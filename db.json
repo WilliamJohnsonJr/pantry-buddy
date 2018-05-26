@@ -1,0 +1,20 @@
+{
+    "meals": [
+      {
+            "id": 1,
+            "name": "Peanut Butter Jelly Bash",
+            "ingredients": [1,2,3], 
+            "quantities": {
+              "1": 2,
+              "2": 2,
+              "3": 2
+            },
+            "recipe": "Use utensil to spread Peanut Butter and Grape Jelly onto one slice of bread. Place other piece of bread on top. Enjoy."
+          }
+    ],
+    "ingredients": [
+        {
+            "id": 1, "text": "Slice of Wheat Bread"}, {"id": 2, "text": "Tbsp Peanut Butter"}, {"id": 3, "text": "Tbsp Grape Jelly"
+        }
+    ]
+  }
