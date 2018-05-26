@@ -2,6 +2,7 @@ import { Meal } from '../../interfaces/meal.interface';
 import { MealsActions, MealsActionTypes } from './meals.actions';
 import { createSelector } from '@ngrx/store';
 import { ApplicationState } from '../app.state';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface MealsState {
     entities: {[key: number]: Meal};
@@ -12,7 +13,7 @@ export interface MealsState {
 const INITIAL_STATE: MealsState = {
     entities: {},
     selectedMealId: undefined,
-    loaded: false
+    loaded: false,
 }
 
 export function mealsReducer(state: MealsState = INITIAL_STATE, action: MealsActions) {

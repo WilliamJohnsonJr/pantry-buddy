@@ -12,7 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { MyMaterialModule } from './modules/my-material/my-material.module';
 
@@ -28,6 +28,9 @@ import { MyNavComponent } from './shared/my-nav/my-nav.component';
 import { PageNotFoundComponent } from './shared/page-not-found/page-not-found.component';
 import { HomeComponent } from './shared/home/home.component';
 import { CommonModule } from '@angular/common';
+import { BaseService } from './services/base.service';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { httpInterceptorProviders } from './interceptors/index';
 
 
 @NgModule({
@@ -60,7 +63,8 @@ import { CommonModule } from '@angular/common';
 
   ],
   providers: [
-    { provide: API_ENDPOINT, useValue: 'http://localhost:3000/' },
+    httpInterceptorProviders,
+    { provide: API_ENDPOINT, useValue: 'http://localhost:3000/' }
   ],
   bootstrap: [AppComponent]
 })

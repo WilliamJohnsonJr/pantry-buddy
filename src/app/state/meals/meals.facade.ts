@@ -8,14 +8,15 @@ import { ApplicationState } from '../../state/app.state';
 import { MealsQuery } from './meals.reducer';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
-import { MealsActionTypes, LoadMealDetailsAction, LoadMealAction, UpdateMealAction, LoadMealsAction } from './meals.actions';
-import { NoopAction } from '../app.actions';
+import { MealsActionTypes, LoadMealDetailsAction, LoadMealAction, UpdateMealAction, LoadMealsAction, LoadMealsFailAction } from './meals.actions';
+import { NoopAction, EffectError} from '../app.actions';
 import {
   SelectMealAction,
   AddMealAction,
   LoadMealsSuccessAction,
   UpdateMealSuccessAction
 } from './meals.actions';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Injectable()
@@ -39,8 +40,11 @@ export class MealsFacade {
     map((meals: Array<Meal> | null) => {
       return meals
         ? new LoadMealsSuccessAction(meals)
-        : new NoopAction();
-    })
+        : new NoopAction()
+    }),
+    catchError((err) => {
+      console.error(err);
+      return of(new EffectError())})
   );
 
   // Splitter ################################
