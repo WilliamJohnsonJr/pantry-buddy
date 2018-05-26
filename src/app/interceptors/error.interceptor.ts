@@ -11,7 +11,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
             tap(event => {}),
             catchError((err: HttpErrorResponse) => {
-                console.error(`${req.method} "${req.urlWithParams}": ${JSON.stringify(err)}`);
+                console.error(`${req.method} "${req.urlWithParams}": ${err.message}`);
                 return throwError(err);
             })
         )

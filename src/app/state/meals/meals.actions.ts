@@ -7,7 +7,6 @@ export enum MealsActionTypes {
   LOAD_MEAL_DETAILS = '[Meals] Load Meal Details',
   LOAD_MEALS = '[Meals] Load Meals',
   LOAD_MEALS_SUCCESS = '[Meals] Load Meals success',
-  LOAD_MEALS_FAIL = '[Error] Load Meals fail',
   UPDATE_MEAL = '[Meals] Meal update',
   UPDATE_MEAL_SUCCESS = '[Meals] Update Meal Success',
   SELECT_MEAL = '[Meals] Meal selected',
@@ -17,11 +16,6 @@ export enum MealsActionTypes {
 export class LoadMealsAction implements Action {
   readonly type = MealsActionTypes.LOAD_MEALS;
   constructor(public payload = null) {}
-}
-
-export class LoadMealsFailAction implements Action {
-  readonly type = MealsActionTypes.LOAD_MEALS_FAIL;
-  constructor(public payload: HttpErrorResponse){}
 }
 
 export class LoadMealsSuccessAction implements Action {

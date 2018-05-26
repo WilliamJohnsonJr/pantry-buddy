@@ -8,7 +8,7 @@ import { ApplicationState } from '../../state/app.state';
 import { MealsQuery } from './meals.reducer';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
-import { MealsActionTypes, LoadMealDetailsAction, LoadMealAction, UpdateMealAction, LoadMealsAction, LoadMealsFailAction } from './meals.actions';
+import { MealsActionTypes, LoadMealDetailsAction, LoadMealAction, UpdateMealAction, LoadMealsAction } from './meals.actions';
 import { NoopAction, EffectError} from '../app.actions';
 import {
   SelectMealAction,
@@ -42,9 +42,9 @@ export class MealsFacade {
         ? new LoadMealsSuccessAction(meals)
         : new NoopAction()
     }),
-    catchError((err) => {
-      console.error(err);
-      return of(new EffectError())})
+    catchError((err: HttpErrorResponse) => {
+      return of(new EffectError(err))
+    })
   );
 
   // Splitter ################################
@@ -66,7 +66,6 @@ export class MealsFacade {
     withLatestFrom(this.loaded$, this.selectedMeal$),
     switchMap(([mealId, loaded, selectedMeal]) => {
       const mealLoaded = selectedMeal && selectedMeal.id === +mealId;
-
       return loaded || mealLoaded
         ? of(null)
         : this.mealsService.getMeal(mealId.toString());
@@ -75,6 +74,9 @@ export class MealsFacade {
       return meal
         ? new AddMealAction(meal)
         : new NoopAction();
+    }),
+    catchError((err: HttpErrorResponse) => {
+      return of(new EffectError(err))
     })
   );
 
@@ -85,6 +87,9 @@ export class MealsFacade {
     map((meal: Meal) => {
       this.router.navigate(['/meal', meal.id]);
       return new UpdateMealSuccessAction(meal)
+    }),
+    catchError((err: HttpErrorResponse) => {
+      return of(new EffectError(err))
     })
   );
 

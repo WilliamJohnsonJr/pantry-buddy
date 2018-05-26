@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export enum AppActionTypes {
     NOOP = '[App] NOOP',
@@ -7,6 +8,7 @@ export enum AppActionTypes {
 
 export class EffectError implements Action {
     readonly type = AppActionTypes.EFFECT_ERROR;
+    constructor(public payload: HttpErrorResponse){}
   }
 
 export class NoopAction implements Action {

@@ -11,10 +11,8 @@ import { API_ENDPOINT } from '../app.tokens';
 @Injectable({
   providedIn: 'root'
 })
-export class MealsService extends BaseService{
-  constructor(private http: HttpClient, @Inject(API_ENDPOINT) private apiEndpoint){
-    super();
-  }
+export class MealsService {
+  constructor(private http: HttpClient, @Inject(API_ENDPOINT) private apiEndpoint){}
 
   getMeal(id: string): Observable<Meal> {
     return this.http.get<Meal>(`${this.apiEndpoint}meals/${id}`)
