@@ -1,4 +1,19 @@
-<a mat-button routerLink="/meals">Back to Meals</a>
-<p>
-  meal works!
-</p>
+<div>
+  <a mat-button routerLink="/meals">Back to Meals</a>
+  <mat-card *ngIf="meal$ | async as meal" class="example-card">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>{{meal.name}}</mat-card-title>
+      <mat-card-subtitle>Meal</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" [alt]="'Photo of ' + meal.name">
+    <mat-card-content>
+      <p>
+        {{meal.recipe}}
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button type="button" mat-button>EDIT</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -65,10 +65,13 @@ export class MealsFacade {
     map((action: LoadMealAction) => action.payload),
     withLatestFrom(this.loaded$, this.selectedMeal$),
     switchMap(([mealId, loaded, selectedMeal]) => {
-      const mealLoaded = selectedMeal && selectedMeal.id === +mealId;
-      return loaded || mealLoaded
-        ? of(null)
-        : this.mealsService.getMeal(mealId.toString());
+      // const mealLoaded = selectedMeal && selectedMeal.id === mealId;
+      // return loaded
+      // ? of(null)
+      // : mealLoaded
+      //   ? of(null)
+      //   : this.mealsService.getMeal(mealId.toString());
+      return this.mealsService.getMeal(mealId.toString());
     }),
     map((meal: Meal | null) => {
       return meal
