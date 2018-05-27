@@ -4,7 +4,7 @@ import { ActivatedRouteSnapshot } from "@angular/router/src/router_state";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { tap, map, merge, take, switchMap, filter } from 'rxjs/operators';
-import { MealsFacade } from "../state/meals/meals.facade";
+import { MealsFacade } from "../../../state/meals/meals.facade";
 
 @Injectable({
     providedIn: 'root'

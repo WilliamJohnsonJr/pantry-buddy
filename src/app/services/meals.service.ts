@@ -7,7 +7,7 @@ import { Meal } from '../interfaces/meal.interface';
 import { MealsModule } from '../modules/meals/meals.module';
 import { BaseService } from './base.service';
 import { API_ENDPOINT } from '../app.tokens';
-import { Ingredient } from '../interfaces/ingredient.interface';
+import { Ingredient } from '../state//ingredient/ingredient.model';
 
 @Injectable({
   providedIn: 'root'

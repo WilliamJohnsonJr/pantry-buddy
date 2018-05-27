@@ -5,6 +5,7 @@ import { MatTableModule, MatPaginatorModule, MatSortModule, MatList } from '@ang
 import { MealsRoutingModule } from './meals-routing.module';
 import { MealComponent } from './meal/meal.component';
 import { MyMaterialModule } from '../my-material/my-material.module';
+import { EditMealContainerComponent } from './edit-meal-container/edit-meal-container.component';
 
 @NgModule({
   imports: [
@@ -12,6 +13,6 @@ import { MyMaterialModule } from '../my-material/my-material.module';
     MyMaterialModule,
     MealsRoutingModule
   ],
-  declarations: [ MealsListComponent, MealComponent]
+  declarations: [ MealsListComponent, MealComponent, EditMealContainerComponent]
 })
 export class MealsModule { }
