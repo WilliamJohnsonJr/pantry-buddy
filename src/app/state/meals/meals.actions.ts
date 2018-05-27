@@ -40,7 +40,7 @@ export class UpdateMealSuccessAction implements Action {
 
 export class LoadMealAction implements Action {
   readonly type = MealsActionTypes.LOAD_MEAL;
-  constructor(public payload: number) {}
+  constructor(public payload: string) {}
 }
 
 export class SelectMealAction implements Action {

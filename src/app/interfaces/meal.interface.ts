@@ -1,9 +1,9 @@
 import { Ingredient } from "./ingredient.interface";
 
 export interface Meal {
-    id: number;
+    id: string; // number on db
     name: string;
-    ingredients: number[];
-    quantities: {[ingredientId: number]: number};
+    imageUrl: string;
+    ingredients: Ingredient[]; // array of Ingredient Objects that must be flattened out
     recipe: string;
-}
+  }

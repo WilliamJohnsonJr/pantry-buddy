@@ -6,8 +6,14 @@
       <mat-card-title>{{meal.name}}</mat-card-title>
       <mat-card-subtitle>Meal</mat-card-subtitle>
     </mat-card-header>
-    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" [alt]="'Photo of ' + meal.name">
+    <img mat-card-image [src]="meal?.imageUrl" [alt]="'Photo of ' + meal.name">
     <mat-card-content>
+      <h3>Ingredients</h3>
+      <ul *ngIf="meal.ingredients?.length">
+        <li *ngFor="let ingredient of meal.ingredients">
+          {{ingredient.text}}: {{ingredient.quantity}}
+        </li>
+      </ul>
       <p>
         {{meal.recipe}}
       </p>

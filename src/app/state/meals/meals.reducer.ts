@@ -5,12 +5,14 @@ import { ApplicationState } from '../app.state';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export interface MealsState {
-    entities: {[key: number]: Meal};
+    ids: string[];
+    entities: {[id: string]: Meal};
     selectedMealId: string | null;
     loaded: boolean;
 }
 
 const INITIAL_STATE: MealsState = {
+    ids: [],
     entities: {},
     selectedMealId: undefined,
     loaded: false,
@@ -21,10 +23,8 @@ export function mealsReducer(state: MealsState = INITIAL_STATE, action: MealsAct
         case MealsActionTypes.LOAD_MEALS_SUCCESS:
             const mealEntities = action.payload.reduce(
                 (entities, meal) => {
-
                     /*
-                        TODO: Check to be sure that spread is what we want here.
-                        We may need to use _.cloneDeep due to nested objects.
+                        TODO: Be sure that we are cloning objects correctly here with spread operator.
                     */
                   return { ...entities, [meal.id]: meal };
                 },
@@ -48,7 +48,6 @@ export function mealsReducer(state: MealsState = INITIAL_STATE, action: MealsAct
             };
         case MealsActionTypes.ADD_MEAL:
             const inStore = state.entities[action.payload.id];
-     
             if (inStore) {
               return state;
             }

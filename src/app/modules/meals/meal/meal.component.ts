@@ -9,6 +9,6 @@ import { Observable } from 'rxjs';
   styleUrls: ['./meal.component.scss']
 })
 export class MealComponent {
-  contact$: Observable<Meal> = this.mealsFacade.selectedMeal$;
+  meal$: Observable<Meal> = this.mealsFacade.selectedMeal$;
   constructor(private mealsFacade: MealsFacade) { }
 }
