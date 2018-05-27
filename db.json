@@ -3,7 +3,7 @@
       {
             "id": 1,
             "name": "Peanut Butter Jelly Bash",
-            "imageUrl": "http://placekitten.com/500/250",
+            "imageUrl": "https://images.pexels.com/photos/236834/pexels-photo-236834.jpeg?cs=srgb&dl=bread-creamy-food-236834.jpg&fm=jpg",
             "ingredients": [
               {"id": 1, "text": "Slice of Wheat Bread", "quantity": 2},
               {"id": 2, "text": "Tbsp Peanut Butter", "quantity": 2},
