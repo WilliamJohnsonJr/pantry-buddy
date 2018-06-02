@@ -1,5 +1,5 @@
-import { Meal } from '../../interfaces/meal.interface';
-import { MealsActions, MealsActionTypes } from './meals.actions';
+import { Meal } from './meal.interface';
+import { MealActions, MealActionTypes } from './meal.actions';
 import { createSelector } from '@ngrx/store';
 import { ApplicationState } from '../app.state';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -18,9 +18,9 @@ const INITIAL_STATE: MealsState = {
     loaded: false,
 }
 
-export function mealsReducer(state: MealsState = INITIAL_STATE, action: MealsActions) {
+export function mealReducer(state: MealsState = INITIAL_STATE, action: MealActions) {
     switch (action.type) {
-        case MealsActionTypes.LOAD_MEALS_SUCCESS:
+        case MealActionTypes.LOAD_MEALS_SUCCESS:
             const mealEntities = action.payload.reduce(
                 (entities, meal) => {
                     /*
@@ -36,17 +36,17 @@ export function mealsReducer(state: MealsState = INITIAL_STATE, action: MealsAct
                 loaded: true,
                 entities: mealEntities
               };
-        case MealsActionTypes.SELECT_MEAL:
+        case MealActionTypes.SELECT_MEAL:
             return {
                 ...state,
                 selectedMealId: action.payload
             }
-        case MealsActionTypes.UPDATE_MEAL_SUCCESS:
+        case MealActionTypes.UPDATE_MEAL_SUCCESS:
             return {
                 ...state,
                 entities: { ...state.entities, [action.payload.id]: action.payload }
             };
-        case MealsActionTypes.ADD_MEAL:
+        case MealActionTypes.ADD_MEAL:
             const inStore = state.entities[action.payload.id];
             if (inStore) {
               return state;

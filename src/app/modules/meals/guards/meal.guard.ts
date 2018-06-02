@@ -4,18 +4,18 @@ import { ActivatedRouteSnapshot } from "@angular/router/src/router_state";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { tap, map, merge, take, switchMap, filter } from 'rxjs/operators';
-import { MealsFacade } from "../../../state/meals/meals.facade";
+import { MealFacade } from "@state/meal/meal.facade";
 
 @Injectable({
     providedIn: 'root'
   })
 export class MealGuard implements CanActivate {
 
-    constructor(private mealsFacade: MealsFacade) { }
+    constructor(private MealFacade: MealFacade) { }
 
     canActivate(route: ActivatedRouteSnapshot) {
         let mealId = route.paramMap.get('id');
-        return this.mealsFacade.getMealDetails(mealId).pipe(
+        return this.MealFacade.getMealDetails(mealId).pipe(
             filter(meal => !!meal),
             take(1),
             map(meal => !!meal)

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MealsFacade } from '../../../state/meals/meals.facade';
-import { Meal } from '../../../interfaces/meal.interface';
+import { MealFacade } from '@state/meal/meal.facade';
+import { Meal } from '@state/meal/meal.interface';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -9,6 +9,6 @@ import { Observable } from 'rxjs';
   styleUrls: ['./meal.component.scss']
 })
 export class MealComponent {
-  meal$: Observable<Meal> = this.mealsFacade.selectedMeal$;
-  constructor(private mealsFacade: MealsFacade) { }
+  meal$: Observable<Meal> = this.MealFacade.selectedMeal$;
+  constructor(private MealFacade: MealFacade) { }
 }

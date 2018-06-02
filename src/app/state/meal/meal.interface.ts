@@ -1,4 +1,4 @@
-import { Ingredient } from "../state/ingredient/ingredient.model";
+import { Ingredient } from "@state/ingredient/ingredient.model";
 
 export interface Meal {
     id: string; // number on db

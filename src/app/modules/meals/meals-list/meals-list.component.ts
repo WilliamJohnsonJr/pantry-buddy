@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Meal } from '../../../interfaces/meal.interface';
-import { MealsFacade } from '../../../state/meals/meals.facade';
+import { Meal } from '@state/meal/meal.interface';
+import { MealFacade } from '@state/meal/meal.facade';
 
 @Component({
   selector: 'app-meals-list',
@@ -13,10 +13,10 @@ export class MealsListComponent implements OnInit {
   meals$: Observable<Array<Meal>>;
   
 
-  constructor(private mealsFacade: MealsFacade) { }
+  constructor(private MealFacade: MealFacade) { }
 
   ngOnInit () {
-    this.meals$ = this.mealsFacade.getMeals();
+    this.meals$ = this.MealFacade.getMeals();
   }
 
   trackByMealId(index, meal) {

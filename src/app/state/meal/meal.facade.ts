@@ -3,24 +3,24 @@ import { Observable, of } from 'rxjs';
 import { map, take, tap, switchMap, withLatestFrom, catchError, mergeMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { MealsService } from '../../services/meals.service';
-import { Meal } from '../../interfaces/meal.interface';
+import { Meal } from './meal.interface';
 import { ApplicationState } from '../../state/app.state';
-import { MealsQuery } from './meals.reducer';
+import { MealsQuery } from './meal.reducer';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { Router } from '@angular/router';
-import { MealsActionTypes, LoadMealDetailsAction, LoadMealAction, UpdateMealAction, LoadMealsAction } from './meals.actions';
+import { MealActionTypes, LoadMealDetailsAction, LoadMealAction, UpdateMealAction, LoadMealsAction } from './meal.actions';
 import { NoopAction, EffectError} from '../app.actions';
 import {
   SelectMealAction,
   AddMealAction,
   LoadMealsSuccessAction,
   UpdateMealSuccessAction
-} from './meals.actions';
+} from './meal.actions';
 import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Injectable()
-export class MealsFacade {
+export class MealFacade {
   // Selectors ##############################
 
   loaded$ = this.store.select(MealsQuery.getLoaded);
@@ -30,7 +30,7 @@ export class MealsFacade {
   // Effects #################################
 
   @Effect() getMeals$ = this.actions$.pipe(
-    ofType(MealsActionTypes.LOAD_MEALS),
+    ofType(MealActionTypes.LOAD_MEALS),
     withLatestFrom(this.loaded$),
     switchMap(([_, loaded]) => {
       return loaded
@@ -50,7 +50,7 @@ export class MealsFacade {
   // Splitter ################################
 
   @Effect() getMealDetails$ = this.actions$.pipe(
-    ofType(MealsActionTypes.LOAD_MEAL_DETAILS),
+    ofType(MealActionTypes.LOAD_MEAL_DETAILS),
     map((action: LoadMealDetailsAction) => action.payload),
     mergeMap(mealId => [
       new SelectMealAction(mealId),
@@ -61,7 +61,7 @@ export class MealsFacade {
   // Content-Based Deciders ###################
 
   @Effect() getMeal$ = this.actions$.pipe(
-    ofType(MealsActionTypes.LOAD_MEAL),
+    ofType(MealActionTypes.LOAD_MEAL),
     map((action: LoadMealAction) => action.payload),
     withLatestFrom(this.loaded$, this.selectedMeal$),
     switchMap(([mealId, loaded, selectedMeal]) => {
@@ -81,7 +81,7 @@ export class MealsFacade {
   );
 
   @Effect() updateMeal$ = this.actions$.pipe(
-    ofType(MealsActionTypes.UPDATE_MEAL),
+    ofType(MealActionTypes.UPDATE_MEAL),
     map((action: UpdateMealAction) => action.payload),
     switchMap((meal: Meal) => this.mealsService.updateMeal(meal)),
     map((meal: Meal) => {

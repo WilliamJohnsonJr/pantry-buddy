@@ -3,11 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Meal } from '../interfaces/meal.interface';
-import { MealsModule } from '../modules/meals/meals.module';
+import { Meal } from '@state/meal/meal.interface';
+import { MealsModule } from '@modules/meals/meals.module';
 import { BaseService } from './base.service';
-import { API_ENDPOINT } from '../app.tokens';
-import { Ingredient } from '../state//ingredient/ingredient.model';
+import { API_ENDPOINT } from '@app/app.tokens';
+import { Ingredient } from '@state//ingredient/ingredient.model';
 
 @Injectable({
   providedIn: 'root'

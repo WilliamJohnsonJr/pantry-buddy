@@ -20,7 +20,7 @@ import { MyMaterialModule } from './modules/my-material/my-material.module';
 import { ROOT_REDUCER, META_REDUCERS } from './state/app.state';
 
 // Facades
-import { MealsFacade } from './state/meals/meals.facade';
+import { MealFacade } from './state/meal/meal.facade';
 
 // Components
 import { AppComponent } from './app.component';
@@ -57,7 +57,7 @@ import { httpInterceptorProviders } from './interceptors/index';
      StoreModule.forRoot(ROOT_REDUCER, {
       metaReducers: META_REDUCERS
     }),
-    EffectsModule.forRoot([MealsFacade ]),
+    EffectsModule.forRoot([MealFacade ]),
     StoreDevtoolsModule.instrument({ maxAge: 15, name: 'Pantry Buddy' }),
     // !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 20, name: 'Pantry Buddy' }) : []
 
