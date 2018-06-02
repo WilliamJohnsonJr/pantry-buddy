@@ -1,16 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
+import { Meal } from '@state/meal/meal.interface';
+import { Observable } from 'rxjs';
+import {map} from 'rxjs/operators';
+import { MealFacade } from '@state/meal/meal.facade';
 
 @Component({
-  selector: 'app-edit-meal-container',
+  selector: 'edit-meal-container',
   templateUrl: './edit-meal-container.component.html',
   styleUrls: ['./edit-meal-container.component.css']
 })
-export class EditMealContainerComponent implements OnInit {
+export class EditMealContainerComponent {
+  meal$: Observable<Meal> = this.mealsFacade.selectedMeal$.pipe(
+    map(meal => ({...meal}))
+  );
+  
+  constructor(private router: Router, private mealsFacade: MealFacade) {}
 
-  constructor(private store: Store<any>) { }
-
-  ngOnInit() {
+  cancel(meal: Meal) {
+    this.router.navigate(['/meal', meal.id]);
   }
 
+  save(meal: Meal) {
+    this.mealsFacade.updateMeal(meal);
+  }
 }
+

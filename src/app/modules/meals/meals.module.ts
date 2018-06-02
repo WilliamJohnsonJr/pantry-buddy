@@ -6,6 +6,7 @@ import { MealsRoutingModule } from './meals-routing.module';
 import { MealComponent } from './meal/meal.component';
 import { MyMaterialModule } from '../my-material/my-material.module';
 import { EditMealContainerComponent } from './edit-meal-container/edit-meal-container.component';
+import { EditMealComponent } from './edit-meal-container/edit-meal/edit-meal.component';
 
 @NgModule({
   imports: [
@@ -13,6 +14,6 @@ import { EditMealContainerComponent } from './edit-meal-container/edit-meal-cont
     MyMaterialModule,
     MealsRoutingModule
   ],
-  declarations: [ MealsListComponent, MealComponent, EditMealContainerComponent]
+  declarations: [ MealsListComponent, MealComponent, EditMealContainerComponent, EditMealComponent]
 })
 export class MealsModule { }
