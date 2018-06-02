@@ -4,21 +4,21 @@ import { createSelector } from '@ngrx/store';
 import { ApplicationState } from '../app.state';
 import { HttpErrorResponse } from '@angular/common/http';
 
-export interface MealsState {
+export interface MealState {
     ids: string[];
     entities: {[id: string]: Meal};
     selectedMealId: string | null;
     loaded: boolean;
 }
 
-const INITIAL_STATE: MealsState = {
+const INITIAL_STATE: MealState = {
     ids: [],
     entities: {},
     selectedMealId: undefined,
     loaded: false,
 }
 
-export function mealReducer(state: MealsState = INITIAL_STATE, action: MealActions) {
+export function mealReducer(state: MealState = INITIAL_STATE, action: MealActions) {
     switch (action.type) {
         case MealActionTypes.LOAD_MEALS_SUCCESS:
             const mealEntities = action.payload.reduce(
