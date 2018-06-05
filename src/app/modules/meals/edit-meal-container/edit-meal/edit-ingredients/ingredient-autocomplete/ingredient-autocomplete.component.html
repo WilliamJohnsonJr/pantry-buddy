@@ -1,0 +1,8 @@
+<mat-form-field>
+    <input matInput type="text" name="id" formControlName="id" aria-label="Ingredient" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let ingredient of filteredIngredients | async" [value]="ingredient.id">
+          {{ingredient.text}}
+        </mat-option>
+      </mat-autocomplete>
+  </mat-form-field>

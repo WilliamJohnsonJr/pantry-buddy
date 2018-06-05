@@ -12,11 +12,15 @@ import {
   MatSidenavModule,
   MatRadioModule,
   MatTabsModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatTableModule,
+  MatAutocompleteModule
 } from '@angular/material';
+import { CdkTableModule } from '@angular/cdk/table';
 
 @NgModule({
   exports: [
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -27,8 +31,10 @@ import {
     MatRadioModule,
     MatSelectModule,
     MatSidenavModule,
+    MatTableModule,
     MatTabsModule,
-    MatToolbarModule
+    MatToolbarModule,
+    CdkTableModule
   ]
 })
 export class MyMaterialModule { }

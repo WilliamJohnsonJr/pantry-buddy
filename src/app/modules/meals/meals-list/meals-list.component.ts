@@ -10,13 +10,12 @@ import { MealFacade } from '@state/meal/meal.facade';
 })
 export class MealsListComponent implements OnInit {
 
-  meals$: Observable<Array<Meal>>;
-  
+  meals$: Observable<Meal[]>;
 
-  constructor(private MealFacade: MealFacade) { }
+  constructor(private mealFacade: MealFacade) { }
 
   ngOnInit () {
-    this.meals$ = this.MealFacade.getMeals();
+    this.meals$ = this.mealFacade.getMeals();
   }
 
   trackByMealId(index, meal) {

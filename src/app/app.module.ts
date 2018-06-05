@@ -11,7 +11,6 @@ import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, Mat
 import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { MyMaterialModule } from './modules/my-material/my-material.module';
@@ -47,7 +46,6 @@ import { httpInterceptorProviders } from './interceptors/index';
     MyMaterialModule,
     LayoutModule,
     AppRoutingModule,
-    FormsModule,
     HttpClientModule,
     /*
       ngrx uses `combineReducers()` to create the next state from a single root reducer.

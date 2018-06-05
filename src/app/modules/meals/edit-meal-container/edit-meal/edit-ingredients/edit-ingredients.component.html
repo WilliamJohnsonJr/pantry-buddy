@@ -1,0 +1,36 @@
+<mat-card [formGroup]="formGroup">
+  <mat-card-content>
+      <mat-table [dataSource]="ingredientsFormArray.controls">
+          <!-- Ingredient Definition -->
+          <ng-container cdkColumnDef="ingredient">
+            <mat-header-cell *cdkHeaderCellDef> Ingredient </mat-header-cell>
+            <mat-cell *cdkCellDef="let row">
+              <ingredient-autocomplete [ingredientsList]="ingredients$ | async" [ingredient]="row"></ingredient-autocomplete>
+            </mat-cell>
+          </ng-container>
+        
+          <!-- Quantity Definition -->
+          <ng-container cdkColumnDef="quantity">
+            <mat-header-cell *cdkHeaderCellDef> Quantity </mat-header-cell>
+            <mat-cell *cdkCellDef="let row">
+              <mat-form-field>
+                <input type="number" name="quantity" formControlName="quantity">
+                <mat-error>Required</mat-error>
+              </mat-form-field>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Delete Definition -->
+          <ng-container cdkColumnDef="delete">
+              <mat-header-cell *cdkHeaderCellDef> Delete </mat-header-cell>
+              <mat-cell *cdkCellDef="let row">
+                <button mat-raised-button type="button">Delete</button>
+              </mat-cell>
+            </ng-container>
+        
+          <!-- Header and Row Declarations -->
+          <mat-header-row *cdkHeaderRowDef="['ingredient', 'quantity', 'delete']"></mat-header-row>
+          <mat-row *cdkRowDef="let row; columns: ['ingredient', 'quantity', 'delete']"></mat-row>
+        </mat-table>
+  </mat-card-content>
+</mat-card>

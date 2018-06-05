@@ -6,18 +6,7 @@
         <mat-form-field>
           <input matInput type="text" placeholder="Name:" name="name" formControlName="name">
         </mat-form-field>
-        <mat-form-field>
-            <mat-chip-list #chipList>
-                <mat-chip>Chip 1</mat-chip>
-                <mat-chip>Chip 2</mat-chip>
-              </mat-chip-list>
-              <input matInput [matChipInputFor]="chipList" [matAutocomplete]="auto" aria-label="Ingredients" placeholder="Ingredients:" name="ingredients" formControlName="ingredients">
-              <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let ingredient of filteredIngredients | async" [value]="ingredient.id">
-                    {{ingredient.text}}
-                  </mat-option>
-                </mat-autocomplete>
-        </mat-form-field>
+        <edit-ingredients [ingredients]="ingredients"></edit-ingredients>
       </form>
     </mat-card-content>
     <mat-card-actions>

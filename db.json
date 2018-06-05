@@ -4,18 +4,23 @@
             "id": 1,
             "name": "Peanut Butter Jelly Bash",
             "imageUrl": "https://images.pexels.com/photos/236834/pexels-photo-236834.jpeg?cs=srgb&dl=bread-creamy-food-236834.jpg&fm=jpg",
-            "ingredients": [
-              {"id": 1, "text": "Slice of Wheat Bread", "quantity": 2},
-              {"id": 2, "text": "Tbsp Peanut Butter", "quantity": 2},
-              {"id": 3, "text": "Tbsp Grape Jelly", "quantity": 2}      
+            "ingredientsQuantities": [
+              {"id": 1, "ingredientId": 1, "quantity": 2},
+              {"id": 2, "ingredientId": 2, "quantity": 2},
+              {"id": 3, "ingredientId": 3, "quantity": 2}      
             ], 
             "recipe": "Use utensil to spread Peanut Butter and Grape Jelly onto one slice of bread. Place other piece of bread on top. Enjoy."
           }
     ],
+    "ingredients":[
+        {"id": 1, "text": "Slice of Wheat Bread"},
+        {"id": 2, "text": "Tbsp Peanut Butter"},
+        {"id": 3, "text": "Tbsp Grape Jelly"}
+    ],
     "pantry": [
-        {"id": 1, "text": "Slice of Wheat Bread", "quantity": 4},
-        {"id": 2, "text": "Tbsp Peanut Butter", "quantity": 3},
-        {"id": 3, "text": "Tbsp Grape Jelly", "quantity": 5}
+        {"id": 1, "quantity": 4},
+        {"id": 2, "quantity": 3},
+        {"id": 3, "quantity": 5}
     ],
     "upcoming-meals": [
       {"id": 1,"name": "Peanut Butter Jelly Bash", "date": "2018-05-27"}

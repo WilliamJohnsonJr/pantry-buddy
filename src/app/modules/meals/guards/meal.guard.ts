@@ -11,11 +11,11 @@ import { MealFacade } from "@state/meal/meal.facade";
   })
 export class MealGuard implements CanActivate {
 
-    constructor(private MealFacade: MealFacade) { }
+    constructor(private mealFacade: MealFacade) { }
 
     canActivate(route: ActivatedRouteSnapshot) {
         let mealId = route.paramMap.get('id');
-        return this.MealFacade.getMealDetails(mealId).pipe(
+        return this.mealFacade.getMealDetails(mealId).pipe(
             filter(meal => !!meal),
             take(1),
             map(meal => !!meal)

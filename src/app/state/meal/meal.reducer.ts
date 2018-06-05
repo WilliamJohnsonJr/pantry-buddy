@@ -23,9 +23,6 @@ export function mealReducer(state: MealState = INITIAL_STATE, action: MealAction
         case MealActionTypes.LOAD_MEALS_SUCCESS:
             const mealEntities = action.payload.reduce(
                 (entities, meal) => {
-                    /*
-                        TODO: Be sure that we are cloning objects correctly here with spread operator.
-                    */
                   return { ...entities, [meal.id]: meal };
                 },
                 { ...state.entities }
