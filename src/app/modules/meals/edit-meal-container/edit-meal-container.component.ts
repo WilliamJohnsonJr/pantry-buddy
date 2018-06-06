@@ -28,7 +28,7 @@ export class EditMealContainerComponent implements OnInit {
 
   ngOnInit() {
     this.ingredientQuantities$ = this.store.select(IngredientQuantityQuery.getIngredientQuantities);
-    this.store.dispatch(new LoadIngredientQuantities(null));
+    this.store.dispatch(new LoadIngredientQuantities());
   }
 
   cancel(meal: Meal) {

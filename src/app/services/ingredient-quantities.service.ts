@@ -23,17 +23,10 @@ export class IngredientQuantitiesService {
     )
   }
   getIngredientQuantities(): Observable<IngredientQuantity[]> {
-    /*
-      ingredientQuantities from server:  
-      [
-        {"id": 1, "ingredientId": 1, "mealId": 1, "quantity": 2},
-        {"id": 2, "ingredientId": 2, "mealId": 1, "quantity": 2},
-        {"id": 3, "ingredientId": 3, "mealId": 1, "quantity": 2}      
-      ]
-    */
     return this.http.get<IngredientQuantityHttp[]>(`${this.apiEndpoint}ingredientQuantities`).pipe(
       map((ingredientQuantities: IngredientQuantityHttp[]): IngredientQuantity[] => {
-        const transformedIngredientQuantities: IngredientQuantity[] = ingredientQuantities.map((ingredientQuantity: IngredientQuantityHttp) => {
+        const transformedIngredientQuantities: IngredientQuantity[] = ingredientQuantities
+        .map((ingredientQuantity: IngredientQuantityHttp) => {
           const myIngredientQuantity: IngredientQuantity = {
             id: String(ingredientQuantity.id),
             ingredientId: String(ingredientQuantity.ingredientId),

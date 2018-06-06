@@ -18,7 +18,6 @@ import {
 } from './meal.actions';
 import { HttpErrorResponse } from '@angular/common/http';
 import { IngredientQuantity } from '@state/ingredient-quantity/ingredient-quantity.model';
-import { LoadIngredientQuantities, LoadIngredientQuantitiesSuccess } from '@state/ingredient-quantity/ingredient-quantity.actions';
 
 
 @Injectable()
@@ -31,11 +30,6 @@ export class MealFacade {
 
   // Effects #################################
 
-
-  // Splitter ################################
-    // This splitter gets Meals from the server, splits it into normalized forms,
-    // then fires actions to update the store with each normalized entity
-
   @Effect() getMeals$ = this.actions$.pipe(
     ofType(MealActionTypes.LOAD_MEALS),
     withLatestFrom(this.loaded$),
@@ -44,10 +38,10 @@ export class MealFacade {
         ? of(null)
         : this.mealsService.getMeals();
     }),
-    mergeMap((meals: Meal[]) => {
-      return [
-        new LoadMealsSuccessAction(meals)
-      ];
+    map((meals: Meal[] | null) => {
+      return meals
+        ? new LoadMealsSuccessAction(meals)
+        : new NoopAction()
     }),
     catchError((err: HttpErrorResponse) => {
       return of(new EffectError(err))

@@ -19,7 +19,10 @@ const INITIAL_STATE: IngredientQuantityState = {
   loaded: false,
 }
 
-export function ingredientQuantityReducer (state: IngredientQuantityState = INITIAL_STATE, action: IngredientQuantityActions): IngredientQuantityState {
+export function ingredientQuantityReducer (
+  state: IngredientQuantityState = INITIAL_STATE,
+  action: IngredientQuantityActions
+): IngredientQuantityState {
   switch (action.type) {
     case IngredientQuantityActionTypes.LOAD_INGREDIENT_QUANTITIES_SUCCESS:
       const ingredientQuantityEntities = action.payload ? action.payload.reduce(
