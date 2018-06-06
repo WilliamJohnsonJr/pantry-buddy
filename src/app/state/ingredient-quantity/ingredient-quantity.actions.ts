@@ -19,8 +19,7 @@ export enum IngredientQuantityActionTypes {
 
 export class LoadIngredientQuantities implements Action {
   readonly type = IngredientQuantityActionTypes.LOAD_INGREDIENT_QUANTITIES;
-
-  constructor(public payload: null ) {}
+  constructor(public payload = null) {}
 }
 
 export class LoadIngredientQuantitiesSuccess implements Action {
@@ -35,14 +34,11 @@ export class AddIngredientQuantity implements Action {
 
 export class AddIngredientQuantities implements Action {
   readonly type = IngredientQuantityActionTypes.ADD_INGREDIENT_QUANTITIES;
-
   constructor(public payload: IngredientQuantity[]) {}
 }
 
-
 export class UpdateIngredientQuantity implements Action {
   readonly type = IngredientQuantityActionTypes.UPDATE_INGREDIENT_QUANTITY;
-
   constructor(public payload: IngredientQuantity) {}
 }
 
@@ -71,7 +67,7 @@ export class DeleteIngredientQuantities implements Action {
 
 export class ClearIngredientQuantities implements Action {
   readonly type = IngredientQuantityActionTypes.CLEAR_INGREDIENT_QUANTITIES;
-  constructor(public payload: null){}
+  constructor(public payload = null){}
 }
 
 export type IngredientQuantityActions =
@@ -80,6 +76,7 @@ export type IngredientQuantityActions =
  | AddIngredientQuantity
  | AddIngredientQuantities
  | UpdateIngredientQuantity
+ | UpdateIngredientQuantitySuccess
  | UpdateIngredientQuantities
  | DeleteIngredientQuantity
  | DeleteIngredientQuantities

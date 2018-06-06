@@ -10,6 +10,7 @@ import { EditMealComponent } from './edit-meal-container/edit-meal/edit-meal.com
 import { EditIngredientsComponent } from './edit-meal-container/edit-meal/edit-ingredients/edit-ingredients.component';
 import { IngredientAutocompleteComponent } from './edit-meal-container/edit-meal/edit-ingredients/ingredient-autocomplete/ingredient-autocomplete.component';
 import { CoreModule } from '../core/core.module';
+import { IngredientDisplayComponent } from './meal/ingredient-display/ingredient-display.component';
 
 @NgModule({
   imports: [CommonModule, CoreModule, MealsRoutingModule],
@@ -19,7 +20,8 @@ import { CoreModule } from '../core/core.module';
     EditMealContainerComponent,
     EditMealComponent,
     EditIngredientsComponent,
-    IngredientAutocompleteComponent
+    IngredientAutocompleteComponent,
+    IngredientDisplayComponent
   ]
 })
 export class MealsModule {}

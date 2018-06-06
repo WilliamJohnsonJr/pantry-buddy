@@ -13,11 +13,10 @@ export class EditIngredientsComponent implements OnInit {
   constructor(private fb: FormBuilder){}
   // constructor(private fb: FormBuilder, private ingredientFacade: IngredientFacade) { }
 
-  @Input() ingredients: Ingredient[];
+  @Input() ingredientQuantities: IngredientQuantity[];
   ingredientsFormArray: FormArray;
   ingredients$: Observable<Ingredient[]>
   ngOnInit() {
-    // this.ingredients$ = this.ingredientFacade.getIngredients();
   }
 
   private addIngredientFormGroups(ingredients: IngredientQuantity[]) {

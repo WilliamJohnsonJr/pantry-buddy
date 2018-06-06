@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Meal } from './meal.interface';
+import { Meal } from './meal.model';
 import { HttpErrorResponse } from '@angular/common/http';
 
 export enum MealActionTypes {

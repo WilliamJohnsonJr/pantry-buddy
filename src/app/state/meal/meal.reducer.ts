@@ -1,4 +1,4 @@
-import { Meal } from './meal.interface';
+import { Meal } from './meal.model';
 import { MealActions, MealActionTypes } from './meal.actions';
 import { createSelector } from '@ngrx/store';
 import { ApplicationState } from '../app.state';
@@ -21,12 +21,12 @@ const INITIAL_STATE: MealState = {
 export function mealReducer(state: MealState = INITIAL_STATE, action: MealActions) {
     switch (action.type) {
         case MealActionTypes.LOAD_MEALS_SUCCESS:
-            const mealEntities = action.payload.reduce(
+            const mealEntities = action.payload ? action.payload.reduce(
                 (entities, meal) => {
                   return { ...entities, [meal.id]: meal };
                 },
                 { ...state.entities }
-              );
+              ) : {};
         
               return {
                 ...state,

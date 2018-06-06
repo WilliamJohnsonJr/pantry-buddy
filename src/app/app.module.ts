@@ -30,6 +30,7 @@ import { CommonModule } from '@angular/common';
 import { BaseService } from './services/base.service';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { httpInterceptorProviders } from './interceptors/index';
+import { IngredientQuantityEffects } from '@app/state/ingredient-quantity/ingredient-quantity.effects';
 
 
 @NgModule({
@@ -55,7 +56,7 @@ import { httpInterceptorProviders } from './interceptors/index';
      StoreModule.forRoot(ROOT_REDUCER, {
       metaReducers: META_REDUCERS
     }),
-    EffectsModule.forRoot([MealFacade ]),
+    EffectsModule.forRoot([MealFacade, IngredientQuantityEffects ]),
     StoreDevtoolsModule.instrument({ maxAge: 15, name: 'Pantry Buddy' }),
     // !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 20, name: 'Pantry Buddy' }) : []
 

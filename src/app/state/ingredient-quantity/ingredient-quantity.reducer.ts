@@ -3,6 +3,7 @@ import { IngredientQuantity } from './ingredient-quantity.model';
 import { IngredientQuantityActions, IngredientQuantityActionTypes } from './ingredient-quantity.actions';
 import { createFeatureSelector, Action, createSelector } from '@ngrx/store';
 import { ApplicationState } from '@app/state/app.state';
+import { MealsQuery } from '@app/state/meal/meal.reducer';
 
 export interface IngredientQuantityState {
   ids: string[];
@@ -18,31 +19,41 @@ const INITIAL_STATE: IngredientQuantityState = {
   loaded: false,
 }
 
-
-export function ingredientQuantityReducer (state = INITIAL_STATE, action: IngredientQuantityActions) {
+export function ingredientQuantityReducer (state: IngredientQuantityState = INITIAL_STATE, action: IngredientQuantityActions): IngredientQuantityState {
   switch (action.type) {
     case IngredientQuantityActionTypes.LOAD_INGREDIENT_QUANTITIES_SUCCESS:
-            const ingredientQuantityEntities = action.payload.reduce(
-                (entities, ingredientQuantity) => {
-                  return { ...entities, [ingredientQuantity.id]: ingredientQuantity };
-                },
-                { ...state.entities }
-              );
-        
-              return {
-                ...state,
-                loaded: true,
-                entities: ingredientQuantityEntities
-              };
-    case IngredientQuantityActionTypes.ADD_INGREDIENT_QUANTITY:
-    return {
-        ...state,
-        selectedIngredientQuantityId: action.payload
-    }
+      const ingredientQuantityEntities = action.payload ? action.payload.reduce(
+          (entities, ingredientQuantity) => {
+            return { ...entities, [ingredientQuantity.id]: ingredientQuantity };
+          },
+          { ...state.entities }
+        ) : {};
+  
+        return {
+          ...state,
+          loaded: true,
+          entities: ingredientQuantityEntities
+        };
 
-    default: {
-      return state;
-    }
+    case IngredientQuantityActionTypes.ADD_INGREDIENT_QUANTITY:
+        const inStore = state.entities[action.payload.id];
+        if (inStore) {
+          return state;
+        }
+        return {
+          ...state,
+          entities: { ...state.entities, [action.payload.id]: action.payload }
+        };
+
+    case IngredientQuantityActionTypes.UPDATE_INGREDIENT_QUANTITY_SUCCESS:
+        return {
+            ...state,
+            entities: { ...state.entities, [action.payload.id]: action.payload }
+        };
+  
+      default: {
+        return state;
+      }
   }
 }
 
@@ -57,7 +68,8 @@ export namespace IngredientQuantityQuery {
     return Object.keys(entities).map(id => entities[id]);
   });
 
-  export const getSelectedIngredientQuantity = createSelector(getIngredientQuantityEntities, getSelectedIngredientQuantityId, (ingredientQuantityEntities, id) => {
+  export const getSelectedIngredientQuantity = createSelector(getIngredientQuantityEntities,
+     getSelectedIngredientQuantityId, (ingredientQuantityEntities, id) => {
     return ingredientQuantityEntities[id];
   });
 }

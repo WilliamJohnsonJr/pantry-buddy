@@ -1,6 +1,7 @@
 <div>
   <a mat-button routerLink="/meals">Back to Meals</a>
-  <mat-card *ngIf="meal$ | async as meal" class="example-card">
+  <mat-card *ngIf="meal$ | async as meal"
+   class="example-card">
     <mat-card-header>
       <div mat-card-avatar class="example-header-image"></div>
       <mat-card-title>{{meal.name}}</mat-card-title>
@@ -8,12 +9,7 @@
     </mat-card-header>
     <img mat-card-image [src]="meal?.imageUrl" [alt]="'Photo of ' + meal.name">
     <mat-card-content>
-      <h3>Ingredients</h3>
-      <ul *ngIf="meal.ingredients?.length">
-        <li *ngFor="let ingredient of meal.ingredients">
-          {{ingredient.text}}: {{ingredient.quantity}}
-        </li>
-      </ul>
+      <ingredient-display [ingredients]="meal?.ingredients" [ingredientQuantities]="ingredientQuantities$ | async"></ingredient-display>
       <p>
         {{meal.recipe}}
       </p>

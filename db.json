@@ -4,10 +4,10 @@
             "id": 1,
             "name": "Peanut Butter Jelly Bash",
             "imageUrl": "https://images.pexels.com/photos/236834/pexels-photo-236834.jpeg?cs=srgb&dl=bread-creamy-food-236834.jpg&fm=jpg",
-            "ingredientsQuantities": [
-              {"id": 1, "ingredientId": 1, "quantity": 2},
-              {"id": 2, "ingredientId": 2, "quantity": 2},
-              {"id": 3, "ingredientId": 3, "quantity": 2}      
+            "ingredientQuantities": [
+              {"id": 1, "ingredientId": 1, "text": "Slice of Wheat Bread", "mealId": 1, "quantity": 2},
+              {"id": 2, "ingredientId": 2, "text": "Tbsp Peanut Butter", "mealId": 1, "quantity": 2},
+              {"id": 3, "ingredientId": 3, "text": "Tbsp Grape Jelly", "mealId": 1, "quantity": 2}      
             ], 
             "recipe": "Use utensil to spread Peanut Butter and Grape Jelly onto one slice of bread. Place other piece of bread on top. Enjoy."
           }
@@ -15,9 +15,17 @@
     "ingredients":[
         {"id": 1, "text": "Slice of Wheat Bread"},
         {"id": 2, "text": "Tbsp Peanut Butter"},
-        {"id": 3, "text": "Tbsp Grape Jelly"}
+        {"id": 3, "text": "Tbsp Grape Jelly"},
+        {"id": 4, "text": "Slice of Rye Bread"},
+        {"id": 5, "text": "Dill Pickle"},
+        {"id": 6, "text": "Tbsp Mustard"}
     ],
-    "pantry": [
+    "ingredientQuantities":[
+      {"id": 1, "ingredientId": 1, "text": "Slice of Wheat Bread", "mealId": 1, "quantity": 2},
+      {"id": 2, "ingredientId": 2, "text": "Tbsp Peanut Butter", "mealId": 1, "quantity": 2},
+      {"id": 3, "ingredientId": 3, "text": "Tbsp Grape Jelly", "mealId": 1, "quantity": 2}        
+    ],
+    "pantryItems": [
         {"id": 1, "quantity": 4},
         {"id": 2, "quantity": 3},
         {"id": 3, "quantity": 5}

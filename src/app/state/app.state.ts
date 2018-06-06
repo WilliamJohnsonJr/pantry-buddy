@@ -1,12 +1,12 @@
 import { mealReducer, MealState } from './meal/meal.reducer';
-import { ActionReducerMap } from '@ngrx/store';
+import { ActionReducerMap, State } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
 import { environment } from '@env/environment';
 import { IngredientQuantityState, ingredientQuantityReducer } from '@app/state/ingredient-quantity/ingredient-quantity.reducer';
 
 export interface ApplicationState {
-  meals: MealState,
-  ingredientQuantities: IngredientQuantityState
+  meals: MealState;
+  ingredientQuantities: IngredientQuantityState;
 }
 
 export const ROOT_REDUCER

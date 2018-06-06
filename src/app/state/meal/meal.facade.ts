@@ -3,7 +3,7 @@ import { Observable, of } from 'rxjs';
 import { map, take, tap, switchMap, withLatestFrom, catchError, mergeMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { MealsService } from '../../services/meals.service';
-import { Meal } from './meal.interface';
+import { Meal } from './meal.model';
 import { ApplicationState } from '../../state/app.state';
 import { MealsQuery } from './meal.reducer';
 import { Effect, Actions, ofType } from '@ngrx/effects';
@@ -44,10 +44,9 @@ export class MealFacade {
         ? of(null)
         : this.mealsService.getMeals();
     }),
-    mergeMap((mealsPayload: {meals: Meal[], ingredientsQuantities: IngredientQuantity[]}) => {
+    mergeMap((meals: Meal[]) => {
       return [
-        new LoadMealsSuccessAction(mealsPayload.meals),
-        new LoadIngredientQuantitiesSuccess(mealsPayload.ingredientsQuantities)
+        new LoadMealsSuccessAction(meals)
       ];
     }),
     catchError((err: HttpErrorResponse) => {

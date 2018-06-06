@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { Meal } from '@app/state/meal/meal.interface';
+import { Meal } from '@app/state/meal/meal.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { takeWhile } from 'rxjs/operators';
 import { EventEmitter } from 'events';

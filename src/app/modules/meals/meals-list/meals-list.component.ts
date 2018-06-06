@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Meal } from '@state/meal/meal.interface';
+import { Meal } from '@state/meal/meal.model';
 import { MealFacade } from '@state/meal/meal.facade';
 
 @Component({
