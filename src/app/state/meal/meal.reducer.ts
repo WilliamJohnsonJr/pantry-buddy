@@ -1,11 +1,10 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Meal } from './meal.model';
-import { MealActions, MealActionTypes, LoadMealsSuccess } from './meal.actions';
+import { MealActions, MealActionTypes, LoadMealsSuccess, SelectMeal } from './meal.actions';
+import { Action } from '@ngrx/store';
 
 export interface State extends EntityState<Meal> {
   // additional entities state properties
-  loaded: boolean;
-  loading: boolean;
   selectedMealId: string;
 }
 
@@ -13,8 +12,6 @@ export const adapter: EntityAdapter<Meal> = createEntityAdapter<Meal>();
 
 export const initialState: State = adapter.getInitialState({
   // additional entity state properties
-  loaded: false,
-  loading: false,
   selectedMealId: null
 });
 
@@ -25,6 +22,10 @@ export function reducer(
   switch (action.type) {
     case MealActionTypes.AddMeal: {
       return adapter.addOne(action.payload.meal, state);
+    }
+
+    case MealActionTypes.SelectMeal: {
+      return {...state, selectedMealId: action.payload}
     }
 
     case MealActionTypes.UpsertMeal: {
@@ -56,13 +57,11 @@ export function reducer(
     }
 
     case MealActionTypes.LoadMeals: {
-      return {
-        ...state, loaded: false, loading: true
-      }
+      return {...state}
     }
 
     case MealActionTypes.LoadMealsSuccess: {
-      return adapter.addAll(action.payload.meals, {...state, loaded: true, loading: false});
+      return adapter.addAll(action.payload.meals, state);
     }
 
     case MealActionTypes.ClearMeals: {
@@ -76,8 +75,6 @@ export function reducer(
 }
 
 export const getSelectedMealId = (state: State) => state.selectedMealId;
-export const getMealsLoaded = (state: State) => state.loaded;
-export const getMealsLoading = (state: State) => state.loading;
 
 export const {
   selectIds: selectMealIds,

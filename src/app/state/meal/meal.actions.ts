@@ -5,7 +5,10 @@ import { Meal } from './meal.model';
 export enum MealActionTypes {
   LoadMeals = '[Meal] Load Meals',
   LoadMealsSuccess = '[Meal] Load Meals Success',
+  LoadMeal = '[Meal] Load Meal',
+  LoadMealSuccess = '[Meal] Load Meal Success',
   AddMeal = '[Meal] Add Meal',
+  SelectMeal = '[Meal] Select Meal',
   UpsertMeal = '[Meal] Upsert Meal',
   AddMeals = '[Meal] Add Meals',
   UpsertMeals = '[Meal] Upsert Meals',
@@ -28,10 +31,20 @@ export class LoadMealsSuccess implements Action {
   constructor(public payload: { meals: Meal[]}) {}
 }
 
+export class LoadMeal implements Action {
+  readonly type = MealActionTypes.LoadMeal;
+  constructor(public payload: string){}
+}
+
+export class LoadMealSuccess implements Action {
+  readonly type = MealActionTypes.LoadMealSuccess;
+  constructor(public payload: {meal: Meal}){}
+}
+
 export class AddMeal implements Action {
   readonly type = MealActionTypes.AddMeal;
 
-  constructor(public payload: { meal: Meal }) {}
+  constructor(public payload: {meal: Meal}) {}
 }
 
 export class UpsertMeal implements Action {
@@ -44,6 +57,11 @@ export class AddMeals implements Action {
   readonly type = MealActionTypes.AddMeals;
 
   constructor(public payload: {meals: Meal[]}) {}
+}
+
+export class SelectMeal implements Action {
+  readonly type = MealActionTypes.SelectMeal;
+  constructor (public payload: string){}
 }
 
 export class UpsertMeals implements Action {
@@ -84,7 +102,10 @@ export class ClearMeals implements Action {
 export type MealActions =
  LoadMeals
  | LoadMealsSuccess
+ | LoadMeal
+ | LoadMealSuccess
  | AddMeal
+ | SelectMeal
  | UpsertMeal
  | AddMeals
  | UpsertMeals

@@ -5,7 +5,9 @@ import { IngredientQuantity } from '@state/ingredient-quantity/ingredient-quanti
 import { Store } from '@ngrx/store';
 import * as mealActions from '@state/meal/meal.actions';
 import * as fromMeal from '@state/meal/meal.reducer';
-import { selectCurrentMeal } from '@state/reducers/index';
+import { selectCurrentMeal, selectCurrentMealId } from '@state/reducers/index';
+import { AddMeal } from '../../../state/meal/meal.actions';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -16,7 +18,8 @@ import { selectCurrentMeal } from '@state/reducers/index';
 export class MealComponent implements OnInit {
   meal$: Observable<Meal>;
   ingredientQuantities$: Observable<IngredientQuantity[]>;
-  constructor(private store: Store<fromMeal.State>) { }
+  selectedMealId$: Observable<string>;
+  constructor(private store: Store<fromMeal.State>, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.meal$ = this.store.select(selectCurrentMeal);

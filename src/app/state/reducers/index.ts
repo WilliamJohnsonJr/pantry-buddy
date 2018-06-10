@@ -43,16 +43,6 @@ export const selectMealIds = createSelector(
     (mealEntities, mealId) => mealEntities[mealId]
   );
 
-  export const selectMealsLoaded = createSelector(
-      selectMealState,
-      fromMeal.getMealsLoaded
-  )
-
-  export const selectMealsLoading = createSelector(
-      selectMealState,
-      fromMeal.getMealsLoading
-  )
-
   export const selectIngredientQuantityState = createFeatureSelector<fromIngredientQuantity.State>('ingredientQuantity'); // string here corresponds to key in reducers object
 
 export const selectIngredientQuantityIds = createSelector(
@@ -81,13 +71,3 @@ export const selectIngredientQuantityIds = createSelector(
     selectCurrentIngredientQuantityId,
     (mealEntities, mealId) => mealEntities[mealId]
   );
-
-  export const selectIngredientQuantitiesLoaded = createSelector(
-      selectIngredientQuantityState,
-      fromIngredientQuantity.getIngredientQuantitiesLoaded
-  )
-
-  export const selectIngredientQuantitiesLoading = createSelector(
-      selectIngredientQuantityState,
-      fromIngredientQuantity.getIngredientQuantitiesLoading
-  )

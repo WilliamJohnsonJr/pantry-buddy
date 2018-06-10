@@ -6,10 +6,6 @@ import { HomeComponent } from './shared/home/home.component';
 const appRoutes: Routes = [
   
   { path: '', component: HomeComponent},
-  {
-    path: 'meals',
-    loadChildren: './modules/meal/meal.module#MealModule'
-  },
   { path: '**', component: PageNotFoundComponent }
 ];
 

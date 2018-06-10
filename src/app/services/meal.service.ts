@@ -18,7 +18,7 @@ export class MealService {
   constructor(private http: HttpClient, @Inject(API_ENDPOINT) private apiEndpoint){}
 
   getMeal(id: string): Observable<Meal> {
-    return this.http.get<Meal>(`${this.apiEndpoint}meal/${id}`).pipe(
+    return this.http.get<Meal>(`${this.apiEndpoint}meals/${id}`).pipe(
       map(meal => {
         meal.id = meal.id.toString();
         return meal;
@@ -54,7 +54,7 @@ export class MealService {
             recipe: string;
           }
     */
-    return this.http.get<MealHttp[]>(`${this.apiEndpoint}meal`).pipe(
+    return this.http.get<MealHttp[]>(`${this.apiEndpoint}meals`).pipe(
       map((meal: MealHttp[]): Meal[] => {
         const transformedMeal: Meal[] = meal.map((meal: MealHttp) => {
           const myMeal: Meal = {
@@ -72,6 +72,6 @@ export class MealService {
   }
 
   updateMeal(meal: Meal): Observable<Meal> {
-    return this.http.put<Meal>(`${this.apiEndpoint}meal/${meal.id}`, meal)
+    return this.http.put<Meal>(`${this.apiEndpoint}meals/${meal.id}`, meal)
   }
 }

@@ -7,7 +7,6 @@ import { switchMap, map, withLatestFrom } from 'rxjs/operators';
 import { IngredientQuantity } from './ingredient-quantity.model';
 import { AddIngredientQuantities, AddIngredientQuantitiesSuccess } from './ingredient-quantity.actions';
 import { State } from '@state/reducers'
-import { selectIngredientQuantitiesLoaded } from '@state/reducers';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
 import { AlreadyLoaded } from '@app/state/base/base.actions';
@@ -15,9 +14,6 @@ import { AlreadyLoaded } from '@app/state/base/base.actions';
 
 @Injectable()
 export class IngredientQuantityEffects {
-
-  loaded$ = this.store.select(selectIngredientQuantitiesLoaded);
-
 
   constructor(
     private actions$: Actions<IngredientQuantityActions>,
@@ -28,20 +24,11 @@ export class IngredientQuantityEffects {
 
   @Effect() getIngredientQuantities$ = this.actions$
     .ofType(IngredientQuantityActionTypes.AddIngredientQuantities).pipe(
-      withLatestFrom(this.loaded$),
-      switchMap(([blank, alreadyLoaded]) => {
-        if (alreadyLoaded) {
-          return of(null)
-        } else {
-          return this.ingredientQuantityService.getIngredientQuantities();
-        }
+      switchMap(()=> {
+        return this.ingredientQuantityService.getIngredientQuantities();
       }),
-      map((ingredientQuantities: IngredientQuantity[] | null) => {
-        if (ingredientQuantities) {
+      map((ingredientQuantities: IngredientQuantity[]) => {
           return new AddIngredientQuantitiesSuccess({ingredientQuantities: ingredientQuantities})
-        } else {
-          return new AlreadyLoaded()
-        }
       })
     );
 }
