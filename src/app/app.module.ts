@@ -16,10 +16,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { MyMaterialModule } from './modules/my-material/my-material.module';
 
 // Reducers
-import { ROOT_REDUCER, META_REDUCERS } from './state/app.state';
-
-// Facades
-import { MealFacade } from './state/meal/meal.facade';
+import { META_REDUCERS } from './state/app.state';
 
 // Components
 import { AppComponent } from './app.component';
@@ -30,6 +27,10 @@ import { CommonModule } from '@angular/common';
 import { BaseService } from './services/base.service';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { httpInterceptorProviders } from './interceptors/index';
+
+import { reducers } from './state/reducers/index';
+import { MealEffects } from '@app/state/meal/meal.effects';
+import { MealModule } from '@app/modules/meal/meal.module';
 import { IngredientQuantityEffects } from '@app/state/ingredient-quantity/ingredient-quantity.effects';
 
 
@@ -46,6 +47,7 @@ import { IngredientQuantityEffects } from '@app/state/ingredient-quantity/ingred
     CommonModule,
     MyMaterialModule,
     LayoutModule,
+    MealModule,
     AppRoutingModule,
     HttpClientModule,
     /*
@@ -53,12 +55,13 @@ import { IngredientQuantityEffects } from '@app/state/ingredient-quantity/ingred
       The meta-reducers array is taken from right-to-left to make one meta-reducer, then combineReducers is
       called to create the next state.
     */
-     StoreModule.forRoot(ROOT_REDUCER, {
+     StoreModule.forRoot(reducers, {
       metaReducers: META_REDUCERS
     }),
-    EffectsModule.forRoot([MealFacade, IngredientQuantityEffects ]),
+    EffectsModule.forRoot([MealEffects, IngredientQuantityEffects ]),
     StoreDevtoolsModule.instrument({ maxAge: 15, name: 'Pantry Buddy' }),
     // !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 20, name: 'Pantry Buddy' }) : []
+    
 
   ],
   providers: [

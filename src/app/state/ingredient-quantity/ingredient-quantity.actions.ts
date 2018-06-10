@@ -3,80 +3,91 @@ import { Update } from '@ngrx/entity';
 import { IngredientQuantity } from './ingredient-quantity.model';
 
 export enum IngredientQuantityActionTypes {
-  LOAD_INGREDIENT_QUANTITIES = '[IngredientQuantity] Load IngredientQuantities',
-  LOAD_INGREDIENT_QUANTITIES_SUCCESS = '[IngredientQuantity] Load IngredientQuantities Success',
-  ADD_INGREDIENT_QUANTITY = '[IngredientQuantity] Add IngredientQuantity',
-  UPSERT_INGREDIENT_QUANTITY = '[IngredientQuantity] Upsert IngredientQuantity',
-  ADD_INGREDIENT_QUANTITIES = '[IngredientQuantity] Add IngredientQuantities',
-  UPSERT_INGREDIENT_QUANTITIES = '[IngredientQuantity] Upsert IngredientQuantities',
-  UPDATE_INGREDIENT_QUANTITY = '[IngredientQuantity] Update IngredientQuantity',
-  UPDATE_INGREDIENT_QUANTITY_SUCCESS = '[IngredientQuantity] Update IngredientQuantity Success',
-  UPDATE_INGREDIENT_QUANTITIES = '[IngredientQuantity] Update IngredientQuantities',
-  DELETE_INGREDIENT_QUANTITY = '[IngredientQuantity] Delete IngredientQuantity',
-  DELETE_INGREDIENT_QUANTITIES = '[IngredientQuantity] Delete IngredientQuantities',
-  CLEAR_INGREDIENT_QUANTITIES = '[IngredientQuantity] Clear IngredientQuantities'
+  LoadIngredientQuantities = '[IngredientQuantity] Load IngredientQuantities',
+  AddIngredientQuantity = '[IngredientQuantity] Add IngredientQuantity',
+  UpsertIngredientQuantity = '[IngredientQuantity] Upsert IngredientQuantity',
+  AddIngredientQuantities = '[IngredientQuantity] Add IngredientQuantities',
+  AddIngredientQuantitiesSuccess = '[IngredientQuantity] Add IngredientQuantities Success',
+  UpsertIngredientQuantities = '[IngredientQuantity] Upsert IngredientQuantities',
+  UpdateIngredientQuantity = '[IngredientQuantity] Update IngredientQuantity',
+  UpdateIngredientQuantities = '[IngredientQuantity] Update IngredientQuantities',
+  DeleteIngredientQuantity = '[IngredientQuantity] Delete IngredientQuantity',
+  DeleteIngredientQuantities = '[IngredientQuantity] Delete IngredientQuantities',
+  ClearIngredientQuantities = '[IngredientQuantity] Clear IngredientQuantities'
 }
 
 export class LoadIngredientQuantities implements Action {
-  readonly type = IngredientQuantityActionTypes.LOAD_INGREDIENT_QUANTITIES;
-  constructor(public payload = null) {}
-}
+  readonly type = IngredientQuantityActionTypes.LoadIngredientQuantities;
 
-export class LoadIngredientQuantitiesSuccess implements Action {
-  readonly type = IngredientQuantityActionTypes.LOAD_INGREDIENT_QUANTITIES_SUCCESS;
-  constructor(public payload: IngredientQuantity[]){}
+  constructor(public payload: { ingredientQuantities: IngredientQuantity[] }) {}
 }
 
 export class AddIngredientQuantity implements Action {
-  readonly type = IngredientQuantityActionTypes.ADD_INGREDIENT_QUANTITY;
-  constructor(public payload:  IngredientQuantity ) {}
+  readonly type = IngredientQuantityActionTypes.AddIngredientQuantity;
+
+  constructor(public payload: { ingredientQuantity: IngredientQuantity }) {}
+}
+
+export class UpsertIngredientQuantity implements Action {
+  readonly type = IngredientQuantityActionTypes.UpsertIngredientQuantity;
+
+  constructor(public payload: { ingredientQuantity: IngredientQuantity }) {}
 }
 
 export class AddIngredientQuantities implements Action {
-  readonly type = IngredientQuantityActionTypes.ADD_INGREDIENT_QUANTITIES;
-  constructor(public payload: IngredientQuantity[]) {}
+  readonly type = IngredientQuantityActionTypes.AddIngredientQuantities;
+
+  constructor(public payload = null) {}
+}
+
+export class AddIngredientQuantitiesSuccess implements Action {
+  readonly type = IngredientQuantityActionTypes.AddIngredientQuantitiesSuccess;
+
+  constructor(public payload: { ingredientQuantities: IngredientQuantity[] }) {}
+}
+
+export class UpsertIngredientQuantities implements Action {
+  readonly type = IngredientQuantityActionTypes.UpsertIngredientQuantities;
+
+  constructor(public payload: { ingredientQuantities: IngredientQuantity[] }) {}
 }
 
 export class UpdateIngredientQuantity implements Action {
-  readonly type = IngredientQuantityActionTypes.UPDATE_INGREDIENT_QUANTITY;
-  constructor(public payload: IngredientQuantity) {}
-}
+  readonly type = IngredientQuantityActionTypes.UpdateIngredientQuantity;
 
-export class UpdateIngredientQuantitySuccess implements Action {
-  readonly type = IngredientQuantityActionTypes.UPDATE_INGREDIENT_QUANTITY_SUCCESS;
-  constructor(public payload: IngredientQuantity){}
+  constructor(public payload: { ingredientQuantity: Update<IngredientQuantity> }) {}
 }
 
 export class UpdateIngredientQuantities implements Action {
-  readonly type = IngredientQuantityActionTypes.UPDATE_INGREDIENT_QUANTITIES;
+  readonly type = IngredientQuantityActionTypes.UpdateIngredientQuantities;
 
-  constructor(public payload: IngredientQuantity[]) {}
+  constructor(public payload: { ingredientQuantities: Update<IngredientQuantity>[] }) {}
 }
 
 export class DeleteIngredientQuantity implements Action {
-  readonly type = IngredientQuantityActionTypes.DELETE_INGREDIENT_QUANTITY;
+  readonly type = IngredientQuantityActionTypes.DeleteIngredientQuantity;
 
-  constructor(public payload: string) {}
+  constructor(public payload: { id: string }) {}
 }
 
 export class DeleteIngredientQuantities implements Action {
-  readonly type = IngredientQuantityActionTypes.DELETE_INGREDIENT_QUANTITIES;
+  readonly type = IngredientQuantityActionTypes.DeleteIngredientQuantities;
 
-  constructor(public payload: string[]) {}
+  constructor(public payload: { ids: string[] }) {}
 }
 
 export class ClearIngredientQuantities implements Action {
-  readonly type = IngredientQuantityActionTypes.CLEAR_INGREDIENT_QUANTITIES;
-  constructor(public payload = null){}
+  readonly type = IngredientQuantityActionTypes.ClearIngredientQuantities;
 }
 
 export type IngredientQuantityActions =
  LoadIngredientQuantities
- | LoadIngredientQuantitiesSuccess
  | AddIngredientQuantity
+ | UpsertIngredientQuantity
  | AddIngredientQuantities
+ | AddIngredientQuantitiesSuccess
+ | UpsertIngredientQuantities
  | UpdateIngredientQuantity
- | UpdateIngredientQuantitySuccess
  | UpdateIngredientQuantities
  | DeleteIngredientQuantity
  | DeleteIngredientQuantities

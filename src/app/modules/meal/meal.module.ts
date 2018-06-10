@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MealsListComponent } from './meals-list/meals-list.component';
+import { MealListComponent } from './meal-list/meal-list.component';
 import { MatTableModule, MatPaginatorModule, MatSortModule, MatList } from '@angular/material';
-import { MealsRoutingModule } from './meals-routing.module';
+import { MealRoutingModule } from './meal-routing.module';
 import { MealComponent } from './meal/meal.component';
 import { MyMaterialModule } from '../my-material/my-material.module';
 import { EditMealContainerComponent } from './edit-meal-container/edit-meal-container.component';
@@ -11,11 +11,13 @@ import { EditIngredientsComponent } from './edit-meal-container/edit-meal/edit-i
 import { IngredientAutocompleteComponent } from './edit-meal-container/edit-meal/edit-ingredients/ingredient-autocomplete/ingredient-autocomplete.component';
 import { CoreModule } from '../core/core.module';
 import { IngredientDisplayComponent } from './meal/ingredient-display/ingredient-display.component';
+import { StoreModule } from '@ngrx/store';
+import {reducer} from '@state/meal/meal.reducer'
 
 @NgModule({
-  imports: [CommonModule, CoreModule, MealsRoutingModule],
+  imports: [CommonModule, CoreModule, MealRoutingModule],
   declarations: [
-    MealsListComponent,
+    MealListComponent,
     MealComponent,
     EditMealContainerComponent,
     EditMealComponent,
@@ -24,4 +26,4 @@ import { IngredientDisplayComponent } from './meal/ingredient-display/ingredient
     IngredientDisplayComponent
   ]
 })
-export class MealsModule {}
+export class MealModule {}

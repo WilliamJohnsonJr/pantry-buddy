@@ -1,65 +1,95 @@
 import { Action } from '@ngrx/store';
+import { Update } from '@ngrx/entity';
 import { Meal } from './meal.model';
-import { HttpErrorResponse } from '@angular/common/http';
 
 export enum MealActionTypes {
-  LOAD_MEAL = '[Meals] Load Meal',
-  LOAD_MEAL_DETAILS = '[Meals] Load Meal Details',
-  LOAD_MEALS = '[Meals] Load Meals',
-  LOAD_MEALS_SUCCESS = '[Meals] Load Meals success',
-  UPDATE_MEAL = '[Meals] Meal update',
-  UPDATE_MEAL_SUCCESS = '[Meals] Update Meal Success',
-  SELECT_MEAL = '[Meals] Meal selected',
-  ADD_MEAL = '[Meals] Add meal'
+  LoadMeals = '[Meal] Load Meals',
+  LoadMealsSuccess = '[Meal] Load Meals Success',
+  AddMeal = '[Meal] Add Meal',
+  UpsertMeal = '[Meal] Upsert Meal',
+  AddMeals = '[Meal] Add Meals',
+  UpsertMeals = '[Meal] Upsert Meals',
+  UpdateMeal = '[Meal] Update Meal',
+  UpdateMeals = '[Meal] Update Meals',
+  DeleteMeal = '[Meal] Delete Meal',
+  DeleteMeals = '[Meal] Delete Meals',
+  ClearMeals = '[Meal] Clear Meals'
 }
 
-export class LoadMealsAction implements Action {
-  readonly type = MealActionTypes.LOAD_MEALS;
+export class LoadMeals implements Action {
+  readonly type = MealActionTypes.LoadMeals;
+
   constructor(public payload = null) {}
 }
 
-export class LoadMealsSuccessAction implements Action {
-    readonly type = MealActionTypes.LOAD_MEALS_SUCCESS;
-    constructor(public payload: Meal[]) {}
+export class LoadMealsSuccess implements Action {
+  readonly type = MealActionTypes.LoadMealsSuccess;
+
+  constructor(public payload: { meals: Meal[]}) {}
 }
 
-export class LoadMealDetailsAction implements Action {
-  readonly type = MealActionTypes.LOAD_MEAL_DETAILS;
-  constructor(public payload: string) {}
-}
-  
-export class UpdateMealAction implements Action {
-  readonly type = MealActionTypes.UPDATE_MEAL;
-  constructor(public payload: Meal) {}
-}
-  
-export class UpdateMealSuccessAction implements Action {
-  readonly type = MealActionTypes.UPDATE_MEAL_SUCCESS;
-  constructor(public payload: Meal) { }
+export class AddMeal implements Action {
+  readonly type = MealActionTypes.AddMeal;
+
+  constructor(public payload: { meal: Meal }) {}
 }
 
-export class LoadMealAction implements Action {
-  readonly type = MealActionTypes.LOAD_MEAL;
-  constructor(public payload: string) {}
+export class UpsertMeal implements Action {
+  readonly type = MealActionTypes.UpsertMeal;
+
+  constructor(public payload: { meal: Meal }) {}
 }
 
-export class SelectMealAction implements Action {
-  readonly type = MealActionTypes.SELECT_MEAL;
+export class AddMeals implements Action {
+  readonly type = MealActionTypes.AddMeals;
 
-  constructor(public payload: string) { }
+  constructor(public payload: {meals: Meal[]}) {}
 }
 
-export class AddMealAction implements Action {
-  readonly type = MealActionTypes.ADD_MEAL;
+export class UpsertMeals implements Action {
+  readonly type = MealActionTypes.UpsertMeals;
 
-  constructor(public payload: Meal) { }
+  constructor(public payload: { meals: Meal[] }) {}
 }
-    
-export type MealActions = 
-LoadMealsAction
-| LoadMealsSuccessAction
-| UpdateMealAction
-| UpdateMealSuccessAction 
-| LoadMealAction
-| SelectMealAction
-| AddMealAction;
+
+export class UpdateMeal implements Action {
+  readonly type = MealActionTypes.UpdateMeal;
+
+  constructor(public payload: { meal: Update<Meal> }) {}
+}
+
+export class UpdateMeals implements Action {
+  readonly type = MealActionTypes.UpdateMeals;
+
+  constructor(public payload: { meals: Update<Meal>[] }) {}
+}
+
+export class DeleteMeal implements Action {
+  readonly type = MealActionTypes.DeleteMeal;
+
+  constructor(public payload: { id: string }) {}
+}
+
+export class DeleteMeals implements Action {
+  readonly type = MealActionTypes.DeleteMeals;
+
+  constructor(public payload: { ids: string[] }) {}
+}
+
+export class ClearMeals implements Action {
+  readonly type = MealActionTypes.ClearMeals;
+  constructor(public payload = null){}
+}
+
+export type MealActions =
+ LoadMeals
+ | LoadMealsSuccess
+ | AddMeal
+ | UpsertMeal
+ | AddMeals
+ | UpsertMeals
+ | UpdateMeal
+ | UpdateMeals
+ | DeleteMeal
+ | DeleteMeals
+ | ClearMeals;

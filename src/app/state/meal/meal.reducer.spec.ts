@@ -1,6 +1,6 @@
-import { reducer, initialState } from './ingredient-quantity.reducer';
+import { reducer, initialState } from './meal.reducer';
 
-describe('IngredientQuantity Reducer', () => {
+describe('Meal Reducer', () => {
   describe('unknown action', () => {
     it('should return the initial state', () => {
       const action = {} as any;

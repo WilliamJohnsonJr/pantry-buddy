@@ -8,7 +8,7 @@ const appRoutes: Routes = [
   { path: '', component: HomeComponent},
   {
     path: 'meals',
-    loadChildren: './modules/meals/meals.module#MealsModule'
+    loadChildren: './modules/meal/meal.module#MealModule'
   },
   { path: '**', component: PageNotFoundComponent }
 ];

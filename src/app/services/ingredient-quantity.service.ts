@@ -11,7 +11,7 @@ import { IngredientQuantityHttp } from '@app/state/ingredient-quantity/ingredien
 @Injectable({
   providedIn: 'root'
 })
-export class IngredientQuantitiesService {
+export class IngredientQuantityService {
 
   constructor(private http: HttpClient, @Inject(API_ENDPOINT) private apiEndpoint){}
   getIngredientQuantity(id: string): Observable<IngredientQuantity> {

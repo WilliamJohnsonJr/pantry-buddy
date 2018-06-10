@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MealsListComponent } from './meals-list/meals-list.component';
+import { MealListComponent } from './meal-list/meal-list.component';
 import { MealComponent } from './meal/meal.component';
 import { MealGuard } from './guards/meal.guard';
 
 const routes: Routes = [
-  { path: '',  component: MealsListComponent},
+  { path: '',  component: MealListComponent},
   { path: ':id', component:  MealComponent, canActivate: [MealGuard]}
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class MealsRoutingModule { }
+export class MealRoutingModule { }

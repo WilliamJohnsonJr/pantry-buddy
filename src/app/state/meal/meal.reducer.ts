@@ -1,75 +1,87 @@
+import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Meal } from './meal.model';
-import { MealActions, MealActionTypes } from './meal.actions';
-import { createSelector } from '@ngrx/store';
-import { ApplicationState } from '../app.state';
-import { HttpErrorResponse } from '@angular/common/http';
+import { MealActions, MealActionTypes, LoadMealsSuccess } from './meal.actions';
 
-export interface MealState {
-    ids: string[];
-    entities: {[id: string]: Meal};
-    selectedMealId: string | null;
-    loaded: boolean;
+export interface State extends EntityState<Meal> {
+  // additional entities state properties
+  loaded: boolean;
+  loading: boolean;
+  selectedMealId: string;
 }
 
-const INITIAL_STATE: MealState = {
-    ids: [],
-    entities: {},
-    selectedMealId: undefined,
-    loaded: false,
-}
+export const adapter: EntityAdapter<Meal> = createEntityAdapter<Meal>();
 
-export function mealReducer(state: MealState = INITIAL_STATE, action: MealActions) {
-    switch (action.type) {
-        case MealActionTypes.LOAD_MEALS_SUCCESS:
-            const mealEntities = action.payload ? action.payload.reduce(
-                (entities, meal) => {
-                  return { ...entities, [meal.id]: meal };
-                },
-                { ...state.entities }
-              ) : {};
-        
-              return {
-                ...state,
-                loaded: true,
-                entities: mealEntities
-              };
-        case MealActionTypes.SELECT_MEAL:
-            return {
-                ...state,
-                selectedMealId: action.payload
-            }
-        case MealActionTypes.UPDATE_MEAL_SUCCESS:
-            return {
-                ...state,
-                entities: { ...state.entities, [action.payload.id]: action.payload }
-            };
-        case MealActionTypes.ADD_MEAL:
-            const inStore = state.entities[action.payload.id];
-            if (inStore) {
-              return state;
-            }
-      
-            return {
-              ...state,
-              entities: { ...state.entities, [action.payload.id]: action.payload }
-            };
-        default:
-            return state;
+export const initialState: State = adapter.getInitialState({
+  // additional entity state properties
+  loaded: false,
+  loading: false,
+  selectedMealId: null
+});
+
+export function reducer(
+  state = initialState,
+  action: MealActions
+): State {
+  switch (action.type) {
+    case MealActionTypes.AddMeal: {
+      return adapter.addOne(action.payload.meal, state);
     }
+
+    case MealActionTypes.UpsertMeal: {
+      return adapter.upsertOne(action.payload.meal, state);
+    }
+
+    case MealActionTypes.AddMeals: {
+      return adapter.addMany(action.payload.meals, state);
+    }
+
+    case MealActionTypes.UpsertMeals: {
+      return adapter.upsertMany(action.payload.meals, state);
+    }
+
+    case MealActionTypes.UpdateMeal: {
+      return adapter.updateOne(action.payload.meal, state);
+    }
+
+    case MealActionTypes.UpdateMeals: {
+      return adapter.updateMany(action.payload.meals, state);
+    }
+
+    case MealActionTypes.DeleteMeal: {
+      return adapter.removeOne(action.payload.id, state);
+    }
+
+    case MealActionTypes.DeleteMeals: {
+      return adapter.removeMany(action.payload.ids, state);
+    }
+
+    case MealActionTypes.LoadMeals: {
+      return {
+        ...state, loaded: false, loading: true
+      }
+    }
+
+    case MealActionTypes.LoadMealsSuccess: {
+      return adapter.addAll(action.payload.meals, {...state, loaded: true, loading: false});
+    }
+
+    case MealActionTypes.ClearMeals: {
+      return adapter.removeAll(state);
+    }
+
+    default: {
+      return state;
+    }
+  }
 }
 
-// Selectors / Queries ######################################
- 
- export namespace MealsQuery {
-    export const getMealsEntities = (state: ApplicationState) => state.meals.entities;
-    export const getLoaded = (state: ApplicationState) => state.meals.loaded;
-    export const getSelectedMealId = (state: ApplicationState) => state.meals.selectedMealId;
-  
-    export const getMeals = createSelector(getMealsEntities, entities => {
-      return Object.keys(entities).map(id => entities[id]);
-    });
-  
-    export const getSelectedMeal = createSelector(getMealsEntities, getSelectedMealId, (mealEntities, id) => {
-      return mealEntities[id];
-    });
-  }
+export const getSelectedMealId = (state: State) => state.selectedMealId;
+export const getMealsLoaded = (state: State) => state.loaded;
+export const getMealsLoading = (state: State) => state.loading;
+
+export const {
+  selectIds: selectMealIds,
+  selectEntities: selectMealEntities,
+  selectAll: selectAllMeals,
+  selectTotal: selectMealTotal,
+} = adapter.getSelectors();

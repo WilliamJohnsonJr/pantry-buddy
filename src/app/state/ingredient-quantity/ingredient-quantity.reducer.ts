@@ -1,78 +1,81 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { IngredientQuantity } from './ingredient-quantity.model';
 import { IngredientQuantityActions, IngredientQuantityActionTypes } from './ingredient-quantity.actions';
-import { createFeatureSelector, Action, createSelector } from '@ngrx/store';
-import { ApplicationState } from '@app/state/app.state';
-import { MealsQuery } from '@app/state/meal/meal.reducer';
 
-export interface IngredientQuantityState {
-  ids: string[];
-  entities: {[id: string]: IngredientQuantity};
-  selectedIngredientQuantityId: string | null;
+export interface State extends EntityState<IngredientQuantity> {
+  // additional entities state properties
   loaded: boolean;
+  loading: boolean;
+  selectedIngredientQuantityId: string;
 }
 
-const INITIAL_STATE: IngredientQuantityState = {
-  ids: [],
-  entities: {},
-  selectedIngredientQuantityId: undefined,
+export const adapter: EntityAdapter<IngredientQuantity> = createEntityAdapter<IngredientQuantity>();
+
+export const initialState: State = adapter.getInitialState({
+  // additional entity state properties
   loaded: false,
-}
+  loading: false,
+  selectedIngredientQuantityId: null
+});
 
-export function ingredientQuantityReducer (
-  state: IngredientQuantityState = INITIAL_STATE,
+export function reducer(
+  state = initialState,
   action: IngredientQuantityActions
-): IngredientQuantityState {
+): State {
   switch (action.type) {
-    case IngredientQuantityActionTypes.LOAD_INGREDIENT_QUANTITIES_SUCCESS:
-      const ingredientQuantityEntities = action.payload ? action.payload.reduce(
-          (entities, ingredientQuantity) => {
-            return { ...entities, [ingredientQuantity.id]: ingredientQuantity };
-          },
-          { ...state.entities }
-        ) : {};
-  
-        return {
-          ...state,
-          loaded: true,
-          entities: ingredientQuantityEntities
-        };
+    case IngredientQuantityActionTypes.AddIngredientQuantity: {
+      return adapter.addOne(action.payload.ingredientQuantity, state);
+    }
 
-    case IngredientQuantityActionTypes.ADD_INGREDIENT_QUANTITY:
-        const inStore = state.entities[action.payload.id];
-        if (inStore) {
-          return state;
-        }
-        return {
-          ...state,
-          entities: { ...state.entities, [action.payload.id]: action.payload }
-        };
+    case IngredientQuantityActionTypes.UpsertIngredientQuantity: {
+      return adapter.upsertOne(action.payload.ingredientQuantity, state);
+    }
 
-    case IngredientQuantityActionTypes.UPDATE_INGREDIENT_QUANTITY_SUCCESS:
-        return {
-            ...state,
-            entities: { ...state.entities, [action.payload.id]: action.payload }
-        };
-  
-      default: {
-        return state;
-      }
+    case IngredientQuantityActionTypes.AddIngredientQuantities: {
+      return adapter.addMany(action.payload.ingredientQuantities, state);
+    }
+
+    case IngredientQuantityActionTypes.UpsertIngredientQuantities: {
+      return adapter.upsertMany(action.payload.ingredientQuantities, state);
+    }
+
+    case IngredientQuantityActionTypes.UpdateIngredientQuantity: {
+      return adapter.updateOne(action.payload.ingredientQuantity, state);
+    }
+
+    case IngredientQuantityActionTypes.UpdateIngredientQuantities: {
+      return adapter.updateMany(action.payload.ingredientQuantities, state);
+    }
+
+    case IngredientQuantityActionTypes.DeleteIngredientQuantity: {
+      return adapter.removeOne(action.payload.id, state);
+    }
+
+    case IngredientQuantityActionTypes.DeleteIngredientQuantities: {
+      return adapter.removeMany(action.payload.ids, state);
+    }
+
+    case IngredientQuantityActionTypes.LoadIngredientQuantities: {
+      return adapter.addAll(action.payload.ingredientQuantities, state);
+    }
+
+    case IngredientQuantityActionTypes.ClearIngredientQuantities: {
+      return adapter.removeAll(state);
+    }
+
+    default: {
+      return state;
+    }
   }
 }
 
-// Selectors / Queries ######################################
- 
-export namespace IngredientQuantityQuery {
-  export const getIngredientQuantityEntities = (state: ApplicationState) => state.ingredientQuantities.entities;
-  export const getLoaded = (state: ApplicationState) => state.ingredientQuantities.loaded;
-  export const getSelectedIngredientQuantityId = (state: ApplicationState) => state.ingredientQuantities.selectedIngredientQuantityId;
+export const getSelectedIngredientQuantityId = (state: State) => state.selectedIngredientQuantityId;
+export const getIngredientQuantitiesLoaded = (state: State) => state.loaded;
+export const getIngredientQuantitiesLoading = (state: State) => state.loading;
 
-  export const getIngredientQuantities = createSelector(getIngredientQuantityEntities, entities => {
-    return Object.keys(entities).map(id => entities[id]);
-  });
-
-  export const getSelectedIngredientQuantity = createSelector(getIngredientQuantityEntities,
-     getSelectedIngredientQuantityId, (ingredientQuantityEntities, id) => {
-    return ingredientQuantityEntities[id];
-  });
-}
+export const {
+  selectIds: selectIngredientQuantityIds,
+  selectEntities: selectIngredientQuantityEntities,
+  selectAll: selectAllIngredientQuantities,
+  selectTotal: selectIngredientQuantityTotal,
+} = adapter.getSelectors();

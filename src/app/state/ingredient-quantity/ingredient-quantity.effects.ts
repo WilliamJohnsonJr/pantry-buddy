@@ -1,46 +1,47 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Actions, Effect } from '@ngrx/effects';
-import { map, switchMap, tap } from 'rxjs/operators';
-import {
-    LoadIngredientQuantities,
-    LoadIngredientQuantitiesSuccess,
-    AddIngredientQuantity,
-    AddIngredientQuantities,
-    UpdateIngredientQuantity,
-    UpdateIngredientQuantitySuccess,
-    UpdateIngredientQuantities,
-    DeleteIngredientQuantity,
-    DeleteIngredientQuantities,
-    ClearIngredientQuantities,
-    IngredientQuantityActionTypes,
-    IngredientQuantityActions
-} from '@state/ingredient-quantity/ingredient-quantity.actions';
-import { IngredientQuantitiesService } from '@app/services/ingredient-quantities.service';
+import {IngredientQuantityActions, IngredientQuantityActionTypes} from '@state/ingredient-quantity/ingredient-quantity.actions';
+import { IngredientQuantityService } from '@app/services/ingredient-quantity.service';
+import { Router } from '@angular/router';
+import { switchMap, map, withLatestFrom } from 'rxjs/operators';
 import { IngredientQuantity } from './ingredient-quantity.model';
-import { MealActions } from '../meal/meal.actions';
+import { AddIngredientQuantities, AddIngredientQuantitiesSuccess } from './ingredient-quantity.actions';
+import { State } from '@state/reducers'
+import { selectIngredientQuantitiesLoaded } from '@state/reducers';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
+import { AlreadyLoaded } from '@app/state/base/base.actions';
+
 
 @Injectable()
 export class IngredientQuantityEffects {
+
+  loaded$ = this.store.select(selectIngredientQuantitiesLoaded);
+
+
   constructor(
-    private actions$: Actions<IngredientQuantityActions | MealActions>,
-    private ingredientQuantitiesService: IngredientQuantitiesService,
+    private actions$: Actions<IngredientQuantityActions>,
+    private store: Store<State>,
+    private ingredientQuantityService: IngredientQuantityService,
     private router: Router) {
   }
 
   @Effect() getIngredientQuantities$ = this.actions$
-    .ofType(IngredientQuantityActionTypes.LOAD_INGREDIENT_QUANTITIES).pipe(
-      switchMap(() => {
-          return this.ingredientQuantitiesService.getIngredientQuantities()
-        }),
-      map((ingredientQuantities: IngredientQuantity[]) => new LoadIngredientQuantitiesSuccess(ingredientQuantities))
-    );
-
-  @Effect() updateIngredientQuantity$ = this.actions$
-    .ofType(IngredientQuantityActionTypes.UPDATE_INGREDIENT_QUANTITY).pipe(
-      map(action => action.payload),
-      switchMap((ingredientQuantity: IngredientQuantity) => this.ingredientQuantitiesService.updateIngredientQuantity(ingredientQuantity)),
-      tap((ingredientQuantity: IngredientQuantity) => this.router.navigate(['/ingredientQuantity', ingredientQuantity.id])),
-      map((ingredientQuantity: IngredientQuantity) => new UpdateIngredientQuantitySuccess(ingredientQuantity))
+    .ofType(IngredientQuantityActionTypes.AddIngredientQuantities).pipe(
+      withLatestFrom(this.loaded$),
+      switchMap(([blank, alreadyLoaded]) => {
+        if (alreadyLoaded) {
+          return of(null)
+        } else {
+          return this.ingredientQuantityService.getIngredientQuantities();
+        }
+      }),
+      map((ingredientQuantities: IngredientQuantity[] | null) => {
+        if (ingredientQuantities) {
+          return new AddIngredientQuantitiesSuccess({ingredientQuantities: ingredientQuantities})
+        } else {
+          return new AlreadyLoaded()
+        }
+      })
     );
 }
