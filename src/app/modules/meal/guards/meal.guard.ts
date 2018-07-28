@@ -20,6 +20,7 @@ export class MealGuard implements CanActivate {
         let mealId = route.paramMap.get('id');
         this.store.dispatch(new SelectMeal(mealId));
         return this.store.select(selectCurrentMeal).pipe(
+            tap(meal => {console.log(meal)}),
             filter(meal => !!meal),
             take(1),
             map(meal => !!meal)

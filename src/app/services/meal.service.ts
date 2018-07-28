@@ -10,7 +10,8 @@ import { API_ENDPOINT } from '@app/app.tokens';
 import { Ingredient } from '@state//ingredient/ingredient.model';
 import { IngredientQuantity } from '@state/ingredient-quantity/ingredient-quantity.model';
 import { MealHttp } from '@state/meal/meal-http.interface';
-
+import { normalize, schema } from 'normalizr';
+import {mealsSchema} from '@state/schemas';
 @Injectable({
   providedIn: 'root'
 })
@@ -55,8 +56,12 @@ export class MealService {
           }
     */
     return this.http.get<MealHttp[]>(`${this.apiEndpoint}meals`).pipe(
-      map((meal: MealHttp[]): Meal[] => {
-        const transformedMeal: Meal[] = meal.map((meal: MealHttp) => {
+      map((meals: MealHttp[]): Meal[] => {
+        const normalizedData = normalize({meals: meals}, mealsSchema);
+        console.log('normalizedData');
+        console.log(normalizedData);
+
+        const transformedMeals: Meal[] = meals.map((meal: MealHttp) => {
           const myMeal: Meal = {
             id: String(meal.id),
             name: meal.name,
@@ -66,7 +71,7 @@ export class MealService {
           }
           return myMeal;
         });
-        return transformedMeal
+        return transformedMeals
       })
     )
   }
