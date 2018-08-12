@@ -1,3 +1,9 @@
+/**
+ * // This code adapted from the NgRx Example App at https://github.com/ngrx/platform/blob/master/example-app/
+ * 
+ * License: MIT
+ **/
+
 import {
     createSelector,
     createFeatureSelector,
@@ -97,27 +103,6 @@ import {
 //   export const getCollectionState = createSelector(
 //     getMealsState,
 //     (state: MealsState) => state.collection
-//   );
-  
-//   export const getCollectionLoaded = createSelector(
-//     getCollectionState,
-//     fromCollection.getLoaded
-//   );
-//   export const getCollectionLoading = createSelector(
-//     getCollectionState,
-//     fromCollection.getLoading
-//   );
-//   export const getCollectionMealIds = createSelector(
-//     getCollectionState,
-//     fromCollection.getIds
-//   );
-  
-//   export const getMealCollection = createSelector(
-//     getMealEntities,
-//     getCollectionMealIds,
-//     (entities, ids) => {
-//       return ids.map(id => entities[id]);
-//     }
 //   );
   
   export const isSelectedMealInList = createSelector(
