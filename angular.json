@@ -133,5 +133,8 @@
       }
     }
   },
-  "defaultProject": "pantry-buddy-ngrx"
+  "defaultProject": "pantry-buddy-ngrx",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }
