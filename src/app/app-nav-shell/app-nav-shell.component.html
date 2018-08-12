@@ -1,0 +1,33 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    class="sidenav"
+    fixedInViewport="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(showSidenav$ | async)"
+    (closedStart)="closeSidenav()">
+    <mat-toolbar color="primary" (click)="closeSidenav()" color="primary"><button type="button" mat-icon-button aria-label="Close side nav menu button" class="close-button"><mat-icon>close</mat-icon></button>Menu</mat-toolbar>
+    <mat-nav-list>
+      <a (click)="closeSidenav()" mat-list-item routerLink="/meals">Meals</a>
+      <a (click)="closeSidenav()" mat-list-item routerLink="#">Meal Planner</a>
+      <a (click)="closeSidenav()" mat-list-item routerLink="#">Pantry</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Open sidenav"
+        mat-icon-button
+        (click)="openSidenav()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Open side nav menu icon">menu</mat-icon>
+      </button>
+      <a id="home-anchor" (click)="closeSidenav()" routerLink="/"><span>Pantry Buddy</span></a>
+    </mat-toolbar>
+    <!--  Content goes here and below -->
+    <mat-card>
+      <router-outlet></router-outlet>
+    </mat-card>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,27 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+}
+
+#home-anchor {
+  color: white ;
+  text-decoration: none ;
+    span {
+      color: white ;
+      text-decoration: none ;
+    }
+}
+
+mat-toolbar {
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+}
