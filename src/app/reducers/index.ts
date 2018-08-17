@@ -32,7 +32,7 @@ import {
     ActionReducer,
     MetaReducer,
   } from '@ngrx/store';
-  import { environment } from '../../environments/environment';
+  import { environment } from 'environments/environment';
   import * as fromRouter from '@ngrx/router-store';
 
   /**
@@ -49,7 +49,7 @@ import {
    * notation packages up all of the exports into a single object.
    */
   
-  import * as fromLayout from '../core/reducers/layout.reducer';
+  import * as fromLayout from '@app/core/reducers/layout.reducer';
   
   /**
    * As mentioned, we treat each reducer like a table in a database. This means

@@ -3,8 +3,8 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
-import *  as fromRoot from '../reducers';
-import * as LayoutActions from '../core/actions/layout.actions';
+import *  as fromRoot from '@app/reducers';
+import * as LayoutActions from '@app/core/actions/layout.actions';
 import { MatSidenav } from '@angular/material';
 import { ChangeDetectionStrategy } from '@angular/core';
 

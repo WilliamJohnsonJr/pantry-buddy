@@ -1,4 +1,4 @@
-import { reducer, initialState } from './meal.reducer';
+import { reducer, initialState } from '@app/meals/reducers/meal.reducer';
 
 describe('Meal Reducer', () => {
   describe('unknown action', () => {

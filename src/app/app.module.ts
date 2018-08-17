@@ -3,26 +3,28 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
-import { MyMaterialModule } from './my-material/my-material.module';
+import { MyMaterialModule } from '@app/my-material/my-material.module';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule } from '@app/app-routing.module';
 
 // Tokens
-import { BASE_API_ENDPOINT } from './app.tokens';
+import { BASE_API_ENDPOINT } from '@app/app.tokens';
 
 // Interceptors
-import { httpInterceptorProviders } from './interceptors';
+import { httpInterceptorProviders } from '@app/interceptors';
 
 // Reducers
 
 // Components
-import { AppComponent } from './app.component';
-import { AppNavShellComponent } from './app-nav-shell/app-nav-shell.component';
-import { PageNotFoundComponent } from './core/components/page-not-found/page-not-found.component';
-import { HomeComponent } from './core/components/home/home.component';
-import { reducers, metaReducers } from './reducers';
+import { AppComponent } from '@app/app.component';
+import { AppNavShellComponent } from '@app/app-nav-shell/app-nav-shell.component';
+import { PageNotFoundComponent } from '@app/core/components/page-not-found/page-not-found.component';
+import { HomeComponent } from '@app/core/components/home/home.component';
+import { reducers, metaReducers } from '@app/reducers';
+import { MealListComponent } from '@app/meals/components/meal-list/meal-list.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -36,6 +38,7 @@ import { reducers, metaReducers } from './reducers';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     AppRoutingModule,
     MyMaterialModule,
     LayoutModule,
@@ -45,7 +48,7 @@ import { reducers, metaReducers } from './reducers';
       called to create the next state.
     */
     StoreModule.forRoot(reducers, { metaReducers }),
-    EffectsModule.forRoot([]), // Place effects here
+    EffectsModule.forRoot([]), // Place effects here or by importing EffectsModule.forFeature in feature modules
     StoreDevtoolsModule.instrument({ maxAge: 15, name: 'Pantry Buddy' }),
 ],
 providers: [

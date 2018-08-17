@@ -9,8 +9,8 @@ import {
     createFeatureSelector,
     ActionReducerMap,
   } from '@ngrx/store';
-  import * as fromMeals from './meal.reducer';
-  import * as fromRoot from '../../reducers';
+  import * as fromMeals from '@app/meals/reducers/meal.reducer';
+  import * as fromRoot from '@app/reducers';
   
   export interface MealsState {
     meals: fromMeals.State;
@@ -105,10 +105,10 @@ import {
 //     (state: MealsState) => state.collection
 //   );
   
-  export const isSelectedMealInList = createSelector(
-    getMealIds,
-    getSelectedMealId,
-    (ids, selected) => {
-      return ids.indexOf(selected) > -1;
-    }
-  );
+  // export const isSelectedMealInList = createSelector(
+  //   getMealIds,
+  //   getSelectedMealId,
+  //   (ids: Array<number | string>, selected) => {
+  //       return (ids.indexOf(selected) > -1);
+  //   }
+  // );

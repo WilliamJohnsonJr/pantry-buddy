@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import * as fromMeals from '../../reducers';
+import * as fromMeals from '@app/meals/reducers';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Meal } from '../../models/meal.model';
+import { Meal } from '@app/meals/models/meal.model';
+import * as MealActions from '@app/meals/actions/meal.actions'
 
 @Component({
   selector: 'meal-list',
@@ -17,7 +18,7 @@ export class MealListComponent implements OnInit {
 
   ngOnInit () {
     this.meals$ = this.store.pipe(select(fromMeals.getAllMeals));
-    this.store.dispatch(new LoadMeals());
+    this.store.dispatch(new MealActions.LoadMealsRequest());
   }
 
   /*

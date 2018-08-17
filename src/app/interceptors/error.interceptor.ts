@@ -7,7 +7,7 @@ import { tap, catchError } from 'rxjs/operators';
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler):
-    Observable<HttpEvent<any>> {
+    Observable<any> { // TODO: Fix type check here.
     return next.handle(req).pipe(
             tap(event => {}),
             catchError((err: HttpErrorResponse) => {

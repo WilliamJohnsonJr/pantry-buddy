@@ -1,8 +1,10 @@
 import { Action } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
-import { Meal } from '../models/meal.model';
+import { Meal } from '@app/meals/models/meal.model';
 
 export enum MealActionTypes {
+  LoadMealsRequest = '[Meal] Load Meals Request',
+  LoadMealsRequestFail = '[Meal] Load Meals Request Fail',
   LoadMeals = '[Meal] Load Meals',
   AddMeal = '[Meal] Add Meal',
   UpsertMeal = '[Meal] Upsert Meal',
@@ -15,10 +17,19 @@ export enum MealActionTypes {
   ClearMeals = '[Meal] Clear Meals'
 }
 
+export class LoadMealsRequest implements Action {
+  readonly type = MealActionTypes.LoadMealsRequest;
+  constructor(public payload = null){}
+}
+
+export class LoadMealsRequestFail implements Action {
+  readonly type = MealActionTypes.LoadMealsRequestFail;
+  constructor(public payload: {error: string}){}
+}
+
 export class LoadMeals implements Action {
   readonly type = MealActionTypes.LoadMeals;
-
-  constructor(public payload: { meals: Meal[] }) {}
+  constructor(public payload: {meals: Meal[]}){}
 }
 
 export class AddMeal implements Action {
@@ -74,7 +85,9 @@ export class ClearMeals implements Action {
 }
 
 export type MealActions =
- LoadMeals
+| LoadMealsRequest
+| LoadMealsRequestFail
+ | LoadMeals
  | AddMeal
  | UpsertMeal
  | AddMeals
