@@ -2,7 +2,7 @@
 <mat-list>
     <a mat-list-item
       [routerLink]="['/meals', meal.id]"
-      *ngFor="let meal of meals$ | async; trackBy:trackById"
+      *ngFor="let meal of meals; trackBy:trackById"
       title="View {{meal.name}} details">
       <h3 mat-line>{{meal.name}}</h3>
     </a>

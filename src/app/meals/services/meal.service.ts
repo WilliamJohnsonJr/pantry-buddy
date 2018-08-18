@@ -25,7 +25,7 @@ export class MealService {
   }
 
   getMeals(): Observable<Meal[]> {
-    return this.http.get<MealHttp[]>(`${this.baseApiEndpoint}meaie`).pipe(
+    return this.http.get<MealHttp[]>(`${this.baseApiEndpoint}meals`).pipe(
       map((meals: MealHttp[]): Meal[] => {
 
         // Normalizes data and returns normalized array rather than array of nested objects

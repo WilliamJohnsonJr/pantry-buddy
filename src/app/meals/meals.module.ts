@@ -8,6 +8,7 @@ import { reducers } from '@app/meals/reducers';
 import { MealEffects } from '@app/meals/effects/meal.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
+import { MealListContainerComponent } from './container-components/meal-list-container/meal-list-container.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { HttpClientModule } from '@angular/common/http';
     StoreModule.forFeature('meals', reducers),
     EffectsModule.forFeature([MealEffects])
   ],
-  declarations: [MealListComponent]
+  declarations: [MealListComponent, MealListContainerComponent]
 })
 export class MealsModule { }
