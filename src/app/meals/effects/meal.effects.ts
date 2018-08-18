@@ -12,6 +12,7 @@ import {
 } from '@app/meals/actions/meal.actions';
 import { MealService } from '@app/meals/services/meal.service';
 import { LoadMeals } from '@app/meals/actions/meal.actions';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class MealEffects {
@@ -32,7 +33,9 @@ export class MealEffects {
     switchMap(() =>
       this.mealService.getMeals().pipe(
         map((meals: Meal[]) => new LoadMeals({meals: meals})),
-        catchError(error => of(new LoadMealsRequestFail(error)))
+        catchError((error: HttpErrorResponse) => {
+         return of(new LoadMealsRequestFail({error: error.status + ' - ' + error.message}))
+        })
       )
     )
   );
