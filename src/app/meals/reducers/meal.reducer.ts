@@ -47,6 +47,13 @@ export function reducer(
       return adapter.addOne(action.payload.meal, state);
     }
 
+    case MealActionTypes.SelectMealById: {
+      return {
+        ...state,
+        selectedMealId: action.payload.id
+      }
+    }
+
     case MealActionTypes.UpsertMeal: {
       return adapter.upsertOne(action.payload.meal, state);
     }
@@ -91,6 +98,10 @@ export function reducer(
     }
   }
 }
+
+export const getAllMealsLoaded = (state: State) => state.allMealsLoaded;
+
+export const getLoading = (state: State) => state.loading;
 
 export const getSelectedId = (state: State) => state.selectedMealId;
 

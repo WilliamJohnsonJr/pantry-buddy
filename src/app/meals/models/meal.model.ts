@@ -1,3 +1,7 @@
 export interface Meal {
-  id: string;
+  id: number;
+  name: string;
+  imageUrl: string;
+  ingredientQuantities: number[]; // array of Ingredient ids
+  recipe: string;
 }

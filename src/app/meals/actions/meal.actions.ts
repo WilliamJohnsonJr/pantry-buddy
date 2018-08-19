@@ -6,6 +6,7 @@ export enum MealActionTypes {
   LoadMealsRequest = '[Meal] Load Meals Request',
   LoadMealsRequestFail = '[Meal] Load Meals Request Fail',
   LoadMeals = '[Meal] Load Meals',
+  SelectMealById = '[Meal] Select Meal By Id',
   AddMeal = '[Meal] Add Meal',
   UpsertMeal = '[Meal] Upsert Meal',
   AddMeals = '[Meal] Add Meals',
@@ -30,6 +31,11 @@ export class LoadMealsRequestFail implements Action {
 export class LoadMeals implements Action {
   readonly type = MealActionTypes.LoadMeals;
   constructor(public payload: {meals: Meal[]}){}
+}
+
+export class SelectMealById implements Action {
+  readonly type = MealActionTypes.SelectMealById;
+  constructor(public payload: {id: number}){}
 }
 
 export class AddMeal implements Action {
@@ -88,6 +94,7 @@ export type MealActions =
 | LoadMealsRequest
 | LoadMealsRequestFail
  | LoadMeals
+ | SelectMealById
  | AddMeal
  | UpsertMeal
  | AddMeals

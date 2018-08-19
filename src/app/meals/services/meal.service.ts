@@ -15,11 +15,13 @@ import { normalize } from 'normalizr';
 export class MealService {
   constructor(private http: HttpClient, @Inject(BASE_API_ENDPOINT) private baseApiEndpoint){}
 
-  getMeal(id: string): Observable<Meal> {
-    return this.http.get<Meal>(`${this.baseApiEndpoint}meals/${id}`).pipe(
+  getMeal(id: number): Observable<Meal> {
+    return this.http.get<MealHttp>(`${this.baseApiEndpoint}meals/${id}`).pipe(
       map(meal => {
-        meal.id = meal.id;
-        return meal;
+        // Normalizes data and returns normalized array rather than array of nested objects
+        const normalizedData = normalize({meals: meal}, mealsSchema);
+        const dataArray = normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);
+        return dataArray[1];
       })
     )
   }
