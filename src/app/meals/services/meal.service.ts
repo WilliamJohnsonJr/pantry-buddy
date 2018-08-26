@@ -8,6 +8,7 @@ import { Meal } from '@app/meals/models/meal.model';
 import { MealHttp } from '@app/meals/models/meal-http.model';
 import { mealsSchema } from '@app/meals/schemas/meal-schemas';
 import { normalize } from 'normalizr';
+import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,21 +21,22 @@ export class MealService {
       map(meal => {
         // Normalizes data and returns normalized array rather than array of nested objects
         const normalizedData = normalize({meals: meal}, mealsSchema);
-        const dataArray = normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);      
+        const dataArray = normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);
         return dataArray[1];
       })
     )
   }
 
-  getMeals(): Observable<Meal[]> {
+  getMeals(): Observable<{meals: Meal[], ingredientQuantities: IngredientQuantity[]}> {
     return this.http.get<MealHttp[]>(`${this.baseApiEndpoint}meals`).pipe(
-      map((meals: MealHttp[]): Meal[] => {
-
+      map((meals: MealHttp[]): {meals: Meal[], ingredientQuantities: IngredientQuantity[]} => {
         // Normalizes data and returns normalized array rather than array of nested objects
         const normalizedData = normalize({meals: meals}, mealsSchema);
-        console.log('MEALS DATA');
-        console.log(normalizedData);
-        return normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);
+        const mealsData = normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);
+        // We have to return an array to LoadIngredientQuantities action, so we run through the normalized
+        // ingredientQuantities object using Object.keys and convert it to an array of IngredientQuantity objects.
+        const ingredientQuantitiesData = Object.keys(normalizedData.entities.ingredientQuantities).map(key => normalizedData.entities.ingredientQuantities[key]);
+        return {meals: mealsData, ingredientQuantities: ingredientQuantitiesData};
       })
     )
   }

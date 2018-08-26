@@ -29,10 +29,12 @@ import {
     ActionReducerMap,
   } from '@ngrx/store';
   import * as fromMeals from '@app/meals/reducers/meal.reducer';
+  import * as fromIngredientQuantities from '@app/meals/reducers/ingredient-quantity.reducer';
   import * as fromRoot from '@app/reducers';
   
   export interface MealsState {
     meals: fromMeals.State;
+    ingredientQuantities: fromIngredientQuantities.State;
   }
   
   export interface State extends fromRoot.State {
@@ -41,6 +43,7 @@ import {
   
   export const reducers: ActionReducerMap<MealsState> = {
     meals: fromMeals.reducer,
+    ingredientQuantities: fromIngredientQuantities.reducer
   };
   
   /**
