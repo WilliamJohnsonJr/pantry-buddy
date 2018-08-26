@@ -4,6 +4,7 @@ import { MealActions, MealActionTypes } from '@app/meals/actions/meal.actions';
 
 export interface State extends EntityState<Meal> {
   selectedMealId: number | null;
+  selectedMealLoaded: boolean;
   allMealsLoaded: boolean;
   loading: boolean;
   error: string | null;
@@ -16,6 +17,7 @@ export const adapter: EntityAdapter<Meal> = createEntityAdapter<Meal>({
 
 export const initialState: State = adapter.getInitialState({
   selectedMealId: null,
+  selectedMealLoaded: false,
   allMealsLoaded: false,
   loading: false,
   error: null
@@ -43,8 +45,28 @@ export function reducer(
       }
     }
 
+    case MealActionTypes.LoadMealRequest: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+
+    case MealActionTypes.LoadMealRequestFail: {
+      return {
+        ...state,
+        loading: false,
+        selectedMealLoaded: false,
+        selectedMealId: null,
+        error: action.payload.error
+      }
+    }
+
     case MealActionTypes.AddMeal: {
-      return adapter.addOne(action.payload.meal, state);
+      return adapter.addOne(action.payload.meal, {...state,
+        selectedMealLoaded: true,
+        loading: false
+      });
     }
 
     case MealActionTypes.SelectMealById: {
@@ -100,6 +122,8 @@ export function reducer(
 }
 
 export const getAllMealsLoaded = (state: State) => state.allMealsLoaded;
+
+export const getSelectedMealLoaded = (state: State) => state.selectedMealLoaded;
 
 export const getLoading = (state: State) => state.loading;
 

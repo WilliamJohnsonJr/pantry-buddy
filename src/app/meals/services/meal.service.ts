@@ -16,13 +16,16 @@ import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model'
 export class MealService {
   constructor(private http: HttpClient, @Inject(BASE_API_ENDPOINT) private baseApiEndpoint){}
 
-  getMeal(id: number): Observable<Meal> {
+  getMeal(id: number): Observable<{meal: Meal, ingredientQuantities: IngredientQuantity[]}> {
     return this.http.get<MealHttp>(`${this.baseApiEndpoint}meals/${id}`).pipe(
       map(meal => {
         // Normalizes data and returns normalized array rather than array of nested objects
-        const normalizedData = normalize({meals: meal}, mealsSchema);
-        const dataArray = normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);
-        return dataArray[1];
+        const normalizedData = normalize({meals: [meal]}, mealsSchema);
+        const mealDataArray = normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);
+        // We have to return an array to LoadIngredientQuantities action, so we run through the normalized
+        // ingredientQuantities object using Object.keys and convert it to an array of IngredientQuantity objects.
+        const ingredientQuantitiesDataArray = Object.keys(normalizedData.entities.ingredientQuantities).map(key => normalizedData.entities.ingredientQuantities[key]);
+        return {meal: mealDataArray[0], ingredientQuantities: ingredientQuantitiesDataArray};
       })
     )
   }

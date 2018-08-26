@@ -91,6 +91,16 @@ import {
     getMealEntitiesState,
     fromMeals.getAllMealsLoaded
   )
+
+  export const getSelectedMealIdParentSelector = createSelector(
+    getMealEntitiesState,
+    fromMeals.getSelectedId
+  )
+
+  export const getSelectedMealLoadedParentSelector = createSelector(
+    getMealEntitiesState,
+    fromMeals.getSelectedMealLoaded
+  )
   
   /**
    * Adapters created with @ngrx/entity generate

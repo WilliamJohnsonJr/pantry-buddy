@@ -12,9 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MealDetailsContainerComponent implements OnInit {
   constructor(private store: Store<fromMeals.State>, private route: ActivatedRoute) {}
-  meal$: Observable<Meal>
-  ngOnInit() {
-    this.meal$ = this.store.pipe(select(fromMeals.getSelectedMeal));
-  }
+  meal$: Observable<Meal> = this.store.pipe(select(fromMeals.getSelectedMeal));
+  ngOnInit() {}
 
 }

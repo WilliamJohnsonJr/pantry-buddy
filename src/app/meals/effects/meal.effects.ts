@@ -5,20 +5,16 @@ import { defer, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 
 import { Meal } from '@app/meals/models/meal.model';
-import {
-  AddMeal,
-  MealActionTypes,
-  LoadMealsRequestFail,
-} from '@app/meals/actions/meal.actions';
+
 import { MealService } from '@app/meals/services/meal.service';
 import { LoadMeals } from '@app/meals/actions/meal.actions';
 import * as fromMeals from '@app/meals/reducers';
 import { HttpErrorResponse } from '@angular/common/http';
-import { getAllMealsLoadedParentSelector } from '../reducers/index';
 import { Noop } from '@app/core/actions/util.actions';
-import { LoadMealsRequest } from '../actions/meal.actions';
+import * as MealActions from '../actions/meal.actions';
 import { LoadIngredientQuantities } from '@app/meals/actions/ingredient-quantity.actions';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
+import { MealActionTypes } from '../actions/meal.actions';
 
 @Injectable()
 export class MealEffects {
@@ -49,11 +45,35 @@ export class MealEffects {
             
           ]),
           catchError((error: HttpErrorResponse) => {
-           return of(new LoadMealsRequestFail({error: error.status + ' - ' + error.message}))
+           return of(new MealActions.LoadMealsRequestFail({error: error.status + ' - ' + error.message}))
           })
         )))
     )
   );
+
+  // This is a splitter effect that, upon successful load, selects the meal, loads its ingredient quantities,
+  // and adds the meal to the store. If meal is already in store, Noop.
+  @Effect()
+  loadMealRequestEffect$: Observable<Action> = this.actions$.pipe(
+    ofType(MealActionTypes.LoadMealRequest),
+    switchMap((action: MealActions.LoadMealRequest) => 
+      this.store.pipe(
+        select(fromMeals.isSelectedMealInList),
+        switchMap(isInList => !isInList 
+          ?  this.mealService.getMeal(action.payload.id).pipe(
+            mergeMap((mealPayload: {meal: Meal, ingredientQuantities: IngredientQuantity[]}) => [
+              new LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
+              new MealActions.AddMeal({meal: mealPayload.meal})
+            ])
+          )
+          : of(new Noop())
+          ),
+          catchError((error: HttpErrorResponse) => {
+            return of(new MealActions.LoadMealRequestFail({error: error.status + ' - ' + error.message}))
+           })
+        )
+      )
+    )
 
 //   @Effect()
 //   addMealToMeal$: Observable<Action> = this.actions$.pipe(

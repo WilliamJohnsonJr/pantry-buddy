@@ -52,9 +52,9 @@ export class MealExistsGuard implements CanActivate {
    * of the collection state to turn `true`, emitting one time once loading
    * has finished.
    */
-  waitForCollectionToLoad(): Observable<boolean> {
+  waitForMealToLoad(): Observable<boolean> {
     return this.store.pipe(
-      select(fromMeals.getAllMealsLoadedParentSelector),
+      select(fromMeals.getSelectedMealLoadedParentSelector),
       filter(loaded => loaded),
       take(1)
     );
@@ -79,8 +79,10 @@ export class MealExistsGuard implements CanActivate {
   hasMealInApi(id: number): Observable<boolean> {
     return this.mealService.getMeal(id).pipe(
       map((meal: Meal) => new MealActions.AddMeal({meal: meal})),
-      tap((action: MealActions.AddMeal) => this.store.dispatch(action)),
-      map(meal => !!meal),
+      tap((action: MealActions.AddMeal) => {
+        this.store.dispatch(action);
+      }),
+      map((mealAction: MealActions.AddMeal) => !!mealAction.payload.meal),
       catchError(() => {
         this.router.navigate(['/404']);
         return of(false);
@@ -99,7 +101,6 @@ export class MealExistsGuard implements CanActivate {
         if (inStore) {
           return of(inStore);
         }
-
         return this.hasMealInApi(id);
       })
     );
@@ -123,11 +124,11 @@ export class MealExistsGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean  {
     let id: number = +next.paramMap.get('id');
-    // Select the meal.
+    // We start by updating the store so that the ID in the route is the ID of our selected meal.
     this.store.dispatch(new MealActions.SelectMealById({id: id}));
     // We must call LoadMealsRequest here for this.waitForCollectionToLoad to ever fire.
-    this.store.dispatch(new MealActions.LoadMealsRequest());
-    return this.waitForCollectionToLoad().pipe(
+    this.store.dispatch(new MealActions.LoadMealRequest({id: id}));
+    return this.waitForMealToLoad().pipe(
       switchMap(() => this.hasMeal(+next.params['id']))
     );
   }
