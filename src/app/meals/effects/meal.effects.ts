@@ -15,6 +15,7 @@ import * as MealActions from '../actions/meal.actions';
 import { LoadIngredientQuantities } from '@app/meals/actions/ingredient-quantity.actions';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
 import { MealActionTypes } from '../actions/meal.actions';
+import { getSelectedMealParentSelector } from '../reducers/index';
 
 @Injectable()
 export class MealEffects {
@@ -36,7 +37,7 @@ export class MealEffects {
       this.store.pipe(
         select(fromMeals.getAllMealsLoadedParentSelector),
         // If meals already loaded, Noop. Else, get meals from server and emit resulting actions.
-        switchMap(loaded => loaded ? of(new Noop()) : this.mealService.getMeals().pipe(
+        switchMap(loaded => loaded ? of(new MealActions.MealsAlreadyLoaded()) : this.mealService.getMeals().pipe(
           mergeMap((mealPayload: {meals: Meal[], ingredientQuantities: IngredientQuantity[]}) => [
             // Has to come first so that loaded flag is false. Otherwise the Noop action interrupts it.
             new LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
@@ -66,7 +67,7 @@ export class MealEffects {
               new MealActions.AddMeal({meal: mealPayload.meal})
             ])
           )
-          : of(new Noop())
+          : of (new MealActions.MealAlreadyLoaded())
           ),
           catchError((error: HttpErrorResponse) => {
             return of(new MealActions.LoadMealRequestFail({error: error.status + ' - ' + error.message}))

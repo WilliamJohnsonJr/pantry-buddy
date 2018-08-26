@@ -1,3 +1,7 @@
 export interface IngredientQuantity {
-  id: string;
+  id: number;
+  ingredientId: number;
+  text: string;
+  mealId: number;
+  quantity: number;
 }

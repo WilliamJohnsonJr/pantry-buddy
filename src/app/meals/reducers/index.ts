@@ -81,6 +81,11 @@ import {
     getMealsState,
     state => state.meals
   );
+
+  export const getIngredientQuantityEntitiesState = createSelector(
+    getMealsState,
+    state => state.ingredientQuantities
+  )
   
   export const getSelectedMealId = createSelector(
     getMealEntitiesState,
@@ -95,6 +100,11 @@ import {
   export const getSelectedMealIdParentSelector = createSelector(
     getMealEntitiesState,
     fromMeals.getSelectedId
+  )
+
+  export const getSelectedMealParentSelector = createSelector(
+    getMealEntitiesState,
+    fromMeals.getSelectedMeal
   )
 
   export const getSelectedMealLoadedParentSelector = createSelector(
@@ -124,6 +134,21 @@ import {
       return selectedId && entities[selectedId];
     }
   );
+
+  export const {
+    selectIds: getIngredientQuantityIds,
+    selectEntities: getIngredientQuantityEntities,
+    selectAll: getAllIngredientQuantities,
+    selectTotal: getTotalIngredientQuantities
+  } = fromIngredientQuantities.adapter.getSelectors(getIngredientQuantityEntitiesState);
+
+  export const getIngredientQuantitiesForSelectedMeal = createSelector(
+    getIngredientQuantityEntities,
+    getSelectedMealId,
+    (ingredientQuantities, selectedMealId) => {
+      return Object.keys(ingredientQuantities).map(id => ingredientQuantities[id]).filter(entity => entity.mealId === selectedMealId);
+    }
+  )
   
   /**
    * Some selector functions create joins across parts of state. This selector

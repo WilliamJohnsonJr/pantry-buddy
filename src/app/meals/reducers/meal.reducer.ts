@@ -1,6 +1,7 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Meal } from '@app/meals/models/meal.model';
 import { MealActions, MealActionTypes } from '@app/meals/actions/meal.actions';
+import { createSelector } from '@ngrx/store';
 
 export interface State extends EntityState<Meal> {
   selectedMealId: number | null;
@@ -45,6 +46,14 @@ export function reducer(
       }
     }
 
+    case MealActionTypes.MealsAlreadyLoaded: {
+      return {
+        ...state,
+        loading: false,
+        allMealsLoaded: true
+      }
+    }
+
     case MealActionTypes.LoadMealRequest: {
       return {
         ...state,
@@ -59,6 +68,14 @@ export function reducer(
         selectedMealLoaded: false,
         selectedMealId: null,
         error: action.payload.error
+      }
+    }
+
+    case MealActionTypes.MealAlreadyLoaded: {
+      return {
+        ...state,
+        loading: false,
+        selectedMealLoaded: true
       }
     }
 
@@ -124,6 +141,12 @@ export function reducer(
 export const getAllMealsLoaded = (state: State) => state.allMealsLoaded;
 
 export const getSelectedMealLoaded = (state: State) => state.selectedMealLoaded;
+
+export const getSelectedMeal = (state: State) => createSelector(
+  selectEntities,
+  getSelectedId,
+  (entities, id) => {return entities[id]}
+)
 
 export const getLoading = (state: State) => state.loading;
 
