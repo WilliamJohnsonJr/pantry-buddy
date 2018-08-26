@@ -34,6 +34,7 @@ import * as MealActions from '../actions/meal.actions';
 import * as fromMeals from '../reducers';
 import { Meal } from '@app/meals/models/meal.model';
 import { MealService } from '@app/meals/services/meal.service';
+import { LoadMealsRequest } from '../actions/meal.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -60,7 +61,7 @@ export class MealExistsGuard implements CanActivate {
   }
 
   /**
-   * This method checks if a book with the given ID is already registered
+   * This method checks if a meal with the given ID is already registered
    * in the Store
    */
   hasMealInStore(id: number): Observable<boolean> {
@@ -72,7 +73,7 @@ export class MealExistsGuard implements CanActivate {
   }
 
   /**
-   * This method loads a book with the given ID from the API and caches
+   * This method loads a meal with the given ID from the API and caches
    * it in the store, returning `true` or `false` if it was found.
    */
   hasMealInApi(id: number): Observable<boolean> {
@@ -89,7 +90,7 @@ export class MealExistsGuard implements CanActivate {
 
   /**
    * `hasMeal` composes `hasMealInStore` and `hasMealInApi`. It first checks
-   * if the book is in store, and if not it then checks if it is in the
+   * if the meal is in store, and if not it then checks if it is in the
    * API.
    */
   hasMeal(id: number): Observable<boolean> {
@@ -108,7 +109,7 @@ export class MealExistsGuard implements CanActivate {
    * This is the actual method the router will call when our guard is run.
    *
    * Our guard waits for the collection to load, then it checks if we need
-   * to request a book from the API or if we already have it in our cache.
+   * to request a meal from the API or if we already have it in our cache.
    * If it finds it in the cache or in the API, it returns an Observable
    * of `true` and the route is rendered successfully.
    *
@@ -122,7 +123,10 @@ export class MealExistsGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean  {
     let id: number = +next.paramMap.get('id');
+    // Select the meal.
     this.store.dispatch(new MealActions.SelectMealById({id: id}));
+    // We must call LoadMealsRequest here for this.waitForCollectionToLoad to ever fire.
+    this.store.dispatch(new MealActions.LoadMealsRequest());
     return this.waitForCollectionToLoad().pipe(
       switchMap(() => this.hasMeal(+next.params['id']))
     );

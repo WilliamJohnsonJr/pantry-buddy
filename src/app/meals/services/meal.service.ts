@@ -20,7 +20,7 @@ export class MealService {
       map(meal => {
         // Normalizes data and returns normalized array rather than array of nested objects
         const normalizedData = normalize({meals: meal}, mealsSchema);
-        const dataArray = normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);
+        const dataArray = normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);      
         return dataArray[1];
       })
     )
@@ -32,6 +32,8 @@ export class MealService {
 
         // Normalizes data and returns normalized array rather than array of nested objects
         const normalizedData = normalize({meals: meals}, mealsSchema);
+        console.log('MEALS DATA');
+        console.log(normalizedData);
         return normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);
       })
     )
