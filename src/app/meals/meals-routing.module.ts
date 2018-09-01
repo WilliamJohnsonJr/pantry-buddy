@@ -3,6 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { MealListContainerComponent } from "@app/meals/container-components/meal-list-container/meal-list-container.component";
 import { MealDetailsContainerComponent } from "@app/meals/container-components/meal-details-container/meal-details-container.component";
 import { MealExistsGuard } from "@app/meals/guards/meal-exists.guard";
+import { EditMealContainerComponent } from "@app/meals/container-components/edit-meal-container/edit-meal-container.component";
 
 export const routes: Routes = [
   {
@@ -11,7 +12,13 @@ export const routes: Routes = [
   },
   {
     path: ':id',
+    pathMatch: 'full',
     component: MealDetailsContainerComponent,
+    canActivate: [MealExistsGuard]
+  },
+  {
+    path: ':id/edit',
+    component: EditMealContainerComponent,
     canActivate: [MealExistsGuard]
   }
 ];

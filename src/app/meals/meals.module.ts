@@ -11,16 +11,21 @@ import { HttpClientModule } from '@angular/common/http';
 import { MealListContainerComponent } from './container-components/meal-list-container/meal-list-container.component';
 import { MealDetailsContainerComponent } from './container-components/meal-details-container/meal-details-container.component';
 import { MealDetailsComponent } from './components/meal-details/meal-details.component';
+import { EditMealContainerComponent } from './container-components/edit-meal-container/edit-meal-container.component';
+import { EditMealComponent } from './components/edit-meal/edit-meal.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
     MyMaterialModule,
     MealsRoutingModule,
     StoreModule.forFeature('meals', reducers),
     EffectsModule.forFeature([MealEffects])
   ],
-  declarations: [MealListComponent, MealListContainerComponent, MealDetailsContainerComponent, MealDetailsComponent]
+  declarations: [MealListComponent, MealListContainerComponent, MealDetailsContainerComponent, MealDetailsComponent, EditMealContainerComponent, EditMealComponent]
 })
 export class MealsModule { }

@@ -1,0 +1,19 @@
+<form [formGroup]="formGroup" (onSubmit)="onSubmit()">
+    <div>
+      <textarea matInput placeholder="Recipe" name="Receipe" formControlName="Recipe" cols="30" rows="10"></textarea>
+    </div>
+    <ul formArrayName="ingredientQuantities">
+      <li *ngFor="let ingredientQuantity of formGroup.controls['ingredientQuantities'].controls;
+      let x=index">
+        <div class="inline-block">
+          <input type="text" matInput placeholder="Quantity" name="quantity" formControlName="quantity">  
+        </div>
+        <div class="inline-block">
+            <mat-select  placeholder="Ingredient" name="x">
+                <mat-option *ngFor="let ingredient of ingredients" 
+                [value]="ingredient.id">{{ingredient.text}}</mat-option>
+              </mat-select>
+        </div>
+      </li>
+    </ul>
+</form>
