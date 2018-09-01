@@ -3,19 +3,23 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
 import { defer, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
-
-import { Meal } from '@app/meals/models/meal.model';
-
-import { MealService } from '@app/meals/services/meal.service';
-import { LoadMeals } from '@app/meals/actions/meal.actions';
-import * as fromMeals from '@app/meals/reducers';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Noop } from '@app/core/actions/util.actions';
-import * as MealActions from '../actions/meal.actions';
-import { LoadIngredientQuantities } from '@app/meals/actions/ingredient-quantity.actions';
+
+// Models
+import { Meal } from '@app/meals/models/meal.model';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
-import { MealActionTypes } from '../actions/meal.actions';
-import { getSelectedMealParentSelector } from '../reducers/index';
+import { Ingredient } from '@app/meals/models/ingredient.model';
+import { MealHttp } from '@app/meals/models/meal-http.model';
+// Actions
+import * as MealActions from '../actions/meal.actions';
+import * as IngredientQuantityActions from '../actions/ingredient-quantity.actions';
+import * as IngredientActions from '../actions/ingredient.actions'
+
+// Services
+import { MealService } from '@app/meals/services/meal.service';
+
+// Reducers
+import * as fromMeals from '@app/meals/reducers';
 
 @Injectable()
 export class MealEffects {
@@ -32,18 +36,19 @@ export class MealEffects {
 
   @Effect()
   loadMealsRequestEffect$: Observable<Action> = this.actions$.pipe(
-    ofType(MealActionTypes.LoadMealsRequest),
+    ofType(MealActions.MealActionTypes.LoadMealsRequest),
     switchMap(() =>
       this.store.pipe(
         select(fromMeals.getAllMealsLoadedParentSelector),
         // If meals already loaded, Noop. Else, get meals from server and emit resulting actions.
         switchMap(loaded => loaded ? of(new MealActions.MealsAlreadyLoaded()) : this.mealService.getMeals().pipe(
-          mergeMap((mealPayload: {meals: Meal[], ingredientQuantities: IngredientQuantity[]}) => [
-            // Has to come first so that loaded flag is false. Otherwise the Noop action interrupts it.
-            new LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
+          map((mealHttps: MealHttp[]) => this.mealService.normalizeMeals(mealHttps)),
+          mergeMap((mealPayload: {meals: Meal[], ingredientQuantities: IngredientQuantity[], ingredients: Ingredient[]}) => [
+            new IngredientActions.LoadIngredients({ingredients: mealPayload.ingredients}),
+            // Has to come first so that loaded flag is false. Otherwise the MealsAlreadyLoaded action interrupts it.
+            new IngredientQuantityActions.LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
             // Comes second since loaded flag is set in the LoadMeals action.
-            new LoadMeals({meals: mealPayload.meals}),          
-            
+            new MealActions.LoadMeals({meals: mealPayload.meals})
           ]),
           catchError((error: HttpErrorResponse) => {
            return of(new MealActions.LoadMealsRequestFail({error: error.status + ' - ' + error.message}))
@@ -56,14 +61,16 @@ export class MealEffects {
   // and adds the meal to the store. If meal is already in store, Noop.
   @Effect()
   loadMealRequestEffect$: Observable<Action> = this.actions$.pipe(
-    ofType(MealActionTypes.LoadMealRequest),
+    ofType(MealActions.MealActionTypes.LoadMealRequest),
     switchMap((action: MealActions.LoadMealRequest) => 
       this.store.pipe(
         select(fromMeals.isSelectedMealInList),
         switchMap(isInList => !isInList 
           ?  this.mealService.getMeal(action.payload.id).pipe(
-            mergeMap((mealPayload: {meal: Meal, ingredientQuantities: IngredientQuantity[]}) => [
-              new LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
+            map((mealHttp: MealHttp) => this.mealService.normalizeMeal(mealHttp)),
+            mergeMap((mealPayload: {meal: Meal, ingredientQuantities: IngredientQuantity[], ingredients: Ingredient[]}) => [
+              new IngredientActions.LoadIngredients({ingredients: mealPayload.ingredients}),
+              new IngredientQuantityActions.LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
               new MealActions.AddMeal({meal: mealPayload.meal})
             ])
           )
