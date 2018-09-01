@@ -27,13 +27,19 @@ export class MealService {
     const mealDataArray = normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);
     // We have to return an array to LoadIngredientQuantities action, so we run through the normalized
     // ingredientQuantities object using Object.keys and convert it to an array of IngredientQuantity objects.
-    const ingredientsDataArray = Object.keys(normalizedData.entities.ingredientQuantities).map(key => normalizedData.entities.ingredientQuantities[key]).map(ingredientQuantity => ({id: ingredientQuantity.ingredientId, text: ingredientQuantity.text}));
-    const ingredientQuantitiesDataArray = Object.keys(Object.assign({}, normalizedData.entities.ingredientQuantities))
+    
+    const ingredientQuantitiesDataArray = Object.keys(normalizedData.entities.ingredientQuantities)
     .map(key => normalizedData.entities.ingredientQuantities[key]).
     map(ingredientQuantity => {
-      delete ingredientQuantity.text;
-      return ingredientQuantity // prevents duplicate text value from entering data store
+      let clone: any = {...ingredientQuantity};
+      delete clone.text;
+      return clone; // prevents duplicate text property from entering data store
     });
+
+    const ingredientsDataArray = Object.keys(normalizedData.entities.ingredientQuantities)
+    .map(key => normalizedData.entities.ingredientQuantities[key])
+    .map(ingredientQuantity => ({id: ingredientQuantity.ingredientId, text: ingredientQuantity.text}));
+
     return {meal: mealDataArray[0], ingredientQuantities: ingredientQuantitiesDataArray, ingredients: ingredientsDataArray};
   }
 
@@ -47,16 +53,18 @@ export class MealService {
      const mealsData = normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);
      // We have to return an array to LoadIngredientQuantities action, so we run through the normalized
      // ingredientQuantities object using Object.keys and convert it to an array of IngredientQuantity objects.
-     const ingredientsDataArray = Object.keys(normalizedData.entities.ingredientQuantities)
+     const ingredientQuantitiesData = Object.keys(normalizedData.entities.ingredientQuantities)
+     .map(key => normalizedData.entities.ingredientQuantities[key])
+     .map(ingredientQuantity => {
+        let clone: any = {...ingredientQuantity};
+        delete clone.text;
+        return clone;  // prevents duplicate text property from entering data store
+      });
+
+    const ingredientsDataArray = Object.keys(normalizedData.entities.ingredientQuantities)
      .map(key => normalizedData.entities.ingredientQuantities[key])
      .map(ingredientQuantity => ({id: ingredientQuantity.ingredientId, text: ingredientQuantity.text}));
 
-     const ingredientQuantitiesData = Object.keys(Object.assign({},normalizedData.entities.ingredientQuantities))
-     .map(key => normalizedData.entities.ingredientQuantities[key])
-     .map(ingredientQuantity => {
-      delete ingredientQuantity.text;
-      return ingredientQuantity  // prevents duplicate text value from entering data store
-    });;
      return {meals: mealsData, ingredientQuantities: ingredientQuantitiesData, ingredients: ingredientsDataArray};
   }
 

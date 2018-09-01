@@ -6,6 +6,7 @@ import { Meal } from '@app/meals/models/meal.model';
 import * as MealActions from '@app/meals/actions/meal.actions';
 import { ActivatedRoute } from '@angular/router';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
+import { Ingredient } from '@app/meals/models/ingredient.model';
 @Component({
   selector: 'meal-details-container',
   templateUrl: './meal-details-container.component.html',
@@ -16,6 +17,7 @@ export class MealDetailsContainerComponent implements OnInit {
   constructor(private store: Store<fromMeals.State>, private route: ActivatedRoute) {}
   meal$: Observable<Meal> = this.store.pipe(select(fromMeals.getSelectedMeal));
   ingredientQuantities$: Observable<IngredientQuantity[]> = this.store.select(fromMeals.getIngredientQuantitiesForSelectedMeal)
+  ingredients$: Observable<Ingredient[]> = this.store.select(fromMeals.getIngredientsForSelectedMeal)
   ngOnInit() {}
 
 }
