@@ -30,11 +30,13 @@ import {
   } from '@ngrx/store';
   import * as fromMeals from '@app/meals/reducers/meal.reducer';
   import * as fromIngredientQuantities from '@app/meals/reducers/ingredient-quantity.reducer';
+  import * as fromIngredients from '@app/meals/reducers/ingredient.reducer';
   import * as fromRoot from '@app/reducers';
   
   export interface MealsState {
     meals: fromMeals.State;
     ingredientQuantities: fromIngredientQuantities.State;
+    ingredients: fromIngredients.State;
   }
   
   export interface State extends fromRoot.State {
@@ -43,7 +45,8 @@ import {
   
   export const reducers: ActionReducerMap<MealsState> = {
     meals: fromMeals.reducer,
-    ingredientQuantities: fromIngredientQuantities.reducer
+    ingredientQuantities: fromIngredientQuantities.reducer,
+    ingredients: fromIngredients.reducer
   };
   
   /**
@@ -85,6 +88,11 @@ import {
   export const getIngredientQuantityEntitiesState = createSelector(
     getMealsState,
     state => state.ingredientQuantities
+  )
+
+  export const getIngredientEntitiesState = createSelector(
+    getMealsState,
+    state => state.ingredients
   )
   
   export const getSelectedMealId = createSelector(
@@ -147,6 +155,22 @@ import {
     getSelectedMealId,
     (ingredientQuantities, selectedMealId) => {
       return Object.keys(ingredientQuantities).map(id => ingredientQuantities[id]).filter(entity => entity.mealId === selectedMealId);
+    }
+  )
+
+  export const {
+    selectIds: getIngredientIds,
+    selectEntities: getIngredientEntities,
+    selectAll: getAllIngredients,
+    selectTotal: getTotalIngredients
+  } = fromIngredients.adapter.getSelectors(getIngredientEntitiesState);
+
+  export const getIngredientsForSelectedMeal = createSelector(
+    getIngredientEntities,
+    getIngredientQuantitiesForSelectedMeal,
+    (ingredients, ingredientQuantities) => {
+      return ingredientQuantities
+        .map(ingredientQuantity => ingredients[ingredientQuantity.ingredientId])
     }
   )
   
