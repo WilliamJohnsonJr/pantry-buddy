@@ -1,1 +1,5 @@
-<edit-meal></edit-meal>
+<edit-meal
+    [ingredients]="ingredients$ | async"
+    [ingredientQuantities]="ingredientQuantities$ | async"
+    [meal]="meal$ | async"
+></edit-meal>

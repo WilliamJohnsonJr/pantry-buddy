@@ -1,19 +1,51 @@
 <form [formGroup]="formGroup" (onSubmit)="onSubmit()">
     <div>
-      <textarea matInput placeholder="Recipe" name="Receipe" formControlName="Recipe" cols="30" rows="10"></textarea>
+      <mat-form-field>
+          <input type="text" matInput placeholder="Meal Name" name="name" formControlName="name">
+          <mat-error>Required.</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+        <input type="text" matInput placeholder="Image URL" name="imageUrl" formControlName="imageUrl">
+        <mat-error>Required.</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <button type="button" mat-raised-button color="primary" (click)="addIngredientQuantity()">Add Ingredient</button>
     </div>
     <ul formArrayName="ingredientQuantities">
-      <li *ngFor="let ingredientQuantity of formGroup.controls['ingredientQuantities'].controls;
-      let x=index">
-        <div class="inline-block">
-          <input type="text" matInput placeholder="Quantity" name="quantity" formControlName="quantity">  
-        </div>
-        <div class="inline-block">
-            <mat-select  placeholder="Ingredient" name="x">
-                <mat-option *ngFor="let ingredient of ingredients" 
-                [value]="ingredient.id">{{ingredient.text}}</mat-option>
-              </mat-select>
+      <li *ngFor="let ingredientQuantity of ingredientQuantitiesFormArray.controls;
+      let i=index">
+        <div [formGroupName]="i">
+            <div>
+                <mat-form-field>
+                  <input type="text" matInput placeholder="Quantity" name="quantity" formControlName="quantity">  
+                  <mat-error>Required.</mat-error>
+                </mat-form-field>
+              </div>
+              <div>
+                  <mat-form-field>
+                    <mat-select  placeholder="Ingredient" name="ingredientId" formControlName="ingredientId">
+                        <mat-option *ngFor="let ingredient of ingredients" 
+                        [value]="ingredient.id">{{ingredient.text}}</mat-option>
+                    </mat-select>
+                    <mat-error>Required.</mat-error>
+                  </mat-form-field>
+              </div>
+              <div>
+                <button type="button" mat-raised-button color="accent" (click)="removeIngredientQuantity()">
+                  Remove
+                </button>
+              </div>
         </div>
       </li>
     </ul>
+    <div>
+      <mat-form-field>
+          <textarea matInput placeholder="Recipe" name="receipe" formControlName="recipe" cols="30" rows="10"></textarea>
+          <mat-error>Required.</mat-error>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
 </form>
