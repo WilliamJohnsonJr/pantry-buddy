@@ -16,24 +16,23 @@ export class IngredientQuantityAutocompleteComponent implements OnInit {
   @Input() myFormControl: AbstractControl;
   @Input() myPlaceholder: string;
   @ViewChild('myAuto') autocomplete: MatAutocomplete;
-  @Input() options: Ingredient[];
+  @Input() myOptions: Ingredient[] = [];
   filteredOptions: Observable<Ingredient[]>
   
   ngOnInit() {
     this.filteredOptions = this.myFormControl.valueChanges
       .pipe(
         startWith<string | number | null>(''),
-        map(value => value ? this._filter(value) : this.options.slice())
+        map(value => value ? this._filter(value) : this.myOptions.slice())
       );
   }
 
-  displayFn(stringOrId?: string | number): string | undefined {
-    console.log(this.options);
+  displayFn = (stringOrId?: string | number): string | undefined => {
     if (stringOrId) {
       if (typeof stringOrId === 'string') {
         return stringOrId;
       } else if (typeof stringOrId === 'number') {
-        const filteredOptions = this.options.filter(option => option.id === stringOrId);
+        const filteredOptions = this.myOptions.filter(option => option.id === stringOrId);
         return filteredOptions.length ? filteredOptions[0].text : '';
       }
     }
@@ -44,13 +43,11 @@ export class IngredientQuantityAutocompleteComponent implements OnInit {
     if (value) {
       if (typeof value === 'string') {
         const filterValue = value.toLowerCase();
-        return this.options.filter(option => option.text.toLowerCase().indexOf(filterValue) > -1 );
+        return this.myOptions.filter(option => option.text.toLowerCase().indexOf(filterValue) > -1 );
       } else if (typeof value === 'number') {
-        return this.options.filter(option => option.id === value);
+        return this.myOptions.filter(option => option.id === value);
       }
       return [];
-    }
-    
+    } 
   }
-
 }
