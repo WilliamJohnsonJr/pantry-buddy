@@ -15,7 +15,7 @@
       <button type="button" mat-raised-button color="primary" (click)="addIngredientQuantity()">Add Ingredient</button>
     </div>
     <ul formArrayName="ingredientQuantities">
-      <li *ngFor="let ingredientQuantity of ingredientQuantitiesFormArray.controls;
+      <li *ngFor="let ingredientQuantityControl of ingredientQuantitiesFormArray.controls;
       let i=index">
         <div [formGroupName]="i">
             <div>
@@ -24,14 +24,10 @@
                   <mat-error>Required.</mat-error>
                 </mat-form-field>
               </div>
-              <div>
-                  <mat-form-field>
-                    <mat-select  placeholder="Ingredient" name="ingredientId" formControlName="ingredientId">
-                        <mat-option *ngFor="let ingredient of ingredients" 
-                        [value]="ingredient.id">{{ingredient.text}}</mat-option>
-                    </mat-select>
-                    <mat-error>Required.</mat-error>
-                  </mat-form-field>
+              <div>  
+                <ingredient-quantity-autocomplete [options]="ingredients" 
+                [myPlaceholder]="'Ingredient'"
+                [myFormControl]="ingredientQuantityControl['controls'].ingredientId"></ingredient-quantity-autocomplete>    
               </div>
               <div>
                 <button type="button" mat-raised-button color="accent" (click)="removeIngredientQuantity()">

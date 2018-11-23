@@ -14,6 +14,7 @@ import { MealDetailsComponent } from './components/meal-details/meal-details.com
 import { EditMealContainerComponent } from './container-components/edit-meal-container/edit-meal-container.component';
 import { EditMealComponent } from './components/edit-meal/edit-meal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IngredientQuantityAutocompleteComponent } from './components/edit-meal/ingredient-quantity-autocomplete/ingredient-quantity-autocomplete.component';
 
 @NgModule({
   imports: [
@@ -26,6 +27,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     StoreModule.forFeature('meals', reducers),
     EffectsModule.forFeature([MealEffects])
   ],
-  declarations: [MealListComponent, MealListContainerComponent, MealDetailsContainerComponent, MealDetailsComponent, EditMealContainerComponent, EditMealComponent]
+  declarations: [MealListComponent, MealListContainerComponent, MealDetailsContainerComponent, MealDetailsComponent, EditMealContainerComponent, EditMealComponent, IngredientQuantityAutocompleteComponent]
 })
 export class MealsModule { }
