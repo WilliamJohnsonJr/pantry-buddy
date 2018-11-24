@@ -6,6 +6,7 @@ import { Meal } from '@app/meals/models/meal.model';
 import { ActivatedRoute } from '@angular/router';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
 import { Ingredient } from '@app/meals/models/ingredient.model';
+import { UpdateMealRequest } from '@app/meals/actions/meal.actions';
 
 @Component({
   selector: 'edit-meal-container',
@@ -21,4 +22,8 @@ export class EditMealContainerComponent implements OnInit {
   ingredients$: Observable<Ingredient[]> = this.store.select(fromMeals.getIngredientsForSelectedMeal)
 
   ngOnInit(){}
+
+  onSubmit(formValue: Meal) {
+    this.store.dispatch(new UpdateMealRequest({meal: formValue}));
+  }
 }

@@ -8,6 +8,7 @@ export interface State extends EntityState<Meal> {
   selectedMealLoaded: boolean;
   allMealsLoaded: boolean;
   loading: boolean;
+  submitting: boolean;
   error: string | null;
 }
 
@@ -21,6 +22,7 @@ export const initialState: State = adapter.getInitialState({
   selectedMealLoaded: false,
   allMealsLoaded: false,
   loading: false,
+  submitting: false,
   error: null
 });
 
@@ -104,6 +106,13 @@ export function reducer(
     case MealActionTypes.UpsertMeals: {
       return adapter.upsertMany(action.payload.meals, state);
     }
+
+    case MealActionTypes.UpdateMealRequest: {
+      return {
+        ...state,
+        submitting: true
+      }
+    } 
 
     case MealActionTypes.UpdateMeal: {
       return adapter.updateOne(action.payload.meal, state);

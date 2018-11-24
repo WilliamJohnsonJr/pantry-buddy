@@ -6,8 +6,8 @@ import { map, tap } from 'rxjs/operators';
 import { BASE_API_ENDPOINT } from '@app/app.tokens';
 import { Meal } from '@app/meals/models/meal.model';
 import { MealHttp } from '@app/meals/models/meal-http.model';
-import { mealsSchema } from '@app/meals/schemas/meal-schemas';
-import { normalize } from 'normalizr';
+import { mealsSchema, mealSchema } from '@app/meals/schemas/meal-schemas';
+import { normalize, denormalize } from 'normalizr';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
 import { Ingredient } from '../models/ingredient.model';
 
@@ -68,7 +68,8 @@ export class MealService {
      return {meals: mealsData, ingredientQuantities: ingredientQuantitiesData, ingredients: ingredientsDataArray};
   }
 
-  // updateMeal(meal: Meal): Observable<Meal> {
-  //   return this.http.put<Meal>(`${this.baseApiEndpoint}meals/${meal.id}`, meal)
-  // }
+  updateMeal(meal: Meal): Observable<MealHttp> {
+    const mealHttp: MealHttp = denormalize(meal, mealSchema);
+    return this.http.put<MealHttp>(`${this.baseApiEndpoint}meals/${meal.id}`, meal)
+  }
 }

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
 import { defer, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
+import { catchError, map, mergeMap, switchMap, toArray, combineLatest } from 'rxjs/operators';
+import { HttpErrorResponse, HttpEvent } from '@angular/common/http';
 
 // Models
 import { Meal } from '@app/meals/models/meal.model';
@@ -23,6 +23,8 @@ import * as fromMeals from '@app/meals/reducers';
 
 @Injectable()
 export class MealEffects {
+  // CONSTRUCTOR is at bottom of file
+
   /**
    * This effect does not yield any actions back to the store. Set
    * `dispatch` to false to hint to @ngrx/effects that it should
@@ -83,6 +85,24 @@ export class MealEffects {
       )
     )
 
+    @Effect() updateMealRequestEffect$: Observable<Action> = this.actions$.pipe(
+      ofType(MealActions.MealActionTypes.UpdateMealRequest),
+      switchMap((action: MealActions.UpdateMealRequest) => 
+        of(combineLatest([this.mealService.updateMeal(action.payload.meal), of(action)]))
+      ),
+      mergeMap((response: [any, MealActions.UpdateMealRequest]) => {
+        const action: MealActions.UpdateMealRequest = response[1];
+        return [
+        new MealActions.UpdateMeal({meal: {id: action.payload.meal.id, changes: action.payload.meal}}),
+        new IngredientActions.LoadIngredients({ingredients: action.ingredients}),
+        new IngredientQuantityActions.LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
+        new MealActions.AddMeal({meal: mealPayload.meal})
+      ]}),
+      catchError((error: HttpErrorResponse) => {
+        return of(new MealActions.UpdateMealRequestFail({error: error.status + ' - ' + error.message}))
+       })
+    )
+
 //   @Effect()
 //   addMealToMeal$: Observable<Action> = this.actions$.pipe(
 //     ofType<AddMeal>(MealActionTypes.AddMeal),
@@ -107,5 +127,9 @@ export class MealEffects {
 //     )
 //   );
 
-  constructor(private actions$: Actions, private mealService: MealService, private store: Store<fromMeals.State>) {}
+  constructor(
+    private actions$: Actions, 
+    private mealService: MealService, 
+    private store: Store<fromMeals.State>
+    ) {}
 }

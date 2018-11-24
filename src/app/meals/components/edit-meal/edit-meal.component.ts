@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, Output, ChangeDetectionStrategy, AfterViewInit, EventEmitter } from '@angular/core';
 import { Meal } from '@app/meals/models/meal.model';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
 import { Ingredient } from '@app/meals/models/ingredient.model';
@@ -14,6 +14,7 @@ export class EditMealComponent implements OnInit {
   constructor(
     public fb: FormBuilder
   ) { }
+  @Output() submitEvent: EventEmitter<IngredientQuantity[]> = new EventEmitter<IngredientQuantity[]>();
   @Input() meal: Meal;
   @Input() ingredientQuantities: IngredientQuantity[];
   @Input() ingredients: Ingredient[];
@@ -64,7 +65,12 @@ export class EditMealComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.formGroup.value);
+    if (this.formGroup.valid) {
+      console.log('Form Value: ' + JSON.stringify(this.formGroup.value));
+      this.submitEvent.emit(this.formGroup.value);
+    } else {
+      console.error('Invalid fields.');
+    }
   }
   
 }
