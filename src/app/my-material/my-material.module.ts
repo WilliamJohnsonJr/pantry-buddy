@@ -17,8 +17,21 @@ import {
   MatAutocompleteModule
 } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MyAutocompleteComponent } from './my-autocomplete/my-autocomplete.component';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 @NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatAutocompleteModule
+  ],
+  declarations: [
+    MyAutocompleteComponent
+  ],
   exports: [
     MatAutocompleteModule,
     MatButtonModule,
@@ -34,7 +47,8 @@ import { CdkTableModule } from '@angular/cdk/table';
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    CdkTableModule
+    CdkTableModule,
+    MyAutocompleteComponent
   ]
 })
 export class MyMaterialModule { }

@@ -25,9 +25,9 @@
                 </mat-form-field>
               </div>
               <div>  
-                <ingredient-quantity-autocomplete [myOptions]="ingredients" 
+                <my-autocomplete [myOptions]="ingredients" 
                 [myPlaceholder]="'Ingredient'"
-                [myFormControl]="ingredientQuantityControl['controls'].ingredientId"></ingredient-quantity-autocomplete>    
+                [myFormControl]="ingredientQuantityControl['controls'].ingredientId"></my-autocomplete>    
               </div>
               <div>
                 <button type="button" mat-raised-button color="accent" (click)="removeIngredientQuantity()">

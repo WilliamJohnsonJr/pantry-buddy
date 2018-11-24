@@ -2,22 +2,23 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AbstractControl, FormGroup, FormControl, Validators } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
-import { Ingredient } from '../../../models/ingredient.model';
+
 import { MatAutocomplete } from '@angular/material';
+import { IdTextObject } from '@app/my-material/models/id-text-object.model';
 
 @Component({
-  selector: 'ingredient-quantity-autocomplete',
-  templateUrl: './ingredient-quantity-autocomplete.component.html',
-  styleUrls: ['./ingredient-quantity-autocomplete.component.css']
+  selector: 'my-autocomplete',
+  templateUrl: './my-autocomplete.component.html',
+  styleUrls: ['./my-autocomplete.component.css']
 })
-export class IngredientQuantityAutocompleteComponent implements OnInit {
+export class MyAutocompleteComponent implements OnInit {
 
   constructor() { }
   @Input() myFormControl: AbstractControl;
   @Input() myPlaceholder: string;
   @ViewChild('myAuto') autocomplete: MatAutocomplete;
-  @Input() myOptions: Ingredient[] = [];
-  filteredOptions: Observable<Ingredient[]>
+  @Input() myOptions: IdTextObject[] = [];
+  filteredOptions: Observable<IdTextObject[]>
   
   ngOnInit() {
     this.filteredOptions = this.myFormControl.valueChanges
@@ -39,7 +40,7 @@ export class IngredientQuantityAutocompleteComponent implements OnInit {
     return undefined;
   }
 
-  private _filter(value: string | number): Ingredient[] {
+  private _filter(value: string | number): IdTextObject[] {
     if (value) {
       if (typeof value === 'string') {
         const filterValue = value.toLowerCase();
