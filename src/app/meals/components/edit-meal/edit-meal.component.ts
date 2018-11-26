@@ -66,7 +66,6 @@ export class EditMealComponent implements OnInit {
 
   onSubmit() {
     if (this.formGroup.valid) {
-      console.log('Form Value: ' + JSON.stringify(this.formGroup.value));
       this.submitEvent.emit(this.formGroup.value);
     } else {
       console.error('Invalid fields.');

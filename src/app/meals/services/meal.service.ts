@@ -1,21 +1,29 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { BASE_API_ENDPOINT } from '@app/app.tokens';
 import { Meal } from '@app/meals/models/meal.model';
 import { MealHttp } from '@app/meals/models/meal-http.model';
-import { mealsSchema, mealSchema } from '@app/meals/schemas/meal-schemas';
+import { mealsSchema, mealSchema, ingredientQuantitySchema } from '@app/meals/schemas/meal-schemas';
 import { normalize, denormalize } from 'normalizr';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
 import { Ingredient } from '../models/ingredient.model';
+import { IngredientQuantityHttp } from '../models/ingredient-quantity-http.model';
+import { Store, select } from '@ngrx/store';
+import * as fromMeals from '@app/meals/reducers';
+import * as fromIngredientQuantities from '@app/meals/reducers/ingredient-quantity.reducer';
+import {UtilActionTypes} from '@app/core/actions/util.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MealService {
-  constructor(private http: HttpClient, @Inject(BASE_API_ENDPOINT) private baseApiEndpoint){}
+  constructor(
+    private http: HttpClient,
+    @Inject(BASE_API_ENDPOINT) private baseApiEndpoint,
+    private store: Store<fromMeals.State>){}
 
   getMeal(id: number): Observable<MealHttp> {
     return this.http.get<MealHttp>(`${this.baseApiEndpoint}meals/${id}`)
@@ -69,7 +77,14 @@ export class MealService {
   }
 
   updateMeal(meal: Meal): Observable<MealHttp> {
-    const mealHttp: MealHttp = denormalize(meal, mealSchema);
-    return this.http.put<MealHttp>(`${this.baseApiEndpoint}meals/${meal.id}`, meal)
+    this.store.pipe(select(fromMeals.getIngredientQuantitiesForSelectedMeal)).subscribe(
+      ingredientQuantities => {
+        console.log(ingredientQuantities);
+        const tempIngredientQuantities: IngredientQuantityHttp = denormalize({ingredientQuantities: meal.ingredientQuantities}, ingredientQuantitySchema, ingredientQuantities)
+          console.log(tempIngredientQuantities);
+      }
+    );
+    return of(new UtilActionTypes.Noop);
+    // return this.http.put<MealHttp>(`${this.baseApiEndpoint}meals/${meal.id}`, meal)
   }
 }

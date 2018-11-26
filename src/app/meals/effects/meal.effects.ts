@@ -90,17 +90,17 @@ export class MealEffects {
       switchMap((action: MealActions.UpdateMealRequest) => 
         of(combineLatest([this.mealService.updateMeal(action.payload.meal), of(action)]))
       ),
-      mergeMap((response: [any, MealActions.UpdateMealRequest]) => {
-        const action: MealActions.UpdateMealRequest = response[1];
-        return [
-        new MealActions.UpdateMeal({meal: {id: action.payload.meal.id, changes: action.payload.meal}}),
-        new IngredientActions.LoadIngredients({ingredients: action.ingredients}),
-        new IngredientQuantityActions.LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
-        new MealActions.AddMeal({meal: mealPayload.meal})
-      ]}),
-      catchError((error: HttpErrorResponse) => {
-        return of(new MealActions.UpdateMealRequestFail({error: error.status + ' - ' + error.message}))
-       })
+      map(res => res[1]) // TODO: Finish writing logic once updateMeal method completed.
+      // mergeMap((response: [any, MealActions.UpdateMealRequest]) => {
+      //   const action: MealActions.UpdateMealRequest = response[1];
+      //   return [
+      //   new MealActions.UpdateMeal({meal: {id: action.payload.meal.id, changes: action.payload.meal}}),
+      //   new IngredientQuantityActions.LoadIngredientQuantities({ingredientQuantities: action.payload.meal.ingredientQuantities}),
+      //   new MealActions.AddMeal({meal: mealPayload.meal})
+      // ]}),
+      // catchError((error: HttpErrorResponse) => {
+      //   return of(new MealActions.UpdateMealRequestFail({error: error.status + ' - ' + error.message}))
+      //  })
     )
 
 //   @Effect()
