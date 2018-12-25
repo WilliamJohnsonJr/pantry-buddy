@@ -14,7 +14,11 @@ import { normalize, schema } from 'normalizr';
 //   comments: [comment]
 // });
 
-const ingredientQuantitySchema = new schema.Entity('ingredientQuantities');
+const ingredientSchema = new schema.Entity('ingredient');
+
+const ingredientQuantitySchema = new schema.Entity('ingredientQuantities', {
+    ingredient: ingredientSchema
+});
 
 const mealSchema = new schema.Entity('meals', {
     ingredientQuantities: [ingredientQuantitySchema]

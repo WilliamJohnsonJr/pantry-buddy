@@ -2,13 +2,11 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/
 import * as fromMeals from '@app/meals/reducers';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import {map} from 'rxjs/operators';
 import { Meal } from '@app/meals/models/meal.model';
 import { ActivatedRoute } from '@angular/router';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
 import { Ingredient } from '@app/meals/models/ingredient.model';
 import { UpdateMealRequest } from '@app/meals/actions/meal.actions';
-import {denormalize} from 'normalizr';
 
 @Component({
   selector: 'edit-meal-container',
@@ -20,8 +18,8 @@ export class EditMealContainerComponent implements OnInit {
 
   constructor(private store: Store<fromMeals.State>, private route: ActivatedRoute) {}
   meal$: Observable<Meal> = this.store.pipe(select(fromMeals.getSelectedMeal));
-  ingredientQuantities$: Observable<IngredientQuantity[]> = this.store.select(fromMeals.getIngredientQuantitiesForSelectedMeal)
-  ingredients$: Observable<Ingredient[]> = this.store.select(fromMeals.getIngredientsForSelectedMeal)
+  ingredientQuantities$: Observable<IngredientQuantity[]> = this.store.select(fromMeals.getIngredientQuantitiesForSelectedMeal);
+  ingredients$: Observable<Ingredient[]> = this.store.select(fromMeals.getAllIngredients);
 
   ngOnInit(){}
 

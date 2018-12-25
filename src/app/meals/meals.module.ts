@@ -6,6 +6,7 @@ import { MealsRoutingModule } from '@app/meals/meals-routing.module';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from '@app/meals/reducers';
 import { MealEffects } from '@app/meals/effects/meal.effects';
+import { IngredientEffects } from '@app/meals/effects/ingredient.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { HttpClientModule } from '@angular/common/http';
 import { MealListContainerComponent } from './container-components/meal-list-container/meal-list-container.component';
@@ -24,7 +25,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MyMaterialModule,
     MealsRoutingModule,
     StoreModule.forFeature('meals', reducers),
-    EffectsModule.forFeature([MealEffects])
+    EffectsModule.forFeature([MealEffects, IngredientEffects])
   ],
   declarations: [
     MealListComponent,

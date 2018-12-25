@@ -25,6 +25,7 @@ export class EditMealComponent implements OnInit {
     
   ngOnInit() {
     this.formGroup = this.fb.group({
+      id: [this.meal.id],
       name: [this.meal.name, Validators.required],
       imageUrl: [this.meal.imageUrl, Validators.required],
       ingredientQuantities: this.initIngredientQuantities(),
@@ -51,8 +52,10 @@ export class EditMealComponent implements OnInit {
 
   initIngredientQuantity(data?: IngredientQuantity): FormGroup {
     return this.fb.group({
+      id: [data ? data.ingredientId : null],
       ingredientId: [data ? data.ingredientId : null, Validators.required],
-      quantity: [data ? data.quantity : null, Validators.required]
+      quantity: [data ? data.quantity : null, Validators.required],
+      mealId: [this.meal.id]
     })
   }
 

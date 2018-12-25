@@ -6,11 +6,16 @@ import {
     createSelector,
     createFeatureSelector,
     ActionReducerMap,
+    MemoizedSelector,
   } from '@ngrx/store';
   import * as fromMeals from '@app/meals/reducers/meal.reducer';
   import * as fromIngredientQuantities from '@app/meals/reducers/ingredient-quantity.reducer';
   import * as fromIngredients from '@app/meals/reducers/ingredient.reducer';
   import * as fromRoot from '@app/reducers';
+import { Meal } from '../models/meal.model';
+import { EntitySelectors } from '@ngrx/entity/src/models';
+import { IngredientQuantity } from '../models/ingredient-quantity.model';
+import { Ingredient } from '../models/ingredient.model';
   
   export interface MealsState {
     meals: fromMeals.State;
@@ -48,7 +53,7 @@ import {
    * The createFeatureSelector function selects a piece of state from the root of the state object.
    * This is used for selecting feature states that are loaded eagerly or lazily.
    */
-  export const getMealsState = createFeatureSelector<State, MealsState>('meals');
+  export const getMealsState: MemoizedSelector<State, MealsState> = createFeatureSelector<State, MealsState>('meals');
   
   /**
    * Every reducer module exports selector functions, however child reducers
@@ -59,44 +64,54 @@ import {
    * only recompute when arguments change. The created selectors can also be composed
    * together to select different pieces of state.
    */
-  export const getMealEntitiesState = createSelector(
+  export const getMealEntitiesState: MemoizedSelector<State, fromMeals.State> = createSelector(
     getMealsState,
     state => state.meals
   );
 
-  export const getIngredientQuantityEntitiesState = createSelector(
+  export const getIngredientQuantityEntitiesState: MemoizedSelector<State, fromIngredientQuantities.State> = createSelector(
     getMealsState,
     state => state.ingredientQuantities
   )
 
-  export const getIngredientEntitiesState = createSelector(
+  export const getIngredientEntitiesState: MemoizedSelector<State, fromIngredients.State> = createSelector(
     getMealsState,
     state => state.ingredients
   )
   
-  export const getSelectedMealId = createSelector(
+  export const getSelectedMealId: MemoizedSelector<State, number> = createSelector(
     getMealEntitiesState,
     fromMeals.getSelectedId
   );
 
-  export const getAllMealsLoadedParentSelector = createSelector(
+  export const getAllMealsLoadedParentSelector: MemoizedSelector<State, boolean> = createSelector(
     getMealEntitiesState,
     fromMeals.getAllMealsLoaded
   )
 
-  export const getSelectedMealIdParentSelector = createSelector(
+  export const getSelectedMealIdParentSelector: MemoizedSelector<State, number> = createSelector(
     getMealEntitiesState,
     fromMeals.getSelectedId
   )
 
-  export const getSelectedMealParentSelector = createSelector(
+  export const getSelectedMealParentSelector: MemoizedSelector<State, MemoizedSelector<fromMeals.State, Meal>> = createSelector(
     getMealEntitiesState,
     fromMeals.getSelectedMeal
   )
 
-  export const getSelectedMealLoadedParentSelector = createSelector(
+  export const getSelectedMealLoadedParentSelector: MemoizedSelector<State, boolean> = createSelector(
     getMealEntitiesState,
     fromMeals.getSelectedMealLoaded
+  )
+
+  export const getSelectedIngredientId: MemoizedSelector<State, number> = createSelector(
+    getIngredientEntitiesState,
+    fromIngredients.getSelectedId
+  )
+
+  export const getAllIngredientsLoadedParentSelector: MemoizedSelector<State, boolean> = createSelector(
+    getIngredientEntitiesState,
+    fromIngredients.getAllIngredientsLoaded
   )
   
   /**
@@ -112,9 +127,9 @@ import {
     selectEntities: getMealEntities,
     selectAll: getAllMeals,
     selectTotal: getTotalMeals,
-  } = fromMeals.adapter.getSelectors(getMealEntitiesState);
+  }: EntitySelectors<Meal, State> = fromMeals.adapter.getSelectors(getMealEntitiesState);
   
-  export const getSelectedMeal = createSelector(
+  export const getSelectedMeal: MemoizedSelector<State, Meal> = createSelector(
     getMealEntities,
     getSelectedMealId,
     (entities, selectedId) => {
@@ -127,9 +142,9 @@ import {
     selectEntities: getIngredientQuantityEntities,
     selectAll: getAllIngredientQuantities,
     selectTotal: getTotalIngredientQuantities
-  } = fromIngredientQuantities.adapter.getSelectors(getIngredientQuantityEntitiesState);
+  }: EntitySelectors<IngredientQuantity, State> = fromIngredientQuantities.adapter.getSelectors(getIngredientQuantityEntitiesState);
 
-  export const getIngredientQuantitiesForSelectedMeal = createSelector(
+  export const getIngredientQuantitiesForSelectedMeal: MemoizedSelector<State, IngredientQuantity[]> = createSelector(
     getIngredientQuantityEntities,
     getSelectedMealId,
     (ingredientQuantities, selectedMealId) => {
@@ -142,9 +157,9 @@ import {
     selectEntities: getIngredientEntities,
     selectAll: getAllIngredients,
     selectTotal: getTotalIngredients
-  } = fromIngredients.adapter.getSelectors(getIngredientEntitiesState);
+  }: EntitySelectors<Ingredient, State> = fromIngredients.adapter.getSelectors(getIngredientEntitiesState);
 
-  export const getIngredientsForSelectedMeal = createSelector(
+  export const getIngredientsForSelectedMeal: MemoizedSelector<State, Ingredient[]> = createSelector(
     getIngredientEntities,
     getIngredientQuantitiesForSelectedMeal,
     (ingredients, ingredientQuantities) => {
@@ -152,7 +167,8 @@ import {
         .map(ingredientQuantity => ingredients[ingredientQuantity.ingredientId])
     }
   )
-  
+
+
   /**
    * Some selector functions create joins across parts of state. This selector
    * composes the search result IDs to return an array of meals in the store.
@@ -170,9 +186,17 @@ import {
 //     (state: MealsState) => state.collection
 //   );
   
-  export const isSelectedMealInList = createSelector(
+  export const isSelectedMealInList: MemoizedSelector<State, boolean> = createSelector(
     getMealIds,
     getSelectedMealId,
+    (ids: Array<number>, selected) => {
+        return (ids.indexOf(selected) > -1);
+    }
+  );
+
+  export const isSelectedIngredientInList: MemoizedSelector<State, boolean> = createSelector(
+    getIngredientIds,
+    getSelectedIngredientId,
     (ids: Array<number>, selected) => {
         return (ids.indexOf(selected) > -1);
     }

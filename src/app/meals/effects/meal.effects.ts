@@ -20,6 +20,8 @@ import { MealService } from '@app/meals/services/meal.service';
 
 // Reducers
 import * as fromMeals from '@app/meals/reducers';
+import { Noop } from '@app/core/actions/util.actions';
+import { UpdateMeal } from '../actions/meal.actions';
 
 @Injectable()
 export class MealEffects {
@@ -46,7 +48,7 @@ export class MealEffects {
         switchMap(loaded => loaded ? of(new MealActions.MealsAlreadyLoaded()) : this.mealService.getMeals().pipe(
           map((mealHttps: MealHttp[]) => this.mealService.normalizeMeals(mealHttps)),
           mergeMap((mealPayload: {meals: Meal[], ingredientQuantities: IngredientQuantity[], ingredients: Ingredient[]}) => [
-            new IngredientActions.LoadIngredients({ingredients: mealPayload.ingredients}),
+            new IngredientActions.LoadIngredientsFromMeals({ingredients: mealPayload.ingredients}),
             // Has to come first so that loaded flag is false. Otherwise the MealsAlreadyLoaded action interrupts it.
             new IngredientQuantityActions.LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
             // Comes second since loaded flag is set in the LoadMeals action.
@@ -71,7 +73,7 @@ export class MealEffects {
           ?  this.mealService.getMeal(action.payload.id).pipe(
             map((mealHttp: MealHttp) => this.mealService.normalizeMeal(mealHttp)),
             mergeMap((mealPayload: {meal: Meal, ingredientQuantities: IngredientQuantity[], ingredients: Ingredient[]}) => [
-              new IngredientActions.LoadIngredients({ingredients: mealPayload.ingredients}),
+              new IngredientActions.LoadIngredientsFromMeal({ingredients: mealPayload.ingredients}),
               new IngredientQuantityActions.LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
               new MealActions.AddMeal({meal: mealPayload.meal})
             ])
@@ -85,12 +87,40 @@ export class MealEffects {
       )
     )
 
-    @Effect() updateMealRequestEffect$: Observable<Action> = this.actions$.pipe(
+    @Effect() loadEditMealRequestEffect$: Observable<Action> = this.actions$.pipe(
+      ofType(MealActions.MealActionTypes.LoadEditMealRequest),
+      switchMap((action: MealActions.LoadEditMealRequest) => 
+      this.store.pipe(
+        select(fromMeals.isSelectedMealInList),
+        switchMap(isInList => !isInList 
+          ?  this.mealService.getMeal(action.payload.id).pipe(
+            map((mealHttp: MealHttp) => this.mealService.normalizeMeal(mealHttp)),
+            mergeMap((mealPayload: {meal: Meal, ingredientQuantities: IngredientQuantity[], ingredients: Ingredient[]}) => [
+              new IngredientActions.LoadIngredientsRequest(),
+              new IngredientQuantityActions.LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
+              new MealActions.AddMeal({meal: mealPayload.meal})
+            ])
+          )
+          : of (new MealActions.MealAlreadyLoaded())
+          ),
+          catchError((error: HttpErrorResponse) => {
+            return of(new MealActions.LoadMealRequestFail({error: error.status + ' - ' + error.message}))
+           })
+        )
+      )
+    )
+
+    @Effect() updateMealRequestEffect$: Observable<any> = this.actions$.pipe(
       ofType(MealActions.MealActionTypes.UpdateMealRequest),
-      switchMap((action: MealActions.UpdateMealRequest) => 
-        of(combineLatest([this.mealService.updateMeal(action.payload.meal), of(action)]))
-      ),
-      map(res => res[1]) // TODO: Finish writing logic once updateMeal method completed.
+      switchMap((action: MealActions.UpdateMealRequest): Observable<any> => {
+       return this.mealService.updateMeal(action.payload.meal)
+      }),
+      mergeMap((res: [Meal, any, any]) => [
+        new UpdateMeal({meal: {id: res[0].id, changes: res[0]}}),
+        new IngredientQuantityActions.UpsertIngredientQuantities({ingredientQuantities: res[1]}),
+        res[2].subscribe()
+      ])
+      // TODO: Finish writing logic once updateMeal method completed.
       // mergeMap((response: [any, MealActions.UpdateMealRequest]) => {
       //   const action: MealActions.UpdateMealRequest = response[1];
       //   return [

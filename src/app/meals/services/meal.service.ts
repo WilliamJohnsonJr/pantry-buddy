@@ -1,12 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable, of, combineLatest } from 'rxjs';
+import { map, switchMap, mergeMap, toArray } from 'rxjs/operators';
 
 import { BASE_API_ENDPOINT } from '@app/app.tokens';
 import { Meal } from '@app/meals/models/meal.model';
 import { MealHttp } from '@app/meals/models/meal-http.model';
-import { mealsSchema, mealSchema, ingredientQuantitySchema } from '@app/meals/schemas/meal-schemas';
+import { mealsSchema, mealSchema } from '@app/meals/schemas/meal-schemas';
 import { normalize, denormalize } from 'normalizr';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
 import { Ingredient } from '../models/ingredient.model';
@@ -14,7 +14,11 @@ import { IngredientQuantityHttp } from '../models/ingredient-quantity-http.model
 import { Store, select } from '@ngrx/store';
 import * as fromMeals from '@app/meals/reducers';
 import * as fromIngredientQuantities from '@app/meals/reducers/ingredient-quantity.reducer';
-import {UtilActionTypes} from '@app/core/actions/util.actions';
+import {Noop} from '@app/core/actions/util.actions';
+import * as fromIngredients from '@app/meals/reducers/ingredient.reducer';
+import { getIngredientEntitiesState } from '../reducers/index';
+import { IngredientQuantityActionTypes, UpsertIngredientQuantities } from '../actions/ingredient-quantity.actions';
+import { IngredientQuantityActions } from '@app/meals/actions/ingredient-quantity.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +39,7 @@ export class MealService {
     const mealDataArray = normalizedData.result.meals.map(id => normalizedData.entities.meals[id]);
     // We have to return an array to LoadIngredientQuantities action, so we run through the normalized
     // ingredientQuantities object using Object.keys and convert it to an array of IngredientQuantity objects.
-    
+
     const ingredientQuantitiesDataArray = Object.keys(normalizedData.entities.ingredientQuantities)
     .map(key => normalizedData.entities.ingredientQuantities[key]).
     map(ingredientQuantity => {
@@ -76,15 +80,68 @@ export class MealService {
      return {meals: mealsData, ingredientQuantities: ingredientQuantitiesData, ingredients: ingredientsDataArray};
   }
 
-  updateMeal(meal: Meal): Observable<MealHttp> {
-    this.store.pipe(select(fromMeals.getIngredientQuantitiesForSelectedMeal)).subscribe(
-      ingredientQuantities => {
-        console.log(ingredientQuantities);
-        const tempIngredientQuantities: IngredientQuantityHttp = denormalize({ingredientQuantities: meal.ingredientQuantities}, ingredientQuantitySchema, ingredientQuantities)
-          console.log(tempIngredientQuantities);
-      }
-    );
-    return of(new UtilActionTypes.Noop);
-    // return this.http.put<MealHttp>(`${this.baseApiEndpoint}meals/${meal.id}`, meal)
+  updateMeal(meal: Meal): Observable<Meal> {
+    const mealId: number = meal.id;
+    let denormalizedMeal: MealHttp;
+    return combineLatest(
+      [
+      this.store.select(fromMeals.getIngredientQuantitiesForSelectedMeal),
+      this.store.select(fromMeals.getAllIngredients),
+      this.store.select(fromMeals.getSelectedMeal)
+    ]).pipe(
+      map(
+        (res: any) => {
+          const ingredientQuantities: IngredientQuantity[] = res[0];
+          const ingredients: Ingredient[] = res[1];
+          const selectedMeal: Meal = res[2];
+          denormalizedMeal = {
+            ...meal,
+            ingredientQuantities: meal.ingredientQuantities.map(
+              (ingredientQuantity: any) => {
+                const ingredientQuantityHttp: IngredientQuantityHttp = {
+                  ...ingredientQuantity,
+                  text: ingredients.filter(ingredient => ingredient.id === ingredientQuantity.ingredientId)[0].text
+                }
+                
+                return ingredientQuantityHttp;
+              }
+            )
+          }
+          return denormalizedMeal;
+        }),
+        switchMap(denormalizedMeal => {
+          return combineLatest(denormalizedMeal.ingredientQuantities.map(iq => {
+            return iq.id 
+              ? this.http.put<IngredientQuantityHttp>(`${this.baseApiEndpoint}ingredientQuantities/${iq.id}`, iq)
+              : this.http.post<IngredientQuantityHttp>(`${this.baseApiEndpoint}ingredientQuantities`, iq)
+          }))
+        }),
+        switchMap((res: IngredientQuantityHttp[]) => {
+          const existingIngredientQuantityIds: number[] = denormalizedMeal.ingredientQuantities.map(iq => iq.id);
+          const ingredientQuantitiesToAdd: IngredientQuantityHttp[] = res
+            .filter(item => existingIngredientQuantityIds.indexOf(item.id)<0);
+          return ingredientQuantitiesToAdd;
+        }),
+        map((ingredientQuantitiesToAdd: IngredientQuantityHttp[]) => {
+          let updatedIngredientQuantities: IngredientQuantityHttp[] = denormalizedMeal.ingredientQuantities.filter(iq => iq.id);
+          if (ingredientQuantitiesToAdd instanceof Array) {
+            ingredientQuantitiesToAdd.forEach((ingredientQuantity: IngredientQuantityHttp) => updatedIngredientQuantities.push(ingredientQuantity));
+            denormalizedMeal.ingredientQuantities = updatedIngredientQuantities;
+          } else if (ingredientQuantitiesToAdd) {
+            ingredientQuantitiesToAdd = [ingredientQuantitiesToAdd];
+            ingredientQuantitiesToAdd.forEach((ingredientQuantity: IngredientQuantityHttp) => updatedIngredientQuantities.push(ingredientQuantity));
+            denormalizedMeal.ingredientQuantities = updatedIngredientQuantities;
+          }
+          
+          return [
+            meal,
+            updatedIngredientQuantities.map(item=>item).map(iq => {
+              delete iq.text;
+              return iq;
+            }),
+            this.http.put<MealHttp>(`${this.baseApiEndpoint}meals/${mealId}`, denormalizedMeal),
+          ];
+        })
+    )
   }
 }

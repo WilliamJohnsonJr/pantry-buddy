@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
@@ -21,6 +21,7 @@ export class MyAutocompleteComponent implements OnInit {
   filteredOptions: Observable<IdTextObject[]>
   
   ngOnInit() {
+
     this.filteredOptions = this.myFormControl.valueChanges
       .pipe(
         startWith<string | number | null>(''),
@@ -48,7 +49,7 @@ export class MyAutocompleteComponent implements OnInit {
       } else if (typeof value === 'number') {
         return this.myOptions.filter(option => option.id === value);
       }
-      return [];
+      return this.myOptions.slice();
     } 
   }
 }

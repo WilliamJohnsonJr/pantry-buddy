@@ -1,23 +1,22 @@
 /**
- * // This code adapted from the NgRx Example App at https://github.com/ngrx/platform/blob/master/example-app/ under the MIT license
+ * // This code adapted from the NgRx Example App at https://github.com/ngrx/platform/blob/master/example-app/ under the following license:
  * 
  **/
 
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router  } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { Observable, of } from 'rxjs';
-import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { Observable, of, combineLatest } from 'rxjs';
+import { catchError, filter, map, switchMap, take, tap,  } from 'rxjs/operators';
 import * as MealActions from '../actions/meal.actions';
 import * as fromMeals from '../reducers';
 import { Meal } from '@app/meals/models/meal.model';
 import { MealService } from '@app/meals/services/meal.service';
-import { LoadMealsRequest } from '../actions/meal.actions';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MealExistsGuard implements CanActivate {
+export class EditMealGuard implements CanActivate {
   constructor(
     private store: Store<fromMeals.State>,
     private mealService: MealService,
@@ -31,11 +30,19 @@ export class MealExistsGuard implements CanActivate {
    * has finished.
    */
   waitForMealToLoad(): Observable<boolean> {
+      return this.store.pipe(
+        select(fromMeals.getSelectedMealLoadedParentSelector),
+        filter(loaded => loaded),
+        take(1)
+      )
+  }
+
+  waitForIngredientsToLoad(): Observable<boolean> {
     return this.store.pipe(
-      select(fromMeals.getSelectedMealLoadedParentSelector),
-      filter(loaded => loaded),
-      take(1)
-    );
+      select(fromMeals.getAllIngredientsLoadedParentSelector),
+        filter(loaded => loaded),
+        take(1)
+    )
   }
 
   /**
@@ -104,9 +111,10 @@ export class MealExistsGuard implements CanActivate {
     let id: number = +next.paramMap.get('id');
     // We start by updating the store so that the ID in the route is the ID of our selected meal.
     this.store.dispatch(new MealActions.SelectMealById({id: id}));
-    // We must call LoadMealsRequest here for this.waitForCollectionToLoad to ever fire.
-    this.store.dispatch(new MealActions.LoadMealRequest({id: id}));
+    // We must call LoadEditMealsRequest here for this.waitForCollectionToLoad to ever fire.
+    this.store.dispatch(new MealActions.LoadEditMealRequest({id: id}));
     return this.waitForMealToLoad().pipe(
+      switchMap(() => this.waitForIngredientsToLoad()),
       switchMap(() => this.hasMeal(+next.params['id']))
     );
   }

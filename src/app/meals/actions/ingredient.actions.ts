@@ -3,22 +3,82 @@ import { Update } from '@ngrx/entity';
 import { Ingredient } from '../models/ingredient.model';
 
 export enum IngredientActionTypes {
+  LoadIngredientsRequest = '[Ingredient] Load Ingredients Request',
+  LoadIngredientsRequestFail = '[Ingredient] Load Ingredients Request Fail',
   LoadIngredients = '[Ingredient] Load Ingredients',
+  LoadIngredientsFromMeals = '[Meal Effects] Load Ingredients From Meals',
+  LoadIngredientsFromMeal = '[Meal Effects] Load Ingredients From Meal',
+  IngredientsAlreadyLoaded = '[Ingredient] Ingredients Already Loaded',
+  LoadIngredientRequest = '[Ingredient] Load Ingredient Request',
+  LoadIngredientRequestFail = '[Ingredient] Load Ingredient Request Fail',
+  LoadIngredient = '[Ingredient] Load Ingredient',
+  IngredientAlreadyLoaded = '[Ingredient] Ingredient Already Loaded',
+  SelectIngredientById = '[Ingredient] Select Ingredient By Id',
   AddIngredient = '[Ingredient] Add Ingredient',
   UpsertIngredient = '[Ingredient] Upsert Ingredient',
   AddIngredients = '[Ingredient] Add Ingredients',
   UpsertIngredients = '[Ingredient] Upsert Ingredients',
   UpdateIngredient = '[Ingredient] Update Ingredient',
+  UpdateIngredientRequest = '[Edit Ingredient] Update Ingredient',
   UpdateIngredients = '[Ingredient] Update Ingredients',
   DeleteIngredient = '[Ingredient] Delete Ingredient',
   DeleteIngredients = '[Ingredient] Delete Ingredients',
   ClearIngredients = '[Ingredient] Clear Ingredients'
 }
 
+export class LoadIngredientsRequest implements Action {
+  readonly type = IngredientActionTypes.LoadIngredientsRequest;
+  constructor(public payload = null){}
+}
+
+export class LoadIngredientsRequestFail implements Action {
+  readonly type = IngredientActionTypes.LoadIngredientsRequestFail;
+  constructor(public payload: {error: string}){}
+}
+
 export class LoadIngredients implements Action {
   readonly type = IngredientActionTypes.LoadIngredients;
+  constructor(public payload: {ingredients: Ingredient[]}){}
+}
 
-  constructor(public payload: { ingredients: Ingredient[] }) {}
+export class LoadIngredientsFromMeals implements Action {
+  readonly type = IngredientActionTypes.LoadIngredientsFromMeals;
+  constructor(public payload: {ingredients: Ingredient[]}){}
+}
+
+export class LoadIngredientsFromMeal implements Action {
+  readonly type = IngredientActionTypes.LoadIngredientsFromMeal;
+  constructor(public payload: {ingredients: Ingredient[]}){}
+}
+
+export class IngredientsAlreadyLoaded implements Action {
+  readonly type = IngredientActionTypes.IngredientsAlreadyLoaded;
+  constructor(public payload: null = null){}
+}
+
+export class LoadIngredientRequest implements Action {
+  readonly type = IngredientActionTypes.LoadIngredientRequest;
+  constructor(public payload: {id: number}){}
+}
+
+export class LoadIngredientRequestFail implements Action {
+  readonly type = IngredientActionTypes.LoadIngredientRequestFail;
+  constructor(public payload: {error: string}){}
+}
+
+export class LoadIngredient implements Action {
+  readonly type = IngredientActionTypes.LoadIngredient;
+  constructor(public payload: {ingredient: Ingredient}){}
+}
+
+export class IngredientAlreadyLoaded implements Action {
+  readonly type = IngredientActionTypes.IngredientAlreadyLoaded;
+  constructor(public payload: null = null){}
+}
+
+export class SelectIngredientById implements Action {
+  readonly type = IngredientActionTypes.SelectIngredientById;
+  constructor(public payload: {id: number}){}
 }
 
 export class AddIngredient implements Action {
@@ -51,6 +111,11 @@ export class UpdateIngredient implements Action {
   constructor(public payload: { ingredient: Update<Ingredient> }) {}
 }
 
+export class UpdateIngredientRequest implements Action {
+  readonly type = IngredientActionTypes.UpdateIngredientRequest;
+  constructor(public payload: {ingredient: Ingredient}){}
+}
+
 export class UpdateIngredients implements Action {
   readonly type = IngredientActionTypes.UpdateIngredients;
 
@@ -74,13 +139,24 @@ export class ClearIngredients implements Action {
 }
 
 export type IngredientActions =
- LoadIngredients
- | AddIngredient
- | UpsertIngredient
- | AddIngredients
- | UpsertIngredients
- | UpdateIngredient
- | UpdateIngredients
- | DeleteIngredient
- | DeleteIngredients
- | ClearIngredients;
+LoadIngredientsRequest
+| LoadIngredientsRequestFail
+| LoadIngredients
+| LoadIngredientsFromMeals
+| LoadIngredientsFromMeal
+| IngredientsAlreadyLoaded
+| LoadIngredientRequest
+| LoadIngredientRequestFail
+| LoadIngredient
+| IngredientAlreadyLoaded
+| SelectIngredientById
+| AddIngredient
+| UpsertIngredient
+| AddIngredients
+| UpsertIngredients
+| UpdateIngredient
+| UpdateIngredientRequest
+| UpdateIngredients
+| DeleteIngredient
+| DeleteIngredients
+| ClearIngredients;
