@@ -20,8 +20,6 @@ import { MealService } from '@app/meals/services/meal.service';
 
 // Reducers
 import * as fromMeals from '@app/meals/reducers';
-import { Noop } from '@app/core/actions/util.actions';
-import { UpdateMeal } from '../actions/meal.actions';
 
 @Injectable()
 export class MealEffects {
@@ -115,10 +113,9 @@ export class MealEffects {
       switchMap((action: MealActions.UpdateMealRequest): Observable<any> => {
        return this.mealService.updateMeal(action.payload.meal)
       }),
-      mergeMap((res: [Meal, any, any]) => [
-        new UpdateMeal({meal: {id: res[0].id, changes: res[0]}}),
-        new IngredientQuantityActions.UpsertIngredientQuantities({ingredientQuantities: res[1]}),
-        res[2].subscribe()
+      mergeMap((res: [Meal, IngredientQuantity[]]) => [
+        new MealActions.UpdateMeal({meal: {id: res[0].id, changes: res[0]}}),
+        new IngredientQuantityActions.UpsertIngredientQuantities({ingredientQuantities: res[1]})
       ])
       // TODO: Finish writing logic once updateMeal method completed.
       // mergeMap((response: [any, MealActions.UpdateMealRequest]) => {

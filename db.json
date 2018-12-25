@@ -4,12 +4,13 @@
       "id": 1,
       "name": "Peanut Butter Jelly Bash",
       "imageUrl": "https://images.pexels.com/photos/236834/pexels-photo-236834.jpeg?cs=srgb&dl=bread-creamy-food-236834.jpg&fm=jpg",
-      "ingredientQuantities": [{
-        "id": 1,
-        "ingredientId": 1,
-        "quantity": 2,
-        "mealId": 1,
-        "text": "Slice of Wheat Bread"
+      "ingredientQuantities": [
+        {
+          "id": 1,
+          "ingredientId": 1,
+          "quantity": 2,
+          "mealId": 1,
+          "text": "Slice of Wheat Bread"
         },
         {
           "id": 2,

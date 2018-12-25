@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, combineLatest } from 'rxjs';
-import { map, switchMap, mergeMap, toArray } from 'rxjs/operators';
+import { Observable, of, combineLatest, forkJoin } from 'rxjs';
+import { map, switchMap, mergeMap, toArray, take, flatMap } from 'rxjs/operators';
 
 import { BASE_API_ENDPOINT } from '@app/app.tokens';
 import { Meal } from '@app/meals/models/meal.model';
@@ -110,38 +110,88 @@ export class MealService {
           return denormalizedMeal;
         }),
         switchMap(denormalizedMeal => {
-          return combineLatest(denormalizedMeal.ingredientQuantities.map(iq => {
-            return iq.id 
-              ? this.http.put<IngredientQuantityHttp>(`${this.baseApiEndpoint}ingredientQuantities/${iq.id}`, iq)
-              : this.http.post<IngredientQuantityHttp>(`${this.baseApiEndpoint}ingredientQuantities`, iq)
-          }))
+          const iqObjects: IngredientQuantityHttp[] = denormalizedMeal.ingredientQuantities.map(iq => iq );
+          return iqObjects;
         }),
+      
         switchMap((res: IngredientQuantityHttp[]) => {
-          const existingIngredientQuantityIds: number[] = denormalizedMeal.ingredientQuantities.map(iq => iq.id);
-          const ingredientQuantitiesToAdd: IngredientQuantityHttp[] = res
-            .filter(item => existingIngredientQuantityIds.indexOf(item.id)<0);
-          return ingredientQuantitiesToAdd;
+          debugger;
+          return this.addMissingIngredientQuantityIds(denormalizedMeal, res);
         }),
         map((ingredientQuantitiesToAdd: IngredientQuantityHttp[]) => {
-          let updatedIngredientQuantities: IngredientQuantityHttp[] = denormalizedMeal.ingredientQuantities.filter(iq => iq.id);
-          if (ingredientQuantitiesToAdd instanceof Array) {
-            ingredientQuantitiesToAdd.forEach((ingredientQuantity: IngredientQuantityHttp) => updatedIngredientQuantities.push(ingredientQuantity));
-            denormalizedMeal.ingredientQuantities = updatedIngredientQuantities;
-          } else if (ingredientQuantitiesToAdd) {
-            ingredientQuantitiesToAdd = [ingredientQuantitiesToAdd];
-            ingredientQuantitiesToAdd.forEach((ingredientQuantity: IngredientQuantityHttp) => updatedIngredientQuantities.push(ingredientQuantity));
-            denormalizedMeal.ingredientQuantities = updatedIngredientQuantities;
-          }
-          
-          return [
-            meal,
-            updatedIngredientQuantities.map(item=>item).map(iq => {
-              delete iq.text;
-              return iq;
-            }),
-            this.http.put<MealHttp>(`${this.baseApiEndpoint}meals/${mealId}`, denormalizedMeal),
-          ];
+          return this.createNormalizedAndDenormalizedDataItemsToPersistInStoreAndServer(meal, denormalizedMeal, ingredientQuantitiesToAdd);
         })
     )
   }
+
+  /**
+   * @description sendUpdateRequestsForIngredientQuantities is a helper method to update the json-server db
+   * when a meal's Ingredient Quantities change. This would be unnecessary in a true relational db, but since
+   * json-server does not provide any relationships between the JSON objects it stores we handle it here.
+   * @param denormalizedMeal MealHttp
+   */
+  sendUpdateRequestsForIngredientQuantities = (denormalizedMeal) => {
+    const iqObjects: IngredientQuantityHttp[] = denormalizedMeal.ingredientQuantities.map(iq => iq );
+    return iqObjects.map(iq => iq.id ? this.putIngredientQuantity(iq) : this.postIngredientQuantity(iq));
+  }
+
+  /**
+   * @description addMissingIngredientQuantityIds is a helper method to update the json-server db
+   * when a meal's Ingredient Quantities change. This would be unnecessary in a true relational db, but since
+   * json-server does not provide any relationships between the JSON objects it stores we handle it here.
+   * @param denormalizedMeal MealHttp
+   * @param res Array<IngredientQuantityHttp> - response from successful PUT/POST to server.
+   */
+  addMissingIngredientQuantityIds = (denormalizedMeal, res) => {
+    // Finds what ingredientQuantities already have IDs in the requests sent to the server.
+    const existingIngredientQuantityIds: number[] = denormalizedMeal.ingredientQuantities.map(iq => iq.id);
+    // Filters the response to get the ingredientQuantity 
+    const ingredientQuantitiesToAdd: IngredientQuantityHttp[] = res
+      .filter(item => existingIngredientQuantityIds.indexOf(item.id)<0);
+    return ingredientQuantitiesToAdd;
+  }
+
+  createNormalizedAndDenormalizedDataItemsToPersistInStoreAndServer = (meal, denormalizedMeal, ingredientQuantitiesToAdd) => {
+      // Filters the denormalized meal to only get the ingredientQuantities that have IDs
+    let updatedIngredientQuantities: IngredientQuantityHttp[] = denormalizedMeal.ingredientQuantities.filter(iq => iq.id);
+        // Adds each updated ingredient quantity that now has a new ID to the denormalized meal's ingredient quantities array
+          if (ingredientQuantitiesToAdd instanceof Array) {
+            ingredientQuantitiesToAdd.forEach((ingredientQuantity: IngredientQuantityHttp) => updatedIngredientQuantities.push(ingredientQuantity));
+            // Resets the ingredientQuantities on the denormalized meal so that all Ingredient Quantities now have IDs.
+            denormalizedMeal.ingredientQuantities = updatedIngredientQuantities;
+          } else if (ingredientQuantitiesToAdd) {
+            // Sometimes if there is only one Ingredient Quantity to add, we get an object instead of array. We make it an array.
+            ingredientQuantitiesToAdd = [ingredientQuantitiesToAdd];
+            ingredientQuantitiesToAdd.forEach((ingredientQuantity: IngredientQuantityHttp) => updatedIngredientQuantities.push(ingredientQuantity));
+            // Resets the ingredientQuantities on the denormalized meal so that all Ingredient Quantities now have IDs.
+            denormalizedMeal.ingredientQuantities = updatedIngredientQuantities;
+          }
+          // Updates the meal on the server
+          this.http.put<MealHttp>(`${this.baseApiEndpoint}meals/${meal.id}`, denormalizedMeal).pipe(take(1));
+          // Returns the normalized meal and normalized IngredientQuantities with IDs so that the Store can update.
+          const myMeal: Meal = {
+            ...meal,
+            ingredientQuantities: updatedIngredientQuantities.map(item=>item).map(iq => {
+              delete iq.text;
+              return iq;
+            })
+          };
+          const ingredientQuantitiesWithIds: IngredientQuantity[] = updatedIngredientQuantities.map(item=>item).map(iq => {
+            delete iq.text;
+            return iq;
+          });
+          return [
+            myMeal,
+            ingredientQuantitiesWithIds
+          ];
+  }
+
+  putIngredientQuantity = (iq: IngredientQuantityHttp): Observable<IngredientQuantityHttp> => {
+    return this.http.put<IngredientQuantityHttp>(`${this.baseApiEndpoint}ingredientQuantities/${iq.id}`, iq)
+  }
+
+  postIngredientQuantity = (iq: IngredientQuantityHttp): Observable<IngredientQuantityHttp> => {
+    return this.http.post<IngredientQuantityHttp>(`${this.baseApiEndpoint}ingredientQuantities`, iq)
+  }
+
 }
