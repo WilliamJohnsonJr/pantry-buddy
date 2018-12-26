@@ -112,10 +112,19 @@ export function reducer(
         ...state,
         submitting: true
       }
-    } 
+    }
+
+    case MealActionTypes.UpdateMealRequestFail: {
+      return {
+        ...state,
+        submitting: false
+      }
+    }
 
     case MealActionTypes.UpdateMeal: {
-      return adapter.updateOne(action.payload.meal, state);
+      return adapter.updateOne(action.payload.meal, {...state, 
+        submitting: false
+      });
     }
 
     case MealActionTypes.UpdateMeals: {

@@ -18,7 +18,8 @@ export enum MealActionTypes {
   AddMeals = '[Meal] Add Meals',
   UpsertMeals = '[Meal] Upsert Meals',
   UpdateMeal = '[Meal] Update Meal',
-  UpdateMealRequest = '[Edit Meal] Update Meal',
+  UpdateMealRequest = '[Edit Meal] Update Meal Request',
+  UpdateMealRequestFail = '[Edit Meal] Update Meal Request Fail',
   UpdateMeals = '[Meal] Update Meals',
   DeleteMeal = '[Meal] Delete Meal',
   DeleteMeals = '[Meal] Delete Meals',
@@ -110,6 +111,11 @@ export class UpdateMealRequest implements Action {
   constructor(public payload: {meal: Meal}){}
 }
 
+export class UpdateMealRequestFail implements Action {
+  readonly type = MealActionTypes.UpdateMealRequestFail;
+  constructor(public payload = null){}
+}
+
 export class UpdateMeals implements Action {
   readonly type = MealActionTypes.UpdateMeals;
 
@@ -148,6 +154,7 @@ LoadMealsRequest
 | UpsertMeals
 | UpdateMeal
 | UpdateMealRequest
+| UpdateMealRequestFail
 | UpdateMeals
 | DeleteMeal
 | DeleteMeals

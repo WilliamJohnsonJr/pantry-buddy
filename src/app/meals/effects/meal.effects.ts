@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
 import { defer, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, toArray, combineLatest } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { HttpErrorResponse, HttpEvent } from '@angular/common/http';
 
 // Models
@@ -113,10 +113,22 @@ export class MealEffects {
       switchMap((action: MealActions.UpdateMealRequest): Observable<any> => {
        return this.mealService.updateMeal(action.payload.meal)
       }),
-      mergeMap((res: [Meal, IngredientQuantity[]]) => [
-        new MealActions.UpdateMeal({meal: {id: res[0].id, changes: res[0]}}),
-        new IngredientQuantityActions.UpsertIngredientQuantities({ingredientQuantities: res[1]})
-      ])
+      mergeMap((res: Observable<[HttpEvent<any>, [Meal, IngredientQuantity[]]]>) => res),
+      mergeMap((res: [HttpEvent<any>, [Meal, IngredientQuantity[]]]) => {
+        debugger;
+        // const httpResponse: HttpEvent<any> = res[0]; // currently unused - needs to handle error
+        const normalizedMeal: Meal = res[1][0];
+        const ingredientQuantities: IngredientQuantity[] = res[1][1];
+        return [
+          new MealActions.UpdateMeal({ meal: { id: normalizedMeal.id, changes: normalizedMeal } }),
+          new IngredientQuantityActions.ClearIngredientQuantities(),
+          new IngredientQuantityActions.UpsertIngredientQuantities({ ingredientQuantities: ingredientQuantities })
+        ]
+      }),
+      catchError((err: HttpErrorResponse)=> {
+        console.error(err);
+        return of(new MealActions.UpdateMealRequestFail())
+      })
       // TODO: Finish writing logic once updateMeal method completed.
       // mergeMap((response: [any, MealActions.UpdateMealRequest]) => {
       //   const action: MealActions.UpdateMealRequest = response[1];
