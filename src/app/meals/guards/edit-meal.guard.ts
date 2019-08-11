@@ -12,6 +12,7 @@ import * as MealActions from '../actions/meal.actions';
 import * as fromMeals from '../reducers';
 import { Meal } from '@app/meals/models/meal.model';
 import { MealService } from '@app/meals/services/meal.service';
+import { MealHttp } from '../models/meal-http.model';
 
 @Injectable({
   providedIn: 'root'
@@ -63,11 +64,11 @@ export class EditMealGuard implements CanActivate {
    */
   hasMealInApi(id: number): Observable<boolean> {
     return this.mealService.getMeal(id).pipe(
-      map((meal: Meal) => new MealActions.AddMeal({meal: meal})),
+      map((meal: MealHttp): MealActions.AddMeal => new MealActions.AddMeal({meal: meal})),
       tap((action: MealActions.AddMeal) => {
         this.store.dispatch(action);
       }),
-      map((mealAction: MealActions.AddMeal) => !!mealAction.payload.meal),
+      map((mealAction: MealActions.AddMeal): boolean => !!mealAction.payload.meal),
       catchError(() => {
         this.router.navigate(['/404']);
         return of(false);
