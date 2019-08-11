@@ -19,8 +19,7 @@
         type="button"
         aria-label="Open sidenav"
         mat-icon-button
-        (click)="openSidenav()"
-        *ngIf="isHandset$ | async">
+        (click)="openSidenav()">
         <mat-icon aria-label="Open side nav menu icon">menu</mat-icon>
       </button>
       <a id="home-anchor" (click)="closeSidenav()" routerLink="/"><span>Pantry Buddy</span></a>

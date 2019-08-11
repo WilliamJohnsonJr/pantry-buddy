@@ -2,10 +2,15 @@ import { NgModule }              from '@angular/core';
 import { RouterModule, Routes }  from '@angular/router';
 import { PageNotFoundComponent } from './core/components/page-not-found/page-not-found.component';
 import { HomeComponent } from './core/components/home/home.component';
+import { MealListComponent } from './meals/components/meal-list/meal-list.component';
  
 const appRoutes: Routes = [
   
   { path: '', component: HomeComponent},
+  {
+    path: 'meals',
+    loadChildren: './meals/meals.module#MealsModule'
+  },
   { path: '**', component: PageNotFoundComponent }
 ];
 

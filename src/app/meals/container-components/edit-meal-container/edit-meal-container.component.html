@@ -1,0 +1,6 @@
+<edit-meal
+    [ingredients]="ingredients$ | async"
+    [ingredientQuantities]="ingredientQuantities$ | async"
+    [meal]="meal$ | async"
+    (submitEvent)="onSubmit($event)"
+></edit-meal>

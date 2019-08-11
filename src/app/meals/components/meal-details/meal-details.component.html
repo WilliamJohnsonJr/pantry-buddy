@@ -1,0 +1,12 @@
+<h2>{{meal.name}}</h2>
+<ul>
+  <li><img style="width:80%;" [src]="meal.imageUrl" [alt]="'Image of ' + meal.name"></li>
+  <li>{{meal.recipe}}</li>
+  <li>Ingredients:
+    <ul>
+      <li *ngFor="let ingredientQuantityJoin of ingredientQuantityJoins; trackBy:trackById">
+        {{ingredientQuantityJoin.quantity}} {{ingredientQuantityJoin.text}}
+      </li>
+    </ul>
+  </li>
+</ul>

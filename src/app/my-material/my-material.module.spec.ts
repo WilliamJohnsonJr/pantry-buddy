@@ -1,4 +1,4 @@
-import { MyMaterialModule } from './my-material.module';
+import { MyMaterialModule } from '@app/my-material/my-material.module';
 
 describe('MyMaterialModule', () => {
   let myMaterialModule: MyMaterialModule;
