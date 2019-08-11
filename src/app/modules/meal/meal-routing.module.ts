@@ -5,12 +5,8 @@ import { MealComponent } from './meal/meal.component';
 import { MealGuard, MealsGuard } from './guards/meal.guard';
 
 const routes: Routes = [
-  { path: 'meals',  component: MealListComponent, canActivate: [MealsGuard],
-  children: [
-    { path: ':id', component:  MealComponent, canActivate: [MealGuard]}
-  ]
-},
-  
+  { path: 'meals',  component: MealListComponent, canActivate: [MealsGuard]},
+  { path: 'meals/:id', component:  MealComponent, canActivate: [MealGuard]}
 ];
 
 @NgModule({

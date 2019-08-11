@@ -1,7 +1,7 @@
 export interface Meal {
   id: string; // number on db
-  name: string;
   imageUrl: string;
-  ingredients: string[]; // array of Ingredient ids
+  ingredientQuantities: string[]; // array of IngredientQuantity ids
+  name: string;
   recipe: string;
 }

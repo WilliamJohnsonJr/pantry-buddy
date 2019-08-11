@@ -4,7 +4,7 @@ import { Meal } from '@state/meal/meal.model';
 import {MealActions} from '@state/meal/meal.actions';
 import { Store } from '@ngrx/store';
 import { selectAllMeals, State } from '@state/reducers/index';
-import { LoadMeals } from '../../../state/meal/meal.actions';
+import { HttpGETMeals } from '../../../state/meal/meal.actions';
 
 
 @Component({
@@ -20,7 +20,6 @@ export class MealListComponent implements OnInit {
 
   ngOnInit () {
     this.meals$ = this.store.select(selectAllMeals);
-    this.store.dispatch(new LoadMeals());
   }
 
   /*

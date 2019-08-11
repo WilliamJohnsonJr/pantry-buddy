@@ -55,8 +55,12 @@ export function reducer(
       return adapter.removeMany(action.payload.ids, state);
     }
 
-    case IngredientQuantityActionTypes.LoadIngredientQuantities: {
-      return adapter.addAll(action.payload.ingredientQuantities, state);
+    case IngredientQuantityActionTypes.HttpGETIngredientQuantities: {
+      return {...state}
+    }
+
+    case IngredientQuantityActionTypes.HttpGETIngredientQuantitiesSuccess: {
+      return {...state}
     }
 
     case IngredientQuantityActionTypes.ClearIngredientQuantities: {

@@ -5,7 +5,7 @@ import { IngredientQuantityService } from '@app/services/ingredient-quantity.ser
 import { Router } from '@angular/router';
 import { switchMap, map, withLatestFrom } from 'rxjs/operators';
 import { IngredientQuantity } from './ingredient-quantity.model';
-import { AddIngredientQuantities, AddIngredientQuantitiesSuccess } from './ingredient-quantity.actions';
+import { AddIngredientQuantities } from './ingredient-quantity.actions';
 import { State } from '@state/reducers'
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
@@ -23,12 +23,12 @@ export class IngredientQuantityEffects {
   }
 
   @Effect() getIngredientQuantities$ = this.actions$
-    .ofType(IngredientQuantityActionTypes.AddIngredientQuantities).pipe(
+    .ofType(IngredientQuantityActionTypes.HttpGETIngredientQuantities).pipe(
       switchMap(()=> {
         return this.ingredientQuantityService.getIngredientQuantities();
       }),
       map((ingredientQuantities: IngredientQuantity[]) => {
-          return new AddIngredientQuantitiesSuccess({ingredientQuantities: ingredientQuantities})
+          return new AddIngredientQuantities({ingredientQuantities: ingredientQuantities})
       })
     );
 }

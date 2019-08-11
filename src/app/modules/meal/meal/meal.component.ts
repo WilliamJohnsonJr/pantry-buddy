@@ -3,11 +3,11 @@ import { Meal } from '@state/meal/meal.model';
 import { Observable } from 'rxjs';
 import { IngredientQuantity } from '@state/ingredient-quantity/ingredient-quantity.model';
 import { Store } from '@ngrx/store';
-import * as mealActions from '@state/meal/meal.actions';
 import * as fromMeal from '@state/meal/meal.reducer';
-import { selectCurrentMeal, selectCurrentMealId } from '@state/reducers/index';
-import { AddMeal } from '../../../state/meal/meal.actions';
+import { selectCurrentMeal, selectIngredientQuantitiesBySelectedMeal, selectAllIngredients, selectIngredientEntities } from '@state/reducers/index';
 import { ActivatedRoute } from '@angular/router';
+import { Ingredient } from '@app/state/ingredient/ingredient.model';
+import { Dictionary } from '@ngrx/entity/src/models';
 
 
 @Component({
@@ -18,23 +18,13 @@ import { ActivatedRoute } from '@angular/router';
 export class MealComponent implements OnInit {
   meal$: Observable<Meal>;
   ingredientQuantities$: Observable<IngredientQuantity[]>;
+  ingredients$: Observable<Dictionary<Ingredient>>
   selectedMealId$: Observable<string>;
   constructor(private store: Store<fromMeal.State>, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.meal$ = this.store.select(selectCurrentMeal);
+    this.ingredients$ = this.store.select(selectIngredientEntities);
+    this.ingredientQuantities$ = this.store.select(selectIngredientQuantitiesBySelectedMeal);
   }
-
-  createMeal(payload: Meal) {
-    const meal: Meal = {
-      id: '0',
-      name: payload.name,
-      imageUrl: payload.imageUrl,
-      ingredients: payload.ingredients,
-      recipe: payload.recipe
-    }
-    this.store.dispatch(new mealActions.UpsertMeal({meal: meal}))
-  }
-
-  update
 }

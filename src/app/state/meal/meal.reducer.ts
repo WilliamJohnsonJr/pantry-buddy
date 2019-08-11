@@ -1,18 +1,23 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Meal } from './meal.model';
-import { MealActions, MealActionTypes, LoadMealsSuccess, SelectMeal } from './meal.actions';
-import { Action } from '@ngrx/store';
+import { MealActions, MealActionTypes, HttpGETMealsSuccess, SelectMeal } from './meal.actions';
+import { Action, createSelector } from '@ngrx/store';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export interface State extends EntityState<Meal> {
   // additional entities state properties
+  loaded: boolean;
   selectedMealId: string;
+  error: HttpErrorResponse | Error;
 }
 
 export const adapter: EntityAdapter<Meal> = createEntityAdapter<Meal>();
 
 export const initialState: State = adapter.getInitialState({
   // additional entity state properties
-  selectedMealId: null
+  loaded: false,
+  selectedMealId: null,
+  error: null
 });
 
 export function reducer(
@@ -37,7 +42,7 @@ export function reducer(
     }
 
     case MealActionTypes.UpsertMeals: {
-      return adapter.upsertMany(action.payload.meals, state);
+      return adapter.upsertMany(action.payload.meals, {...state, loaded: true});
     }
 
     case MealActionTypes.UpdateMeal: {
@@ -56,12 +61,24 @@ export function reducer(
       return adapter.removeMany(action.payload.ids, state);
     }
 
-    case MealActionTypes.LoadMeals: {
+    case MealActionTypes.HttpGETMeals: {
       return {...state}
     }
 
-    case MealActionTypes.LoadMealsSuccess: {
-      return adapter.addAll(action.payload.meals, state);
+    case MealActionTypes.HttpGETMealsSuccess: {
+      return {...state}
+    }
+
+    case MealActionTypes.HttpGETMeal: {
+      return {...state}
+    }
+
+    case MealActionTypes.HttpGETMealSuccess: {
+      return {...state}
+    }
+
+    case MealActionTypes.HttpGETMealFailure: {
+      return {...state, error: action.payload}
     }
 
     case MealActionTypes.ClearMeals: {
@@ -75,7 +92,7 @@ export function reducer(
 }
 
 export const getSelectedMealId = (state: State) => state.selectedMealId;
-
+export const selectMealsLoaded = (state: State) => state.loaded;
 export const {
   selectIds: selectMealIds,
   selectEntities: selectMealEntities,

@@ -8,11 +8,10 @@ import { IngredientQuantity } from '../../../../state/ingredient-quantity/ingred
   styleUrls: ['./ingredient-display.component.css']
 })
 export class IngredientDisplayComponent implements OnInit {
-@Input() ingredients: string[];
+@Input() ingredients: Ingredient[];
 @Input() ingredientQuantities: IngredientQuantity[];
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
 }

@@ -1,12 +1,15 @@
 import { Action } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
 import { Meal } from './meal.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export enum MealActionTypes {
-  LoadMeals = '[Meal] Load Meals',
-  LoadMealsSuccess = '[Meal] Load Meals Success',
-  LoadMeal = '[Meal] Load Meal',
-  LoadMealSuccess = '[Meal] Load Meal Success',
+  HttpGETMeals = '[Meal] HttpGET Meals',
+  HttpGETMealsSuccess = '[Meal] HttpGET Meals Success',
+  HttpGETMealsFailure = '[Meal] HttpGET Meals Failure',
+  HttpGETMeal = '[Meal] HttpGET Meal',
+  HttpGETMealSuccess = '[Meal] HttpGET Meal Success',
+  HttpGETMealFailure = '[Meal] HttpGET Meal Failure',
   AddMeal = '[Meal] Add Meal',
   SelectMeal = '[Meal] Select Meal',
   UpsertMeal = '[Meal] Upsert Meal',
@@ -19,26 +22,36 @@ export enum MealActionTypes {
   ClearMeals = '[Meal] Clear Meals'
 }
 
-export class LoadMeals implements Action {
-  readonly type = MealActionTypes.LoadMeals;
+export class HttpGETMeals implements Action {
+  readonly type = MealActionTypes.HttpGETMeals;
 
   constructor(public payload = null) {}
 }
 
-export class LoadMealsSuccess implements Action {
-  readonly type = MealActionTypes.LoadMealsSuccess;
+export class HttpGETMealsSuccess implements Action {
+  readonly type = MealActionTypes.HttpGETMealsSuccess;
 
-  constructor(public payload: { meals: Meal[]}) {}
+  constructor(public payload = null) {}
 }
 
-export class LoadMeal implements Action {
-  readonly type = MealActionTypes.LoadMeal;
+export class HttpGETMealsFailure implements Action {
+  readonly type = MealActionTypes.HttpGETMealsFailure;
+  constructor(public payload: HttpErrorResponse | Error){}
+}
+
+export class HttpGETMeal implements Action {
+  readonly type = MealActionTypes.HttpGETMeal;
   constructor(public payload: string){}
 }
 
-export class LoadMealSuccess implements Action {
-  readonly type = MealActionTypes.LoadMealSuccess;
-  constructor(public payload: {meal: Meal}){}
+export class HttpGETMealSuccess implements Action {
+  readonly type = MealActionTypes.HttpGETMealSuccess;
+  constructor(public payload = null){}
+}
+
+export class HttpGETMealFailure implements Action {
+  readonly type = MealActionTypes.HttpGETMealFailure;
+  constructor(public payload: HttpErrorResponse | Error){}
 }
 
 export class AddMeal implements Action {
@@ -100,10 +113,12 @@ export class ClearMeals implements Action {
 }
 
 export type MealActions =
- LoadMeals
- | LoadMealsSuccess
- | LoadMeal
- | LoadMealSuccess
+ HttpGETMeals
+ | HttpGETMealsSuccess
+ | HttpGETMealsFailure
+ | HttpGETMeal
+ | HttpGETMealSuccess
+ | HttpGETMealFailure
  | AddMeal
  | SelectMeal
  | UpsertMeal

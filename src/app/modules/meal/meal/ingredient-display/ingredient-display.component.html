@@ -1,6 +1,6 @@
 <h3>Ingredients</h3>
-      <ul>
-          <li *ngFor="let id of ingredients">
-            {{ingredientQuantities[id]?.quantity}} {{ingredientQuantities[id]?.text}}
-          </li>
-      </ul>
+<ul>
+    <li *ngFor="let ingredientQuantity of ingredientQuantities">
+      {{ingredientQuantity.quantity}} {{ingredients[ingredientQuantity.ingredient].text}}
+    </li>
+</ul>

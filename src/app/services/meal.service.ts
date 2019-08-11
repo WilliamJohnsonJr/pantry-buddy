@@ -12,71 +12,107 @@ import { IngredientQuantity } from '@state/ingredient-quantity/ingredient-quanti
 import { MealHttp } from '@state/meal/meal-http.interface';
 import { normalize, schema } from 'normalizr';
 import {mealsSchema} from '@state/schemas';
+import { store } from '@angular/core/src/render3/instructions';
 @Injectable({
   providedIn: 'root'
 })
 export class MealService {
   constructor(private http: HttpClient, @Inject(API_ENDPOINT) private apiEndpoint){}
 
-  getMeal(id: string): Observable<Meal> {
-    return this.http.get<Meal>(`${this.apiEndpoint}meals/${id}`).pipe(
+  getMeal(id: string): Observable<{
+    meal: Meal,
+    ingredientQuantities: IngredientQuantity[],
+    ingredients: Ingredient[]
+  }> {
+    return this.http.get<MealHttp>(`${this.apiEndpoint}meals/${id}`).pipe(
       map(meal => {
-        meal.id = meal.id.toString();
-        return meal;
+        const normalizedPayload: {
+          meals: Meal[],
+          ingredientQuantities: IngredientQuantity[],
+          ingredients: Ingredient[]
+        } = this._transformMealsPayload([meal]);
+        const result = {
+          meal: normalizedPayload.meals[0],
+          ingredientQuantities: normalizedPayload.ingredientQuantities,
+          ingredients: normalizedPayload.ingredients
+        };
+        return result;
       })
     )
   }
 
-  getMeals(): Observable<Meal[]> {
-    /*
-          MealHttp {
-            "id": 1,
-            "name": "Peanut Butter Jelly Bash",
-            "imageUrl": "https://images.pexels.com/photos/236834/pexels-photo-236834.jpeg?cs=srgb&dl=bread-creamy-food-236834.jpg&fm=jpg",
-            "ingredientQuantities": [
-              {"id": 1, "ingredientId": 1, "text": "Slice of Wheat Bread", "quantity": 2},
-              {"id": 2, "ingredientId": 2, "text": "Tbsp Peanut Butter", "quantity": 2},
-              {"id": 3, "ingredientId": 3, "text": "Tbsp Grape Jelly", "quantity": 2}      
-            ], 
-            "recipe": "Use utensil to spread Peanut Butter and Grape Jelly onto one slice of bread. Place other piece of bread on top. Enjoy."
-          }
-
-          IngredientQuantity {
-            ingredientId: string;
-            mealId: string;
-            quantity: number;
-          }
-        
-          Meal {
-            id: string; // number on db
-            name: string;
-            imageUrl: string;
-            ingredients: string[]; // array of Ingredient ids
-            recipe: string;
-          }
-    */
+  getMeals(): Observable<{
+    meals: Meal[],
+    ingredientQuantities: IngredientQuantity[],
+    ingredients: Ingredient[]
+  }> {
     return this.http.get<MealHttp[]>(`${this.apiEndpoint}meals`).pipe(
-      map((meals: MealHttp[]): Meal[] => {
-        const normalizedData = normalize({meals: meals}, mealsSchema);
-        console.log('normalizedData');
-        console.log(normalizedData);
-
-        const transformedMeals: Meal[] = meals.map((meal: MealHttp) => {
-          const myMeal: Meal = {
-            id: String(meal.id),
-            name: meal.name,
-            ingredients: meal.ingredientQuantities.map(ingredientQuantity => String(ingredientQuantity.ingredientId)),
-            imageUrl: meal.imageUrl,
-            recipe: meal.recipe
-          }
-          return myMeal;
-        });
-        return transformedMeals
+      map((meals: MealHttp[]): {
+        meals: Meal[],
+        ingredientQuantities: IngredientQuantity[],
+        ingredients: Ingredient[]
+      } => {
+        return this._transformMealsPayload(meals);
       })
     )
   }
 
   updateMeal(meal: Meal): Observable<Meal> {
     return this.http.put<Meal>(`${this.apiEndpoint}meals/${meal.id}`, meal)
+  }
+
+  private _transformMealsPayload(meals: MealHttp[]) {
+    // Normalize the payload received from the server
+    const normalizedData = normalize({meals: meals}, mealsSchema);
+
+    // Convert numeric IDs to string IDs.
+    const transformedMeals: Meal[] = normalizedData.result.meals.map(mealId => {
+      const meal: {
+        id: number;
+        imageUrl: string;
+        ingredientQuantities: number[];
+        name: string;
+        recipe: string;
+      } = normalizedData.entities.meals[mealId];
+      const myMeal: Meal = {
+        id: String(meal.id),
+        imageUrl: meal.imageUrl,
+        ingredientQuantities: meal.ingredientQuantities.map((id: number): string => String(id)),
+        name: meal.name,
+        recipe: meal.recipe
+      }
+      return myMeal;
+    });
+
+    // Create IngredientQuantity[] to upsert into the store from the normalized data.
+    const transformedIngredientQuantities: IngredientQuantity[] = [];
+    for (let prop in normalizedData.entities.ingredientQuantities) {
+      if (normalizedData.entities.ingredientQuantities.hasOwnProperty(prop)) {
+        transformedIngredientQuantities.push(
+          {
+            ...normalizedData.entities.ingredientQuantities[prop],
+            id: String(normalizedData.entities.ingredientQuantities[prop].id),
+            ingredient: String(normalizedData.entities.ingredientQuantities[prop].ingredient)
+          }
+        );
+      }
+    }
+
+    // Create Ingredient[] to upsert into the store from the normalized data.
+    const transformedIngredients: Ingredient[] = [];
+    for (let prop in normalizedData.entities.ingredients) {
+      if (normalizedData.entities.ingredients.hasOwnProperty(prop)) {
+        transformedIngredients.push({
+          ...normalizedData.entities.ingredients[prop],
+          id: String(normalizedData.entities.ingredients[prop].id)
+        });
+      }
+    }
+
+    return {
+      meals: transformedMeals,
+      ingredientQuantities: transformedIngredientQuantities,
+      ingredients: transformedIngredients
+    }
   }
 }

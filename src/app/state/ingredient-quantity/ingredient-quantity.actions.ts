@@ -3,11 +3,11 @@ import { Update } from '@ngrx/entity';
 import { IngredientQuantity } from './ingredient-quantity.model';
 
 export enum IngredientQuantityActionTypes {
-  LoadIngredientQuantities = '[IngredientQuantity] Load IngredientQuantities',
+  HttpGETIngredientQuantities = '[IngredientQuantity] HttpGET IngredientQuantities',
+  HttpGETIngredientQuantitiesSuccess = '[IngredientQuantity] HttpGET IngredientQuantitiesSuccess',
   AddIngredientQuantity = '[IngredientQuantity] Add IngredientQuantity',
   UpsertIngredientQuantity = '[IngredientQuantity] Upsert IngredientQuantity',
   AddIngredientQuantities = '[IngredientQuantity] Add IngredientQuantities',
-  AddIngredientQuantitiesSuccess = '[IngredientQuantity] Add IngredientQuantities Success',
   UpsertIngredientQuantities = '[IngredientQuantity] Upsert IngredientQuantities',
   UpdateIngredientQuantity = '[IngredientQuantity] Update IngredientQuantity',
   UpdateIngredientQuantities = '[IngredientQuantity] Update IngredientQuantities',
@@ -16,8 +16,14 @@ export enum IngredientQuantityActionTypes {
   ClearIngredientQuantities = '[IngredientQuantity] Clear IngredientQuantities'
 }
 
-export class LoadIngredientQuantities implements Action {
-  readonly type = IngredientQuantityActionTypes.LoadIngredientQuantities;
+export class HttpGETIngredientQuantities implements Action {
+  readonly type = IngredientQuantityActionTypes.HttpGETIngredientQuantities;
+
+  constructor() {}
+}
+
+export class HttpGETIngredientQuantitiesSuccess implements Action {
+  readonly type = IngredientQuantityActionTypes.HttpGETIngredientQuantitiesSuccess;
 
   constructor(public payload: { ingredientQuantities: IngredientQuantity[] }) {}
 }
@@ -36,12 +42,6 @@ export class UpsertIngredientQuantity implements Action {
 
 export class AddIngredientQuantities implements Action {
   readonly type = IngredientQuantityActionTypes.AddIngredientQuantities;
-
-  constructor(public payload = null) {}
-}
-
-export class AddIngredientQuantitiesSuccess implements Action {
-  readonly type = IngredientQuantityActionTypes.AddIngredientQuantitiesSuccess;
 
   constructor(public payload: { ingredientQuantities: IngredientQuantity[] }) {}
 }
@@ -81,11 +81,11 @@ export class ClearIngredientQuantities implements Action {
 }
 
 export type IngredientQuantityActions =
- LoadIngredientQuantities
+ HttpGETIngredientQuantities
+ | HttpGETIngredientQuantitiesSuccess
  | AddIngredientQuantity
  | UpsertIngredientQuantity
  | AddIngredientQuantities
- | AddIngredientQuantitiesSuccess
  | UpsertIngredientQuantities
  | UpdateIngredientQuantity
  | UpdateIngredientQuantities
