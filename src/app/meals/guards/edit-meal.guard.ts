@@ -5,14 +5,12 @@
 
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router  } from '@angular/router';
-import { select, Store } from '@ngrx/store';
-import { Observable, of, combineLatest } from 'rxjs';
-import { catchError, filter, map, switchMap, take, tap,  } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { Observable, zip } from 'rxjs';
+import { filter, map, take, tap  } from 'rxjs/operators';
 import * as MealActions from '../actions/meal.actions';
 import * as fromMeals from '../reducers';
-import { Meal } from '@app/meals/models/meal.model';
-import { MealService } from '@app/meals/services/meal.service';
-import { MealHttp } from '../models/meal-http.model';
+import * as IngredientActions from '../actions/ingredient.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -20,61 +18,7 @@ import { MealHttp } from '../models/meal-http.model';
 export class EditMealGuard implements CanActivate {
   constructor(
     private store: Store<fromMeals.State>,
-    private mealService: MealService,
-    private router: Router
   ) {}
-  
-
-  /**
-   * This method creates an observable that waits for the `loaded` property
-   * of the collection state to turn `true`, emitting one time once loading
-   * has finished.
-   */
-  waitForMealToLoad(): Observable<boolean> {
-      return this.store.pipe(
-        select(fromMeals.getSelectedMealLoadedParentSelector),
-        filter(loaded => loaded),
-        take(1)
-      )
-  }
-
-  waitForIngredientsToLoad(): Observable<boolean> {
-    return this.store.pipe(
-      select(fromMeals.getAllIngredientsLoadedParentSelector),
-        filter(loaded => loaded),
-        take(1)
-    )
-  }
-
-  /**
-   * This method checks if a meal with the given ID is already registered
-   * in the Store
-   */
-  hasMealInStore(id: number): Observable<boolean> {
-    return this.store.pipe(
-      select(fromMeals.getMealEntities),
-      map(entities => !!entities[id]),
-      take(1)
-    );
-  }
-
-  /**
-   * This method loads a meal with the given ID from the API and caches
-   * it in the store, returning `true` or `false` if it was found.
-   */
-  hasMealInApi(id: number): Observable<boolean> {
-    return this.mealService.getMeal(id).pipe(
-      map((meal: MealHttp): MealActions.AddMeal => new MealActions.AddMeal({meal: meal})),
-      tap((action: MealActions.AddMeal) => {
-        this.store.dispatch(action);
-      }),
-      map((mealAction: MealActions.AddMeal): boolean => !!mealAction.payload.meal),
-      catchError(() => {
-        this.router.navigate(['/404']);
-        return of(false);
-      })
-    );
-  }
 
   /**
    * `hasMeal` composes `hasMealInStore` and `hasMealInApi`. It first checks
@@ -82,14 +26,28 @@ export class EditMealGuard implements CanActivate {
    * API.
    */
   hasMeal(id: number): Observable<boolean> {
-    return this.hasMealInStore(id).pipe(
-      switchMap(inStore => {
-        if (inStore) {
-          return of(inStore);
-        }
-        return this.hasMealInApi(id);
-      })
-    );
+    // We start by updating the store so that the ID in the route is the ID of our selected meal.
+    this.store.dispatch(new MealActions.SelectMealById({id: id}));
+    // We fetch the meal from the store or the API with this action.
+    this.store.dispatch(new MealActions.LoadEditMealRequest({id: id}));
+    return zip(
+      this.store.select(fromMeals.getSelectedMeal),
+      this.store.select(fromMeals.getMealsLoading),
+      this.store.select(fromMeals.getAllIngredientsLoadedParentSelector),
+      this.store.select(fromMeals.getIngredientsLoading)
+     )  
+    .pipe(
+      // Only navigate to the page if the meal and ingredients have loaded into the store.
+      map(([meal, loading, ingredientsLoaded, ingredientsLoading]) => [!!meal, ingredientsLoaded]),
+      tap(result => {
+        console.log('result', result);
+      }),
+      filter(([meal, ingredientsLoaded]): boolean => {
+        return (meal);
+      }),
+      take(1),
+      map(meal => !!meal),
+    )
   }
 
   /**
@@ -110,13 +68,6 @@ export class EditMealGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean  {
     let id: number = +next.paramMap.get('id');
-    // We start by updating the store so that the ID in the route is the ID of our selected meal.
-    this.store.dispatch(new MealActions.SelectMealById({id: id}));
-    // We must call LoadEditMealsRequest here for this.waitForCollectionToLoad to ever fire.
-    this.store.dispatch(new MealActions.LoadEditMealRequest({id: id}));
-    return this.waitForMealToLoad().pipe(
-      switchMap(() => this.waitForIngredientsToLoad()),
-      switchMap(() => this.hasMeal(+next.params['id']))
-    );
+    return this.hasMeal(id);
   }
 }

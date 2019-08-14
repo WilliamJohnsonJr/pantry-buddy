@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Observable, combineLatest, forkJoin, of } from 'rxjs';
-import { map, switchMap, take, mergeMap } from 'rxjs/operators';
+import { map, switchMap, take, mergeMap, publishReplay, refCount } from 'rxjs/operators';
 
 import { BASE_API_ENDPOINT } from '@app/app.tokens';
 import { Meal } from '@app/meals/models/meal.model';
@@ -30,7 +30,10 @@ export class MealService {
     private store: Store<fromMeals.State>){}
 
   getMeal(id: number): Observable<MealHttp> {
-    return this.http.get<MealHttp>(`${this.baseApiEndpoint}meals/${id}`)
+    return this.http.get<MealHttp>(`${this.baseApiEndpoint}meals/${id}`).pipe(
+      publishReplay(1),
+      refCount()
+    )
   }
 
   normalizeMeal = (mealHttp: MealHttp): {meal: Meal, ingredientQuantities: IngredientQuantity[], ingredients: Ingredient[]} => {

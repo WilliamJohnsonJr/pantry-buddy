@@ -45,6 +45,7 @@ export class IngredientEffects {
           : this.ingredientService.getIngredients().pipe(
             map((payload: Ingredient[]) => {
               const ingredientPayload: {ingredients: Ingredient[]} = {ingredients: payload};
+              console.log('loading ingredients')
               return new IngredientActions.LoadIngredients({ingredients: ingredientPayload.ingredients});
             }),
             catchError((error: HttpErrorResponse) => {

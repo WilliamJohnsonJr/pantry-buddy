@@ -144,6 +144,7 @@ LoadMealsRequest
 | LoadMeals
 | MealsAlreadyLoaded
 | LoadMealRequest
+| LoadEditMealRequest
 | LoadMealRequestFail
 | LoadMeal
 | MealAlreadyLoaded
