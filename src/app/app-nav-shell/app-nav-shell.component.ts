@@ -48,7 +48,6 @@ export class AppNavShellComponent implements OnInit {
      * updates and user interaction through the life of our
      * application.
      */
-    console.log('closeSidenav');
     this.store.dispatch(new LayoutActions.CloseSidenav());
   }
 

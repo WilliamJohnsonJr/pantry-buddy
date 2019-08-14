@@ -39,9 +39,6 @@ export class EditMealGuard implements CanActivate {
     .pipe(
       // Only navigate to the page if the meal and ingredients have loaded into the store.
       map(([meal, loading, ingredientsLoaded, ingredientsLoading]) => [!!meal, ingredientsLoaded]),
-      tap(result => {
-        console.log('result', result);
-      }),
       filter(([meal, ingredientsLoaded]): boolean => {
         return (meal);
       }),
