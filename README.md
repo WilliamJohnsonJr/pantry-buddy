@@ -2,6 +2,8 @@
 
 ## The only grocery list you'll ever need. Built with NgRx and Angular 6+.
 
+![Pantry Buddy screen shot](./PantryBuddy.png)
+
 To start an NgRx project from scratch, you can use these commands (at least for Angular 6, Angular CLI 6, RxJs 6, and Angular Material 6):
 
 * `npm install -g @angular/cli`  (you have to have it installed globally to run the CLI commands, but it uses the @angular/cli version specified in a project’s package.json by default — that is, if you’re using @angular/cli@6+ and your project uses @angular/cli@1.7.2, you’ll be fine because it will use version 1.7.2 when working in the project)
