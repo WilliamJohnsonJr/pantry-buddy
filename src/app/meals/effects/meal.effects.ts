@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
-import { defer, Observable, of } from 'rxjs';
+import { defer, Observable, of, zip } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { HttpErrorResponse, HttpEvent } from '@angular/common/http';
 
@@ -20,6 +20,8 @@ import { MealService } from '@app/meals/services/meal.service';
 
 // Reducers
 import * as fromMeals from '@app/meals/reducers';
+import { Router } from '@angular/router';
+import { Noop } from '@app/core/actions/util.actions';
 
 @Injectable()
 export class MealEffects {
@@ -88,9 +90,11 @@ export class MealEffects {
     @Effect() loadEditMealRequestEffect$: Observable<Action> = this.actions$.pipe(
       ofType(MealActions.MealActionTypes.LoadEditMealRequest),
       switchMap((action: MealActions.LoadEditMealRequest) => 
-      this.store.pipe(
-        select(fromMeals.isSelectedMealInList),
-        switchMap(isInList => !isInList 
+      zip(
+        this.store.select(fromMeals.isSelectedMealInList),
+        this.store.select(fromMeals.getAllIngredientsLoadedParentSelector)
+      ).pipe(
+        switchMap(([isInList, allIngredientsLoaded]) => !isInList 
           ?  this.mealService.getMeal(action.payload.id).pipe(
             map((mealHttp: MealHttp) => this.mealService.normalizeMeal(mealHttp)),
             mergeMap((mealPayload: {meal: Meal, ingredientQuantities: IngredientQuantity[], ingredients: Ingredient[]}) => [
@@ -99,13 +103,26 @@ export class MealEffects {
               new MealActions.AddMeal({meal: mealPayload.meal})
             ])
           )
-          : of (new MealActions.MealAlreadyLoaded())
+          : allIngredientsLoaded 
+            ? of (new MealActions.MealAlreadyLoaded()) 
+            : of (new IngredientActions.LoadIngredientsRequest())
           ),
           catchError((error: HttpErrorResponse) => {
             return of(new MealActions.LoadMealRequestFail({error: error.status + ' - ' + error.message}))
            })
         )
       )
+    )
+
+    @Effect() loadEmailRequestFail: Observable<any> = this.actions$.pipe(
+      ofType(MealActions.MealActionTypes.LoadMealRequestFail),
+      tap((action: MealActions.LoadMealRequestFail) => {
+        console.error(action.payload.error);
+        if (action.payload.error.substr(0,3) === '404') {
+          this.router.navigate(['/404']);
+        }
+      }),
+      map(action => new Noop())
     )
 
     @Effect() updateMealRequestEffect$: Observable<any> = this.actions$.pipe(
@@ -168,7 +185,8 @@ export class MealEffects {
 
   constructor(
     private actions$: Actions, 
-    private mealService: MealService, 
+    private mealService: MealService,
+    private router: Router, 
     private store: Store<fromMeals.State>
     ) {}
 }

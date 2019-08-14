@@ -4,8 +4,7 @@
     fixedInViewport="true"
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(showSidenav$ | async)"
-    (closedStart)="closeSidenav()">
+    [opened]="(showSidenav$ | async)">
     <mat-toolbar color="primary" (click)="closeSidenav()" color="primary"><button type="button" mat-icon-button aria-label="Close side nav menu button" class="close-button"><mat-icon>close</mat-icon></button>Menu</mat-toolbar>
     <mat-nav-list>
       <a (click)="closeSidenav()" mat-list-item routerLink="/meals">Meals</a>

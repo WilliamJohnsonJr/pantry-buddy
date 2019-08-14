@@ -63,6 +63,13 @@ export function reducer(
       }
     }
 
+    case MealActionTypes.LoadEditMealRequest: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
     case MealActionTypes.LoadMealRequestFail: {
       return {
         ...state,

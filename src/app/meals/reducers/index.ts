@@ -53,7 +53,8 @@ import { Ingredient } from '../models/ingredient.model';
    * The createFeatureSelector function selects a piece of state from the root of the state object.
    * This is used for selecting feature states that are loaded eagerly or lazily.
    */
-  export const getMealsState: MemoizedSelector<State, MealsState> = createFeatureSelector<State, MealsState>('meals');
+  export const getMealsState:
+   MemoizedSelector<State, MealsState> = createFeatureSelector<State, MealsState>('meals');
   
   /**
    * Every reducer module exports selector functions, however child reducers
@@ -84,6 +85,11 @@ import { Ingredient } from '../models/ingredient.model';
     fromMeals.getSelectedId
   );
 
+  export const getMealsLoading: MemoizedSelector<State, boolean> = createSelector(
+    getMealEntitiesState,
+    fromMeals.getLoading
+  )
+
   export const getAllMealsLoadedParentSelector: MemoizedSelector<State, boolean> = createSelector(
     getMealEntitiesState,
     fromMeals.getAllMealsLoaded
@@ -112,6 +118,11 @@ import { Ingredient } from '../models/ingredient.model';
   export const getAllIngredientsLoadedParentSelector: MemoizedSelector<State, boolean> = createSelector(
     getIngredientEntitiesState,
     fromIngredients.getAllIngredientsLoaded
+  )
+
+  export const getIngredientsLoading: MemoizedSelector<State, boolean> = createSelector(
+    getIngredientEntitiesState,
+    fromIngredients.getLoading
   )
   
   /**

@@ -20,7 +20,9 @@ export class AppNavShellComponent implements OnInit {
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => {
-        result.matches ? this.store.dispatch( new LayoutActions.CloseSidenav()) : this.store.dispatch(new LayoutActions.OpenSidenav());
+        result.matches 
+          ? this.store.dispatch( new LayoutActions.CloseSidenav()) 
+          : this.store.dispatch(new LayoutActions.OpenSidenav());
         return result.matches;
       })
     );
