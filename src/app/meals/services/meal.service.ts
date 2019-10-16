@@ -85,48 +85,51 @@ export class MealService {
 
   updateMeal(meal: Meal): Observable<[HttpEvent<any>, [Meal, IngredientQuantity[]]]> {
     let denormalizedMeal: MealHttp;
-    return combineLatest(
-      [
-        this.store.select(fromMeals.getIngredientQuantitiesForSelectedMeal),
-        this.store.select(fromMeals.getAllIngredients),
-        this.store.select(fromMeals.getSelectedMeal)
-      ]).pipe(
-        take(1),
-        map(
-          (res: any) => {
-            const ingredientQuantities: IngredientQuantity[] = res[0];
-            const ingredients: Ingredient[] = res[1];
-            const selectedMeal: Meal = res[2];
-            denormalizedMeal = {
-              ...meal,
-              ingredientQuantities: meal.ingredientQuantities.map(
-                (ingredientQuantity: any) => {
-                  const ingredientQuantityHttp: IngredientQuantityHttp = {
-                    ...ingredientQuantity,
-                    text: ingredients.filter(ingredient => ingredient.id === ingredientQuantity.ingredientId)[0].text
-                  }
+    // return combineLatest(
+    //   [
+    //     this.store.select(fromMeals.getIngredientQuantitiesForSelectedMeal),
+    //     this.store.select(fromMeals.getAllIngredients),
+    //     this.store.select(fromMeals.getSelectedMeal)
+    //   ]).pipe(
+    //     take(1),
+    //     map(
+    //       (res: any) => {
+    //         const ingredientQuantities: IngredientQuantity[] = res[0];
+    //         const ingredients: Ingredient[] = res[1];
+    //         const selectedMeal: Meal = res[2];
+    //         denormalizedMeal = {
+    //           ...meal,
+    //           ingredientQuantities: meal.ingredientQuantities.map(
+    //             (ingredientQuantity: any) => {
+    //               const ingredientQuantityHttp: IngredientQuantityHttp = {
+    //                 ...ingredientQuantity,
+    //                 text: ingredients.filter(ingredient => ingredient.id === ingredientQuantity.ingredientId)[0].text
+    //               }
 
-                  return ingredientQuantityHttp;
-                }
-              )
-            }
-            return denormalizedMeal;
-          }),
-        switchMap(denormalizedMeal => {
-          return this.sendUpdateRequestsForIngredientQuantities(denormalizedMeal);
-        }),
-        switchMap((res: IngredientQuantityHttp[]) => {
-          return this.addMissingIngredientQuantityIds(denormalizedMeal, res);
-        }),
-        map((ingredientQuantitiesToAdd: IngredientQuantityHttp[]) => {
-          const resultsArray: [Meal, IngredientQuantity[]] = this.createNormalizedAndDenormalizedDataItemsToPersistInStoreAndServer(meal, denormalizedMeal, ingredientQuantitiesToAdd);
-          return forkJoin(
-            // Updates the meal on the server
-            [this.http.put<MealHttp>(`${this.baseApiEndpoint}meals/${meal.id}`, denormalizedMeal).subscribe(),
-            of(resultsArray)]
-          )
-        })
-      )
+    //               return ingredientQuantityHttp;
+    //             }
+    //           )
+    //         }
+    //         return denormalizedMeal;
+    //       }),
+    //     switchMap(denormalizedMeal => {
+    //       return this.sendUpdateRequestsForIngredientQuantities(denormalizedMeal);
+    //     }),
+    //     switchMap((res: IngredientQuantityHttp[]): IngredientQuantityHttp[] => {
+    //       return this.addMissingIngredientQuantityIds(denormalizedMeal, res);
+    //     }),
+    //   //  map((ingredientQuantitiesToAdd: IngredientQuantityHttp[]) => {
+    //   //     const resultsArray: [Meal, IngredientQuantity[]] = this
+    //   //     .createNormalizedAndDenormalizedDataItemsToPersistInStoreAndServer(
+    //   //       meal, denormalizedMeal, ingredientQuantitiesToAdd);
+    //   //     return forkJoin(
+    //   //       // Updates the meal on the server
+    //   //       this.http.put<MealHttp>(`${this.baseApiEndpoint}meals/${meal.id}`, denormalizedMeal),
+    //   //       of(resultsArray)
+    //   //     )
+    //   //   })
+    //   )
+    return of();
   }
 
   /**
@@ -148,7 +151,7 @@ export class MealService {
    * @param denormalizedMeal MealHttp
    * @param res Array<IngredientQuantityHttp> - response from successful PUT/POST to server.
    */
-  addMissingIngredientQuantityIds = (denormalizedMeal, res) => {
+  addMissingIngredientQuantityIds = (denormalizedMeal: MealHttp, res: IngredientQuantityHttp[]): IngredientQuantityHttp[] => {
     // Finds what ingredientQuantities already have IDs in the requests sent to the server.
     const existingIngredientQuantityIds: number[] = denormalizedMeal.ingredientQuantities.map(iq => iq.id);
     // Filters the response to get the ingredientQuantity 
@@ -158,9 +161,9 @@ export class MealService {
   }
 
   createNormalizedAndDenormalizedDataItemsToPersistInStoreAndServer = (
-    meal,
-    denormalizedMeal,
-    ingredientQuantitiesToAdd
+    meal: Meal,
+    denormalizedMeal: MealHttp,
+    ingredientQuantitiesToAdd: IngredientQuantityHttp[]
   ): [Meal, IngredientQuantity[]] => {
     // Filters the denormalized meal to only get the ingredientQuantities that have IDs
     let updatedIngredientQuantities: IngredientQuantityHttp[] = denormalizedMeal.ingredientQuantities.filter(iq => iq.id);

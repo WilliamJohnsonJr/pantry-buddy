@@ -48,7 +48,7 @@ export class MealEffects {
         switchMap(loaded => loaded ? of(new MealActions.MealsAlreadyLoaded()) : this.mealService.getMeals().pipe(
           map((mealHttps: MealHttp[]) => this.mealService.normalizeMeals(mealHttps)),
           mergeMap((mealPayload: {meals: Meal[], ingredientQuantities: IngredientQuantity[], ingredients: Ingredient[]}) => [
-            new IngredientActions.LoadIngredientsFromMeals({ingredients: mealPayload.ingredients}),
+            new IngredientActions.LoadIngredientsRequest(),
             // Has to come first so that loaded flag is false. Otherwise the MealsAlreadyLoaded action interrupts it.
             new IngredientQuantityActions.LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
             // Comes second since loaded flag is set in the LoadMeals action.
@@ -73,7 +73,7 @@ export class MealEffects {
           ?  this.mealService.getMeal(action.payload.id).pipe(
             map((mealHttp: MealHttp) => this.mealService.normalizeMeal(mealHttp)),
             mergeMap((mealPayload: {meal: Meal, ingredientQuantities: IngredientQuantity[], ingredients: Ingredient[]}) => [
-              new IngredientActions.LoadIngredientsFromMeal({ingredients: mealPayload.ingredients}),
+              new IngredientActions.LoadIngredientsRequest(),
               new IngredientQuantityActions.LoadIngredientQuantities({ingredientQuantities: mealPayload.ingredientQuantities}),
               new MealActions.AddMeal({meal: mealPayload.meal})
             ])

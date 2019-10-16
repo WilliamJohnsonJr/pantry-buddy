@@ -136,18 +136,6 @@ export function reducer(
       });
     }
 
-    case IngredientActionTypes.LoadIngredientsFromMeals: {
-      return adapter.addAll(action.payload.ingredients, {...state,
-        loading: false
-      });
-    }
-
-    case IngredientActionTypes.LoadIngredientsFromMeal: {
-      return adapter.addAll(action.payload.ingredients, {...state,
-        loading: false
-      });
-    }
-
     case IngredientActionTypes.ClearIngredients: {
       return adapter.removeAll(state);
     }

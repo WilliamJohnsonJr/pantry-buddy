@@ -6,8 +6,6 @@ export enum IngredientActionTypes {
   LoadIngredientsRequest = '[Ingredient] Load Ingredients Request',
   LoadIngredientsRequestFail = '[Ingredient] Load Ingredients Request Fail',
   LoadIngredients = '[Ingredient] Load Ingredients',
-  LoadIngredientsFromMeals = '[Meal Effects] Load Ingredients From Meals',
-  LoadIngredientsFromMeal = '[Meal Effects] Load Ingredients From Meal',
   IngredientsAlreadyLoaded = '[Ingredient] Ingredients Already Loaded',
   LoadIngredientRequest = '[Ingredient] Load Ingredient Request',
   LoadIngredientRequestFail = '[Ingredient] Load Ingredient Request Fail',
@@ -38,16 +36,6 @@ export class LoadIngredientsRequestFail implements Action {
 
 export class LoadIngredients implements Action {
   readonly type = IngredientActionTypes.LoadIngredients;
-  constructor(public payload: {ingredients: Ingredient[]}){}
-}
-
-export class LoadIngredientsFromMeals implements Action {
-  readonly type = IngredientActionTypes.LoadIngredientsFromMeals;
-  constructor(public payload: {ingredients: Ingredient[]}){}
-}
-
-export class LoadIngredientsFromMeal implements Action {
-  readonly type = IngredientActionTypes.LoadIngredientsFromMeal;
   constructor(public payload: {ingredients: Ingredient[]}){}
 }
 
@@ -142,8 +130,6 @@ export type IngredientActions =
 LoadIngredientsRequest
 | LoadIngredientsRequestFail
 | LoadIngredients
-| LoadIngredientsFromMeals
-| LoadIngredientsFromMeal
 | IngredientsAlreadyLoaded
 | LoadIngredientRequest
 | LoadIngredientRequestFail

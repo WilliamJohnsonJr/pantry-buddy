@@ -13,6 +13,8 @@ import * as fromMeals from '../reducers';
 import { Meal } from '@app/meals/models/meal.model';
 import { MealService } from '@app/meals/services/meal.service';
 import { LoadMealsRequest } from '../actions/meal.actions';
+import { MealHttp } from '@app/meals/models/meal-http.model';
+import { IngredientQuantityHttp } from '../models/ingredient-quantity-http.model';
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +58,12 @@ export class MealExistsGuard implements CanActivate {
    */
   hasMealInApi(id: number): Observable<boolean> {
     return this.mealService.getMeal(id).pipe(
-      map((meal: Meal) => new MealActions.AddMeal({meal: meal})),
+      map((meal: MealHttp) => new MealActions
+      .AddMeal({ meal: { 
+        ...meal,
+        ingredientQuantities: meal.ingredientQuantities
+        .map((iq: IngredientQuantityHttp) => iq.id) } 
+      })),
       tap((action: MealActions.AddMeal) => {
         this.store.dispatch(action);
       }),
