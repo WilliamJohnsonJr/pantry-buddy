@@ -16,7 +16,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 })
 export class AppNavShellComponent implements OnInit {
   constructor(private breakpointObserver: BreakpointObserver, private store: Store<fromRoot.State>) {}
-  @ViewChild('drawer') drawer: MatSidenav;
+  @ViewChild('drawer', { static: false }) drawer: MatSidenav;
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => {

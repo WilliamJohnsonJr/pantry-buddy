@@ -16,7 +16,7 @@ export class MyAutocompleteComponent implements OnInit {
   constructor() { }
   @Input() myFormControl: AbstractControl;
   @Input() myPlaceholder: string;
-  @ViewChild('myAuto') autocomplete: MatAutocomplete;
+  @ViewChild('myAuto', { static: true }) autocomplete: MatAutocomplete;
   @Input() myOptions: IdTextObject[] = [];
   filteredOptions: Observable<IdTextObject[]>
   
