@@ -1,10 +1,21 @@
 # PantryBuddy
 
-## The only grocery list you'll ever need. Built with NgRx and Angular 6+.
+## The only grocery list you'll ever need. Built with NgRx and Angular 8+.
 
 ![Pantry Buddy screen shot](./PantryBuddy.png)
 
-To start an NgRx project from scratch, you can use these commands (at least for Angular 6, Angular CLI 6, RxJs 6, and Angular Material 6):
+## Getting Started
+
+* `git clone` this repo.
+* `npm install`
+* In one terminal window: `npm start`.
+* In another terminal window: `npm run json-server`.
+* Go to `localhost:4200` and have fun!
+
+
+## How To Make Your Own
+
+To start an NgRx project from scratch, you can use these commands (at least for Angular 8, Angular CLI 8, RxJs 6, and Angular Material 8):
 
 * `npm install -g @angular/cli`  (you have to have it installed globally to run the CLI commands, but it uses the @angular/cli version specified in a project’s package.json by default — that is, if you’re using @angular/cli@6+ and your project uses @angular/cli@1.7.2, you’ll be fine because it will use version 1.7.2 when working in the project)
 
@@ -28,4 +39,4 @@ To start an NgRx project from scratch, you can use these commands (at least for 
 
 * Use app-nav-shell as an app shell and place everything inside it.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.3.
+This project was originally generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.1.3.

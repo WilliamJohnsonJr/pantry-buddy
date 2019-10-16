@@ -2,6 +2,7 @@
   "name": "pantry-buddy-ngrx",
   "version": "0.0.0",
   "scripts": {
+    "json-server": "./node_modules/.bin/json-server --watch db.json",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -44,6 +45,7 @@
     "@types/node": "^12.11.1",
     "jasmine-core": "^3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
+    "json-server": "^0.15.1",
     "karma": "^4.3.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage-istanbul-reporter": "^2.1.0",
