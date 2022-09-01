@@ -50,7 +50,7 @@ export function reducer(
     }
 
     case IngredientQuantityActionTypes.LoadIngredientQuantities: {
-      return adapter.addAll(action.payload.ingredientQuantities, state);
+      return adapter.addMany(action.payload.ingredientQuantities, state);
     }
 
     case IngredientQuantityActionTypes.ClearIngredientQuantities: {

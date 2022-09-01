@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 
-import { MatAutocomplete } from '@angular/material';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 import { IdTextObject } from '@app/my-material/models/id-text-object.model';
 
 @Component({

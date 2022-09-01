@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, ChangeDetectionStrategy, AfterViewIni
 import { Meal } from '@app/meals/models/meal.model';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
 import { Ingredient } from '@app/meals/models/ingredient.model';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, UntypedFormArray, Validators } from '@angular/forms';
 
 @Component({
   selector: 'edit-meal',
@@ -12,15 +12,15 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 })
 export class EditMealComponent implements OnInit {
   constructor(
-    public fb: FormBuilder
+    public fb: UntypedFormBuilder
   ) { }
   @Output() submitEvent: EventEmitter<IngredientQuantity[]> = new EventEmitter<IngredientQuantity[]>();
   @Input() meal: Meal;
   @Input() ingredientQuantities: IngredientQuantity[];
   @Input() ingredients: Ingredient[];
-  formGroup: FormGroup;
-  get ingredientQuantitiesFormArray(): FormArray{
-    return <FormArray>this.formGroup.get('ingredientQuantities');
+  formGroup: UntypedFormGroup;
+  get ingredientQuantitiesFormArray(): UntypedFormArray{
+    return <UntypedFormArray>this.formGroup.get('ingredientQuantities');
   }
     
   ngOnInit() {
@@ -42,7 +42,7 @@ export class EditMealComponent implements OnInit {
     });
   }
 
-  initIngredientQuantities(): FormArray {
+  initIngredientQuantities(): UntypedFormArray {
     let formArray = this.fb.array([]);
     this.ingredientQuantities.map(
       ingredientQuantity => formArray.push(this.initIngredientQuantity(ingredientQuantity))
@@ -50,7 +50,7 @@ export class EditMealComponent implements OnInit {
     return formArray;
   }
 
-  initIngredientQuantity(data?: IngredientQuantity): FormGroup {
+  initIngredientQuantity(data?: IngredientQuantity): UntypedFormGroup {
     return this.fb.group({
       id: [data ? data.ingredientId : null],
       ingredientId: [data ? data.ingredientId : null, Validators.required],
