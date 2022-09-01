@@ -147,7 +147,7 @@ export function reducer(
     }
 
     case MealActionTypes.LoadMeals: {
-      return adapter.addAll(action.payload.meals, {...state,
+      return adapter.addMany(action.payload.meals, {...state,
         allMealsLoaded: true,
         loading: false
       });

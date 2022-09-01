@@ -33,7 +33,7 @@ To start an NgRx project from scratch, you can use these commands (at least for 
 
 * `npm install -g json-server` (CLI for a simple CRUD JSON server)
 
-* `json-server —watch db.json`    (to start json-server)
+* `json-server -—watch db.json`    (to start json-server)
 
 * `ng generate @angular/material:material-nav --name=app-nav-shell` (create a Sidenav Material component)
 

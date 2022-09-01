@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { select, Store } from '@ngrx/store';
 import *  as fromRoot from '@app/reducers';
 import * as LayoutActions from '@app/core/actions/layout.actions';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import { ChangeDetectionStrategy } from '@angular/core';
 
 @Component({

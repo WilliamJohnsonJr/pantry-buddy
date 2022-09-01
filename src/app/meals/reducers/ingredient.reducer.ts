@@ -130,7 +130,7 @@ export function reducer(
     }
 
     case IngredientActionTypes.LoadIngredients: {
-      return adapter.addAll(action.payload.ingredients, {...state,
+      return adapter.addMany(action.payload.ingredients, {...state,
         allIngredientsLoaded: true,
         loading: false
       });
