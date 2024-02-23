@@ -1,6 +1,6 @@
 # PantryBuddy
 
-## The only grocery list you'll ever need. Built with NgRx and Angular 8+.
+## The only grocery list you'll ever need. Built with NgRx and Angular 14.
 
 ![Pantry Buddy screen shot](./PantryBuddy.png)
 
@@ -13,9 +13,9 @@
 * Go to `localhost:4200` and have fun!
 
 
-## How To Make Your Own
+## How To Make Your Own NgRx project (note: this may not work anymore, but is here for reference)
 
-To start an NgRx project from scratch, you can use these commands (at least for Angular 8, Angular CLI 8, RxJs 6, and Angular Material 8):
+To start an NgRx project from scratch, you can use these commands (at the time of Angular 8, Angular CLI 8, RxJs 6, and Angular Material 8):
 
 * `npm install -g @angular/cli`  (you have to have it installed globally to run the CLI commands, but it uses the @angular/cli version specified in a project’s package.json by default — that is, if you’re using @angular/cli@6+ and your project uses @angular/cli@1.7.2, you’ll be fine because it will use version 1.7.2 when working in the project)
 
