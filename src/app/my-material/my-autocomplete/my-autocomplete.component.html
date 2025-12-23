@@ -1,11 +1,13 @@
 <mat-form-field>
-    <input type="text" placeholder="{{myPlaceholder}}" [attr.aria-label]="myPlaceholder"
+  <input type="text" placeholder="{{myPlaceholder}}" [attr.aria-label]="myPlaceholder"
     matInput [formControl]="myFormControl"
-     [matAutocomplete]="myAuto">
-   <mat-autocomplete #myAuto [displayWith]="displayFn">
-     <mat-option *ngFor="let individualOption of filteredOptions | async" [value]="individualOption.id">
-       {{individualOption.text}}
-     </mat-option>
-   </mat-autocomplete>
-   <mat-error>Required.</mat-error>
+    [matAutocomplete]="myAuto">
+  <mat-autocomplete #myAuto [displayWith]="displayFn">
+    @for (individualOption of filteredOptions | async; track individualOption) {
+      <mat-option [value]="individualOption.id">
+        {{individualOption.text}}
+      </mat-option>
+    }
+  </mat-autocomplete>
+  <mat-error>Required.</mat-error>
 </mat-form-field>

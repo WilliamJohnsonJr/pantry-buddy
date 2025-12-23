@@ -16,7 +16,7 @@ describe('MealEffects', () => {
       ]
     });
 
-    effects = TestBed.get(MealEffects);
+    effects = TestBed.inject(MealEffects);
   });
 
   it('should be created', () => {

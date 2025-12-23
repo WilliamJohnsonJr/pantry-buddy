@@ -1,47 +1,48 @@
 <form [formGroup]="formGroup" (onSubmit)="onSubmit()">
-    <div>
-      <mat-form-field>
-          <input type="text" matInput placeholder="Meal Name" name="name" formControlName="name">
-          <mat-error>Required.</mat-error>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field>
-        <input type="text" matInput placeholder="Image URL" name="imageUrl" formControlName="imageUrl">
-        <mat-error>Required.</mat-error>
-      </mat-form-field>
-    </div>
-    <div>
-      <button type="button" mat-raised-button color="primary" (click)="addIngredientQuantity()">Add Ingredient</button>
-    </div>
-    <ul formArrayName="ingredientQuantities">
-      <li *ngFor="let ingredientQuantityControl of ingredientQuantitiesFormArray.controls;
-      let i=index">
+  <div>
+    <mat-form-field>
+      <input type="text" matInput placeholder="Meal Name" name="name" formControlName="name">
+      <mat-error>Required.</mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <input type="text" matInput placeholder="Image URL" name="imageUrl" formControlName="imageUrl">
+      <mat-error>Required.</mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+    <button type="button" mat-raised-button color="primary" (click)="addIngredientQuantity()">Add Ingredient</button>
+  </div>
+  <ul formArrayName="ingredientQuantities">
+    @for (ingredientQuantityControl of ingredientQuantitiesFormArray.controls; track ingredientQuantityControl; let i = $index) {
+      <li>
         <div [formGroupName]="i">
-            <div>
-                <mat-form-field>
-                  <input type="number" matInput placeholder="Quantity" name="quantity" formControlName="quantity">  
-                  <mat-error>Required.</mat-error>
-                </mat-form-field>
-              </div>
-              <div> 
-                <my-autocomplete [myOptions]="ingredients" 
-                [myPlaceholder]="'Ingredient'"
-                [myFormControl]="ingredientQuantityControl['controls'].ingredientId"></my-autocomplete>    
-              </div>
-              <div>
-                <button type="button" mat-raised-button color="accent" (click)="removeIngredientQuantity(i)">
-                  Remove
-                </button>
-              </div>
+          <div>
+            <mat-form-field>
+              <input type="number" matInput placeholder="Quantity" name="quantity" formControlName="quantity">
+              <mat-error>Required.</mat-error>
+            </mat-form-field>
+          </div>
+          <div>
+            <my-autocomplete [myOptions]="ingredients"
+              [myPlaceholder]="'Ingredient'"
+            [myFormControl]="ingredientQuantityControl['controls'].ingredientId"></my-autocomplete>
+          </div>
+          <div>
+            <button type="button" mat-raised-button color="accent" (click)="removeIngredientQuantity(i)">
+              Remove
+            </button>
+          </div>
         </div>
       </li>
-    </ul>
-    <div>
-      <mat-form-field>
-          <textarea matInput placeholder="Recipe" name="receipe" formControlName="recipe" cols="30" rows="10"></textarea>
-          <mat-error>Required.</mat-error>
-      </mat-form-field>
-    </div>
-    <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+    }
+  </ul>
+  <div>
+    <mat-form-field>
+      <textarea matInput placeholder="Recipe" name="receipe" formControlName="recipe" cols="30" rows="10"></textarea>
+      <mat-error>Required.</mat-error>
+    </mat-form-field>
+  </div>
+  <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
 </form>

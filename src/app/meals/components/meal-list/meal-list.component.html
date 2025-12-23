@@ -1,10 +1,10 @@
 <h1>Meals</h1>
 <mat-list>
+  @for (meal of meals; track trackById($index, meal)) {
     <a mat-list-item
       [routerLink]="['/meals', meal.id]"
-      *ngFor="let meal of meals; trackBy:trackById"
       title="View {{meal.name}} details">
       <h3 mat-line>{{meal.name}}</h3>
     </a>
-  </mat-list>
-  
+  }
+</mat-list>

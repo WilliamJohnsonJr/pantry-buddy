@@ -4,9 +4,11 @@
   <li>{{meal.recipe}}</li>
   <li>Ingredients:
     <ul>
-      <li *ngFor="let ingredientQuantityJoin of ingredientQuantityJoins; trackBy:trackById">
-        {{ingredientQuantityJoin.quantity}} {{ingredientQuantityJoin.text}}
-      </li>
+      @for (ingredientQuantityJoin of ingredientQuantityJoins; track trackById($index, ingredientQuantityJoin)) {
+        <li>
+          {{ingredientQuantityJoin.quantity}} {{ingredientQuantityJoin.text}}
+        </li>
+      }
     </ul>
   </li>
 </ul>
