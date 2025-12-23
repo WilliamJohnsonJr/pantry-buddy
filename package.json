@@ -52,7 +52,7 @@
     "karma-jasmine-html-reporter": "^2.0.0",
     "ts-node": "^8.4.1",
     "tslint": "~6.1.0",
-    "typescript": "5.2.x"
+    "typescript": "5.4.x"
   },
   "description": "The only grocery list you'll ever need. Built with NgRx and Angular 6+.",
   "main": "index.js",
