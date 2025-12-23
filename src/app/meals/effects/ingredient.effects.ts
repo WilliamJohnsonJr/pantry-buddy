@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
 import { defer, Observable, of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, toArray, combineLatest } from 'rxjs/operators';
@@ -33,15 +33,14 @@ export class IngredientEffects {
    * effect easier to test.
    */
 
-  @Effect()
-  loadIngredientsRequestEffect$: Observable<Action> = this.actions$.pipe(
+  loadIngredientsRequestEffect$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(IngredientActions.IngredientActionTypes.LoadIngredientsRequest),
     switchMap(() =>
       this.store.pipe(
         select(fromMeals.getAllIngredientsLoadedParentSelector),
         // If ingredients already loaded, Noop. Else, get ingredients from server and emit resulting actions.
-        switchMap(loaded => loaded 
-          ? of(new IngredientActions.IngredientsAlreadyLoaded()) 
+        switchMap(loaded => loaded
+          ? of(new IngredientActions.IngredientsAlreadyLoaded())
           : this.ingredientService.getIngredients().pipe(
             map((payload: Ingredient[]) => {
               const ingredientPayload: {ingredients: Ingredient[]} = {ingredients: payload};
@@ -52,17 +51,16 @@ export class IngredientEffects {
             })
         )))
     )
-  );
+  ));
 
   // This is a splitter effect that, upon successful load, selects the ingredient, loads its ingredient quantities,
   // and adds the ingredient to the store. If ingredient is already in store, Noop.
-  @Effect()
-  loadIngredientRequestEffect$: Observable<Action> = this.actions$.pipe(
+  loadIngredientRequestEffect$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(IngredientActions.IngredientActionTypes.LoadIngredientRequest),
-    switchMap((action: IngredientActions.LoadIngredientRequest) => 
+    switchMap((action: IngredientActions.LoadIngredientRequest) =>
       this.store.pipe(
         select(fromMeals.isSelectedIngredientInList),
-        switchMap(isInList => !isInList 
+        switchMap(isInList => !isInList
           ?  this.ingredientService.getIngredient(action.payload.id).pipe(
             map((payload: Ingredient) => {
               const ingredientPayload: {ingredient: Ingredient} = {ingredient: payload};
@@ -76,7 +74,7 @@ export class IngredientEffects {
            })
         )
       )
-    )
+    ));
 
     // @Effect() updateIngredientRequestEffect$: Observable<Noop> = this.actions$.pipe(
     //   ofType(IngredientActions.IngredientActionTypes.UpdateIngredientRequest),
@@ -122,8 +120,8 @@ export class IngredientEffects {
 //   );
 
   constructor(
-    private actions$: Actions, 
-    private ingredientService: IngredientService, 
+    private actions$: Actions,
+    private ingredientService: IngredientService,
     private store: Store<fromMeals.State>
     ) {}
 }

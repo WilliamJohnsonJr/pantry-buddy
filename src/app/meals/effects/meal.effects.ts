@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store, select } from '@ngrx/store';
 import { defer, Observable, of, zip } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
@@ -38,8 +38,7 @@ export class MealEffects {
    * effect easier to test.
    */
 
-  @Effect()
-  loadMealsRequestEffect$: Observable<Action> = this.actions$.pipe(
+  loadMealsRequestEffect$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(MealActions.MealActionTypes.LoadMealsRequest),
     switchMap(() =>
       this.store.pipe(
@@ -59,17 +58,15 @@ export class MealEffects {
           })
         )))
     )
-  );
-
+  ));
   // This is a splitter effect that, upon successful load, selects the meal, loads its ingredient quantities,
   // and adds the meal to the store. If meal is already in store, Noop.
-  @Effect()
-  loadMealRequestEffect$: Observable<Action> = this.actions$.pipe(
+  loadMealRequestEffect$: Observable<Action> = createEffect(() => this.actions$.pipe(
     ofType(MealActions.MealActionTypes.LoadMealRequest),
-    switchMap((action: MealActions.LoadMealRequest) => 
+    switchMap((action: MealActions.LoadMealRequest) =>
       this.store.pipe(
         select(fromMeals.isSelectedMealInList),
-        switchMap(isInList => !isInList 
+        switchMap(isInList => !isInList
           ?  this.mealService.getMeal(action.payload.id).pipe(
             map((mealHttp: MealHttp) => this.mealService.normalizeMeal(mealHttp)),
             mergeMap((mealPayload: {meal: Meal, ingredientQuantities: IngredientQuantity[], ingredients: Ingredient[]}) => [
@@ -85,16 +82,16 @@ export class MealEffects {
            })
         )
       )
-    )
+    ));
 
-    @Effect() loadEditMealRequestEffect$: Observable<Action> = this.actions$.pipe(
+    loadEditMealRequestEffect$: Observable<Action> = createEffect(() => this.actions$.pipe(
       ofType(MealActions.MealActionTypes.LoadEditMealRequest),
-      switchMap((action: MealActions.LoadEditMealRequest) => 
+      switchMap((action: MealActions.LoadEditMealRequest) =>
       zip(
         this.store.select(fromMeals.isSelectedMealInList),
         this.store.select(fromMeals.getAllIngredientsLoadedParentSelector)
       ).pipe(
-        switchMap(([isInList, allIngredientsLoaded]) => !isInList 
+        switchMap(([isInList, allIngredientsLoaded]) => !isInList
           ?  this.mealService.getMeal(action.payload.id).pipe(
             map((mealHttp: MealHttp) => this.mealService.normalizeMeal(mealHttp)),
             mergeMap((mealPayload: {meal: Meal, ingredientQuantities: IngredientQuantity[], ingredients: Ingredient[]}) => [
@@ -103,8 +100,8 @@ export class MealEffects {
               new MealActions.AddMeal({meal: mealPayload.meal})
             ])
           )
-          : allIngredientsLoaded 
-            ? of (new MealActions.MealAlreadyLoaded()) 
+          : allIngredientsLoaded
+            ? of (new MealActions.MealAlreadyLoaded())
             : of (new IngredientActions.LoadIngredientsRequest())
           ),
           catchError((error: HttpErrorResponse) => {
@@ -112,9 +109,9 @@ export class MealEffects {
            })
         )
       )
-    )
+    ));
 
-    @Effect() loadEmailRequestFail: Observable<any> = this.actions$.pipe(
+    loadEmailRequestFail: Observable<any> = createEffect(() => this.actions$.pipe(
       ofType(MealActions.MealActionTypes.LoadMealRequestFail),
       tap((action: MealActions.LoadMealRequestFail) => {
         console.error(action.payload.error);
@@ -123,9 +120,9 @@ export class MealEffects {
         }
       }),
       map(action => new Noop())
-    )
+    ));
 
-    @Effect() updateMealRequestEffect$: Observable<any> = this.actions$.pipe(
+    updateMealRequestEffect$: Observable<any> = createEffect(() => this.actions$.pipe(
       ofType(MealActions.MealActionTypes.UpdateMealRequest),
       switchMap((action: MealActions.UpdateMealRequest): Observable<any> => {
        return this.mealService.updateMeal(action.payload.meal)
@@ -157,7 +154,7 @@ export class MealEffects {
       // catchError((error: HttpErrorResponse) => {
       //   return of(new MealActions.UpdateMealRequestFail({error: error.status + ' - ' + error.message}))
       //  })
-    )
+    ));
 
 //   @Effect()
 //   addMealToMeal$: Observable<Action> = this.actions$.pipe(
@@ -184,9 +181,9 @@ export class MealEffects {
 //   );
 
   constructor(
-    private actions$: Actions, 
+    private actions$: Actions,
     private mealService: MealService,
-    private router: Router, 
+    private router: Router,
     private store: Store<fromMeals.State>
     ) {}
 }
