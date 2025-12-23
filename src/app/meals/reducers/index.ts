@@ -13,26 +13,25 @@ import {
   import * as fromIngredients from '@app/meals/reducers/ingredient.reducer';
   import * as fromRoot from '@app/reducers';
 import { Meal } from '../models/meal.model';
-import { EntitySelectors } from '@ngrx/entity/src/models';
 import { IngredientQuantity } from '../models/ingredient-quantity.model';
 import { Ingredient } from '../models/ingredient.model';
-  
+
   export interface MealsState {
     meals: fromMeals.State;
     ingredientQuantities: fromIngredientQuantities.State;
     ingredients: fromIngredients.State;
   }
-  
+
   export interface State extends fromRoot.State {
     meals: MealsState;
   }
-  
+
   export const reducers: ActionReducerMap<MealsState> = {
     meals: fromMeals.reducer,
     ingredientQuantities: fromIngredientQuantities.reducer,
     ingredients: fromIngredients.reducer
   };
-  
+
   /**
    * A selector function is a map function factory. We pass it parameters and it
    * returns a function that maps from the larger state tree into a smaller
@@ -48,14 +47,14 @@ import { Ingredient } from '../models/ingredient.model';
    * }
    * ```
    */
-  
+
   /**
    * The createFeatureSelector function selects a piece of state from the root of the state object.
    * This is used for selecting feature states that are loaded eagerly or lazily.
    */
   export const getMealsState:
    MemoizedSelector<State, MealsState> = createFeatureSelector<State, MealsState>('meals');
-  
+
   /**
    * Every reducer module exports selector functions, however child reducers
    * have no knowledge of the overall state tree. To make them usable, we
@@ -79,7 +78,7 @@ import { Ingredient } from '../models/ingredient.model';
     getMealsState,
     state => state.ingredients
   )
-  
+
   export const getSelectedMealId: MemoizedSelector<State, number> = createSelector(
     getMealEntitiesState,
     fromMeals.getSelectedId
@@ -124,7 +123,7 @@ import { Ingredient } from '../models/ingredient.model';
     getIngredientEntitiesState,
     fromIngredients.getLoading
   )
-  
+
   /**
    * Adapters created with @ngrx/entity generate
    * commonly used selector functions including
@@ -138,8 +137,8 @@ import { Ingredient } from '../models/ingredient.model';
     selectEntities: getMealEntities,
     selectAll: getAllMeals,
     selectTotal: getTotalMeals,
-  }: EntitySelectors<Meal, State> = fromMeals.adapter.getSelectors(getMealEntitiesState);
-  
+  } = fromMeals.adapter.getSelectors(getMealEntitiesState);
+
   export const getSelectedMeal: MemoizedSelector<State, Meal> = createSelector(
     getMealEntities,
     getSelectedMealId,
@@ -153,7 +152,7 @@ import { Ingredient } from '../models/ingredient.model';
     selectEntities: getIngredientQuantityEntities,
     selectAll: getAllIngredientQuantities,
     selectTotal: getTotalIngredientQuantities
-  }: EntitySelectors<IngredientQuantity, State> = fromIngredientQuantities.adapter.getSelectors(getIngredientQuantityEntitiesState);
+  } = fromIngredientQuantities.adapter.getSelectors(getIngredientQuantityEntitiesState);
 
   export const getIngredientQuantitiesForSelectedMeal: MemoizedSelector<State, IngredientQuantity[]> = createSelector(
     getIngredientQuantityEntities,
@@ -168,7 +167,7 @@ import { Ingredient } from '../models/ingredient.model';
     selectEntities: getIngredientEntities,
     selectAll: getAllIngredients,
     selectTotal: getTotalIngredients
-  }: EntitySelectors<Ingredient, State> = fromIngredients.adapter.getSelectors(getIngredientEntitiesState);
+  } = fromIngredients.adapter.getSelectors(getIngredientEntitiesState);
 
   export const getIngredientsForSelectedMeal: MemoizedSelector<State, Ingredient[]> = createSelector(
     getIngredientEntities,
@@ -191,12 +190,12 @@ import { Ingredient } from '../models/ingredient.model';
 //       return searchIds.map(id => meals[id]);
 //     }
 //   );
-  
+
 //   export const getCollectionState = createSelector(
 //     getMealsState,
 //     (state: MealsState) => state.collection
 //   );
-  
+
   export const isSelectedMealInList: MemoizedSelector<State, boolean> = createSelector(
     getMealIds,
     getSelectedMealId,
