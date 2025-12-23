@@ -1,23 +1,23 @@
 import { NgModule } from '@angular/core';
 
-import { MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatLegacyAutocompleteModule as MatAutocompleteModule} from '@angular/material/legacy-autocomplete';
 import {
-  MatButtonModule,
-} from '@angular/material/button';
+  MatLegacyButtonModule as MatButtonModule,
+} from '@angular/material/legacy-button';
 import { 
-  MatCardModule
-} from '@angular/material/card'
-import {   MatCheckboxModule, } from '@angular/material/checkbox';
-import { MatDialogModule, } from '@angular/material/dialog';
+  MatLegacyCardModule as MatCardModule
+} from '@angular/material/legacy-card'
+import {   MatLegacyCheckboxModule as MatCheckboxModule, } from '@angular/material/legacy-checkbox';
+import { MatLegacyDialogModule as MatDialogModule, } from '@angular/material/legacy-dialog';
 import {   MatIconModule, } from '@angular/material/icon';
-import {   MatInputModule, } from '@angular/material/input';
-import { MatListModule,} from '@angular/material/list';
-import {   MatSelectModule,} from '@angular/material/select';
+import {   MatLegacyInputModule as MatInputModule, } from '@angular/material/legacy-input';
+import { MatLegacyListModule as MatListModule,} from '@angular/material/legacy-list';
+import {   MatLegacySelectModule as MatSelectModule,} from '@angular/material/legacy-select';
 import {   MatSidenavModule,} from '@angular/material/sidenav';
-import { MatRadioModule,} from '@angular/material/radio';
-import {MatTabsModule, } from '@angular/material/tabs';
+import { MatLegacyRadioModule as MatRadioModule,} from '@angular/material/legacy-radio';
+import {MatLegacyTabsModule as MatTabsModule, } from '@angular/material/legacy-tabs';
 import { MatToolbarModule,} from '@angular/material/toolbar';
-import { MatTableModule, } from '@angular/material/table';
+import { MatLegacyTableModule as MatTableModule, } from '@angular/material/legacy-table';
 import { CdkTableModule } from '@angular/cdk/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MyAutocompleteComponent } from './my-autocomplete/my-autocomplete.component';
