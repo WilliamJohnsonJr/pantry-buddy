@@ -49,7 +49,7 @@ import { HttpClientModule } from '@angular/common/http';
     */
     StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot([]), // Place effects here or by importing EffectsModule.forFeature in feature modules
-    StoreDevtoolsModule.instrument({ maxAge: 15, name: 'Pantry Buddy' }),
+    StoreDevtoolsModule.instrument({ maxAge: 15, name: 'Pantry Buddy' , connectInZone: true}),
 ],
 providers: [
   httpInterceptorProviders,
