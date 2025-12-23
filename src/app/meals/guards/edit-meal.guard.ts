@@ -4,7 +4,7 @@
  **/
 
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router  } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, zip } from 'rxjs';
 import { filter, map, take, tap  } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import * as IngredientActions from '../actions/ingredient.actions';
 @Injectable({
   providedIn: 'root'
 })
-export class EditMealGuard implements CanActivate {
+export class EditMealGuard  {
   constructor(
     private store: Store<fromMeals.State>,
   ) {}
