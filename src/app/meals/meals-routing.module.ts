@@ -9,16 +9,19 @@ import { EditMealContainerComponent } from "@app/meals/container-components/edit
 export const routes: Routes = [
   {
     path: '',
+    title: 'Meal List',
     component: MealListContainerComponent
   },
   {
     path: ':id',
     pathMatch: 'full',
+    title: 'Meal Details',
     component: MealDetailsContainerComponent,
     canActivate: [MealExistsGuard]
   },
   {
     path: ':id/edit',
+    title: 'Edit Meal',
     component: EditMealContainerComponent,
     canActivate: [EditMealGuard]
   }
