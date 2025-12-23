@@ -7,9 +7,10 @@ import { MatAutocomplete } from '@angular/material/autocomplete';
 import { IdTextObject } from '@app/my-material/models/id-text-object.model';
 
 @Component({
-  selector: 'my-autocomplete',
-  templateUrl: './my-autocomplete.component.html',
-  styleUrls: ['./my-autocomplete.component.css']
+    selector: 'my-autocomplete',
+    templateUrl: './my-autocomplete.component.html',
+    styleUrls: ['./my-autocomplete.component.css'],
+    standalone: false
 })
 export class MyAutocompleteComponent implements OnInit {
 

@@ -8,10 +8,11 @@ interface IngredientQuantityJoin extends IngredientQuantity {
 }
 
 @Component({
-  selector: 'meal-details',
-  templateUrl: './meal-details.component.html',
-  styleUrls: ['./meal-details.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'meal-details',
+    templateUrl: './meal-details.component.html',
+    styleUrls: ['./meal-details.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MealDetailsComponent implements OnInit, OnChanges {
 

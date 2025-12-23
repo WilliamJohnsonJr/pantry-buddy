@@ -5,10 +5,11 @@ import { Ingredient } from '@app/meals/models/ingredient.model';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'edit-meal',
-  templateUrl: './edit-meal.component.html',
-  styleUrls: ['./edit-meal.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'edit-meal',
+    templateUrl: './edit-meal.component.html',
+    styleUrls: ['./edit-meal.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class EditMealComponent implements OnInit {
   constructor(

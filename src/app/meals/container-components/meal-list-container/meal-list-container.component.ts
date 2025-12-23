@@ -6,10 +6,11 @@ import { Meal } from '@app/meals/models/meal.model';
 import * as MealActions from '@app/meals/actions/meal.actions'
 
 @Component({
-  selector: 'meal-list-container',
-  templateUrl: './meal-list-container.component.html',
-  styleUrls: ['./meal-list-container.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'meal-list-container',
+    templateUrl: './meal-list-container.component.html',
+    styleUrls: ['./meal-list-container.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MealListContainerComponent implements OnInit {
 

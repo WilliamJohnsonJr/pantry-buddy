@@ -2,10 +2,11 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Meal } from '@app/meals/models/meal.model';
 
 @Component({
-  selector: 'meal-list',
-  templateUrl: './meal-list.component.html',
-  styleUrls: ['./meal-list.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'meal-list',
+    templateUrl: './meal-list.component.html',
+    styleUrls: ['./meal-list.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MealListComponent {
   constructor() { }

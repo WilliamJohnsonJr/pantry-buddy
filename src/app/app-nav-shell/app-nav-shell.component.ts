@@ -9,10 +9,11 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'app-nav-shell',
-  templateUrl: './app-nav-shell.component.html',
-  styleUrls: ['./app-nav-shell.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-nav-shell',
+    templateUrl: './app-nav-shell.component.html',
+    styleUrls: ['./app-nav-shell.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AppNavShellComponent implements OnInit {
   constructor(private breakpointObserver: BreakpointObserver, private store: Store<fromRoot.State>) {}

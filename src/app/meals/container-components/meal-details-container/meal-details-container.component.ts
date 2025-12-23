@@ -7,10 +7,11 @@ import { ActivatedRoute } from '@angular/router';
 import { IngredientQuantity } from '@app/meals/models/ingredient-quantity.model';
 import { Ingredient } from '@app/meals/models/ingredient.model';
 @Component({
-  selector: 'meal-details-container',
-  templateUrl: './meal-details-container.component.html',
-  styleUrls: ['./meal-details-container.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'meal-details-container',
+    templateUrl: './meal-details-container.component.html',
+    styleUrls: ['./meal-details-container.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MealDetailsContainerComponent implements OnInit {
   constructor(private store: Store<fromMeals.State>, private route: ActivatedRoute) {}

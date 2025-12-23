@@ -9,10 +9,11 @@ import { Ingredient } from '@app/meals/models/ingredient.model';
 import { UpdateMealRequest } from '@app/meals/actions/meal.actions';
 
 @Component({
-  selector: 'edit-meal-container',
-  templateUrl: './edit-meal-container.component.html',
-  styleUrls: ['./edit-meal-container.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'edit-meal-container',
+    templateUrl: './edit-meal-container.component.html',
+    styleUrls: ['./edit-meal-container.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class EditMealContainerComponent implements OnInit {
 
