@@ -3,6 +3,7 @@
   "compilerOptions": {
     "baseUrl": "src",
     "importHelpers": true,
+    "esModuleInterop": true,
     "paths": {
       "@app/*": [
         "app/*"

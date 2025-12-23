@@ -8,7 +8,7 @@ import { reducers } from '@app/meals/reducers';
 import { MealEffects } from '@app/meals/effects/meal.effects';
 import { IngredientEffects } from '@app/meals/effects/ingredient.effects';
 import { EffectsModule } from '@ngrx/effects';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { MealListContainerComponent } from './container-components/meal-list-container/meal-list-container.component';
 import { MealDetailsContainerComponent } from './container-components/meal-details-container/meal-details-container.component';
 import { MealDetailsComponent } from './components/meal-details/meal-details.component';
@@ -16,24 +16,18 @@ import { EditMealContainerComponent } from './container-components/edit-meal-con
 import { EditMealComponent } from './components/edit-meal/edit-meal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-@NgModule({
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MyMaterialModule,
-    MealsRoutingModule,
-    StoreModule.forFeature('meals', reducers),
-    EffectsModule.forFeature([MealEffects, IngredientEffects])
-  ],
-  declarations: [
-    MealListComponent,
-    MealListContainerComponent,
-    MealDetailsContainerComponent,
-    MealDetailsComponent,
-    EditMealContainerComponent,
-    EditMealComponent
-  ]
-})
+@NgModule({ declarations: [
+        MealListComponent,
+        MealListContainerComponent,
+        MealDetailsContainerComponent,
+        MealDetailsComponent,
+        EditMealContainerComponent,
+        EditMealComponent
+    ], imports: [CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MyMaterialModule,
+        MealsRoutingModule,
+        StoreModule.forFeature('meals', reducers),
+        EffectsModule.forFeature([MealEffects, IngredientEffects])], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class MealsModule { }

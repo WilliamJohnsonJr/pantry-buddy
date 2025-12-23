@@ -24,37 +24,31 @@ import { PageNotFoundComponent } from '@app/core/components/page-not-found/page-
 import { HomeComponent } from '@app/core/components/home/home.component';
 import { reducers, metaReducers } from '@app/reducers';
 import { MealListComponent } from '@app/meals/components/meal-list/meal-list.component';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    AppNavShellComponent,
-    PageNotFoundComponent,
-    HomeComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    MyMaterialModule,
-    LayoutModule,
-    /*
-      ngrx uses `combineReducers()` to create the next state from a single root reducer.
-      The meta-reducers array is taken from right-to-left to make one meta-reducer, then combineReducers is
-      called to create the next state.
-    */
-    StoreModule.forRoot(reducers, { metaReducers }),
-    EffectsModule.forRoot([]), // Place effects here or by importing EffectsModule.forFeature in feature modules
-    StoreDevtoolsModule.instrument({ maxAge: 15, name: 'Pantry Buddy' , connectInZone: true}),
-],
-providers: [
-  httpInterceptorProviders,
-  { provide: BASE_API_ENDPOINT, useValue: 'http://localhost:3000/' }
-],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        AppNavShellComponent,
+        PageNotFoundComponent,
+        HomeComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        MyMaterialModule,
+        LayoutModule,
+        /*
+          ngrx uses `combineReducers()` to create the next state from a single root reducer.
+          The meta-reducers array is taken from right-to-left to make one meta-reducer, then combineReducers is
+          called to create the next state.
+        */
+        StoreModule.forRoot(reducers, { metaReducers }),
+        EffectsModule.forRoot([]), // Place effects here or by importing EffectsModule.forFeature in feature modules
+        StoreDevtoolsModule.instrument({ maxAge: 15, name: 'Pantry Buddy', connectInZone: true })], providers: [
+        httpInterceptorProviders,
+        { provide: BASE_API_ENDPOINT, useValue: 'http://localhost:3000/' },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }
