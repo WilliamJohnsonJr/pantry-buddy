@@ -1,6 +1,6 @@
 # PantryBuddy
 
-## The only grocery list you'll ever need. Built with NgRx and Angular 14.
+## The only grocery list you'll ever need. Built with NgRx and Angular 20.
 
 ![Pantry Buddy screen shot](./PantryBuddy.png)
 
